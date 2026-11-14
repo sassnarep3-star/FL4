@@ -1,5 +1,48 @@
 # COORDINATION.md — shared task board
 
+Repo: `sassnarep3-star/FL4` · Current Arena branch: `arena/121f05ad-fl4` (branched from `ade1d5d`; branch is fixed by Arena)
+Live site: https://sassnarep3-star.github.io/FL4/
+
+Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not block publication).
+
+> This checkout's current task reuses the evidence-first site already merged to `main` by PRs #1 and #2. It is not a second site or a parallel copy. Preserve the integrated site and improve its source discipline and strategy methodology. The original session boards are retained below as history.
+
+## Current task board
+
+| Task | Status | Owner (Arena session) | File scope | Sources / verification | Irregularities |
+|---|---|---|---|---|---|
+| T10 Post-merge source audit and own-line methodology refinement | in progress | `121f05ad`, `arena/121f05ad-fl4` | `data/sources.json`, `data/strategies.json`, `data/questions.json`, `data/requirements.json`, `data/suggestions.json`, `data/flags.json`, `tools/build_site.py`, `tools/validate.py`, generated strategy/requirements/questions/sources/flags pages, `COORDINATION.md` | NIST, scikit-learn, NFL Football Operations, NFL official injury/schedule/stats references checked 2026-11-14; GitHub PR/Pages API; add auditable model blueprint and strict official-source rendering checks | Keep unsupported values blank and flagged. No licensed historical odds, empirical correlations, validated strategies, or verified depth tiers. Do not copy duplicate site from the earlier worktree. |
+| T11 Integration, PR/merge, Pages confirmation | pending | same | repo-wide | Rebase onto current `main`, run source/build/link checks, PR and Actions/Pages API | Continue only on Arena branch; do not use a different branch. |
+
+## Log
+
+- 2026-11-14 — Inspected the repository and `main` after another session's work had already merged as PR #2 (`388414f`). PR #1 and PR #2 are both merged; GitHub Pages is configured at `https://sassnarep3-star.github.io/FL4/`. The Pages deployment run for `388414f` completed successfully (run `43549635924`, workflow `Publish site to GitHub Pages`); `gh api repos/sassnarep3-star/FL4/pages/builds/latest` reported `built`; the published URL fetch returned the site. No open PRs existed. Do not replace that integrated, feature-rich site with a smaller duplicate static app.
+- 2026-11-14 — Audited `origin/main`: it includes source-derived Week 10 injury rows, the 11-page dashboard, a renderer, a validator, and a large pre-existing decision-lab page. Noted the validator currently allows rows without a primary URL and does not verify every rendered table row. This current session will tighten that gap and add the line-generation specification to the merged strategy page.
+- Official methodology sources verified for the strategy specification:
+  - NFL Football Operations, Next Gen Stats: https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats — official description of tracking-derived fields; this does not establish that raw tracking data is public or licensed here.
+  - NFL player statistics: https://www.nfl.com/stats/player-stats/ — official navigation/source, not treated as a saved statistical dataset.
+  - NFL Game Books support: https://support.nfl.com/hc/en-us/articles/35869678028180-Game-Books — official description of Game Book PDF access in game centers.
+  - NFL injury report: https://www.nfl.com/injuries/ — official report index; direct `/league/2026` route returned 404, while the index/week selector and `/league/2026/reg10` resolved. The 2025 Week 8 report body/title mismatch remains flagged in session notes; no such records copied.
+  - NFL roster page: https://www.nfl.com/teams/new-england-patriots/roster — official roster view but no explicit depth ordering, so a roster is not treated as a depth chart.
+  - NFL 2026 Rulebook: https://operations.nfl.com/rules-officiating/2026-nfl-rulebook — official rules reference; no rule-based numeric model values inferred.
+  - NIST correlation glossary: https://www.itl.nist.gov/div898/handbook/glossary.htm — correlation definition; a coefficient is not a joint parlay probability or a causal effect.
+  - NIST bootstrap guidance: https://www.itl.nist.gov/div898/handbook/eda/section3/bootplot.htm — uncertainty estimation via resampling, subject to assumptions.
+  - scikit-learn chronological split: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html — chronological evaluation prevents training on future observations and testing on past observations.
+  - scikit-learn Brier score: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html — proper scoring loss reference; it is not a return or profitability proof.
+- Sources are method/discovery references only. No new odds, injuries, depth tiers, results, rankings, forecasts, correlation estimates, legal conclusions, or reward values were inferred or added.
+
+## Prior integrated work and historical logs
+
+- PR #2 merged to `main` at `388414f`, following PR #1; both prior source-session boards are retained verbatim below. Their task records describe the evidence-first site that is now the base for T10.
+- PR #2 Pages workflow run: https://github.com/sassnarep3-star/FL4/actions/runs/43549635924 — completed successfully on 2026-11-14; latest Pages build status `built`, commit `388414fb881d18a6c1b88fc0e667e37512f56fe6`.
+- Public site reviewed at: https://sassnarep3-star.github.io/FL4/.
+
+---
+
+## Earlier session board (merged from main, PR #2 — preserved verbatim)
+
+# COORDINATION.md — shared task board
+
 Repo: `sassnarep3-star/FL4` · Working branch: `arena/ce31a137-fl4` (base `ade1d5d`, `main`)
 Live site: https://sassnarep3-star.github.io/FL4/
 
