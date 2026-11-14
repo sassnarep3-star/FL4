@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Executive summary | NFL Lines Research</title>
+<link rel="stylesheet" href="../assets/style.css">
+</head><body>
+<header class="top"><div class="brand"><a href="../index.html">NFL Lines Research</a><span>Data as of 2026-11-14</span></div>
+<nav><a href="../index.html" class="">Dashboard</a><a href="../pages/executive-summary.html" class="active">Executive summary</a><a href="../pages/injuries.html" class="">Injuries &amp; depth</a><a href="../pages/strategies.html" class="">Strategies</a><a href="../pages/questions.html" class="">Questions</a><a href="../pages/requirements.html" class="">Requirements</a><a href="../pages/suggestions.html" class="">Suggestions</a><a href="../pages/repo-review.html" class="">Repo review</a><a href="../pages/sources.html" class="">Sources</a><a href="../pages/flagged.html" class="">Flagged for Review</a></nav></header>
+<main>
+<h1>Executive summary</h1>
+
+<p class="lead">Summary as of 2026-11-14. Every number below is computed from the data files, and each has a source on its page.</p>
+<div class="kpis">
+<div class="kpi"><div class="kpi-v">160</div><div class="kpi-l">Flagged players, Week 10</div><div class="kpi-n"></div></div>
+<div class="kpi"><div class="kpi-v">66 / 10</div><div class="kpi-l">Out / Doubtful</div><div class="kpi-n"></div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">Validated strategies</div><div class="kpi-n">none built or tested</div></div>
+<div class="kpi"><div class="kpi-v">16</div><div class="kpi-l">Open questions</div><div class="kpi-n"></div></div>
+<div class="kpi"><div class="kpi-v">68</div><div class="kpi-l">Flags for review</div><div class="kpi-n"></div></div>
+</div>
+<h2>Key findings</h2>
+<ol class="findings">
+<li><b>Injury picture (official):</b> the NFL's Week 10 report lists 160 flagged players across 14 games: 66 Out, 10 Doubtful, 84 Questionable. Teams with the most Out or Doubtful players: DAL (5 Out, 1 Doubtful), IND (6 Out, 0 Doubtful), GB (4 Out, 1 Doubtful), HOU (5 Out, 0 Doubtful), MIN (5 Out, 0 Doubtful). <a href="injuries.html">Injuries page</a>. Source: <a href="https://www.nfl.com/injuries/" target="_blank" rel="noopener">NFL.com</a>.</li>
+<li><b>Starter replacements (headline level, NFL.com):</b> Seahawks QB Sam Darnold ruled out for Week 10; Drew Lock expected to start. Dolphins placed QB Malik Willis on injured reserve with Kyle McCord in line for his first start. Ravens placed Lamar Jackson on injured reserve; Tyler Huntley reported out for the season. Browns (Deshaun Watson) and Cardinals (Carson Beck) start-headlines are from the Nov 11 roundup and may be out of date. <a href="injuries.html">Section 4</a>.</li>
+<li><b>Depth charts are the gap:</b> we cannot yet say which absent player is a starter and who replaced him, on defence or offence. Only headlines were used. Needed: official depth charts (question Q-10, suggestion SG-02).</li>
+<li><b>Betting strategies:</b> zero strategies are built or validated. The leaderboard is empty. We have no historical odds or prop-line data (Q-01, Q-02), and the success metric is not chosen (Q-06). No correlation values were computed; the table shows blanks marked UNVERIFIED.</li>
+<li><b>Legal status is unresolved:</b> the official Mexican federal law (Ley Federal de Juegos y Sorteos, 1947) prohibits betting games unless SEGOB permits them (Art. 1, 3, 4). Whether and how online sports betting is authorised is not confirmed from an official source (Q-03, flag F-09). NFL personnel are barred from betting on NFL games; this is reported in secondary sources (F-11).</li>
+<li><b>Repository:</b> the repo contained only a one-line README before this session. There is no code, data or CI. GitHub Pages was already set to publish from main at the root. <a href="repo-review.html">Repo review</a>.</li>
+</ol>
+
+<h2>Decisions needed from you</h2>
+<ul class="findings">
+<li>Scope: research only, paper trading, or real money (Q-04, SG-09). Real money is blocked until the legal question (Q-03) is answered.</li>
+<li>What counts as a useful signal, and the thresholds for the gates (Q-06, SG-05).</li>
+<li>What a "reward" for top strategies is (Q-05).</li>
+<li>Whether to collect multi-season injury history (SG-01) and depth charts (SG-02) next.</li>
+<li>Whether the site should refresh on a schedule (SG-07) or stay manual.</li>
+</ul>
+
+<h2>How this summary was checked</h2>
+<p>Injury rows were read from the official NFL.com report text on 2026-11-14. Each row links to the player page in that report. Legal points were checked against the official text of the 1947 federal law on the Chamber of Deputies site. NFL policy statements are second-hand (reported by ESPN, the Inquirer and MLive) and are flagged. Items that could not be confirmed are listed on the <a href="flagged.html">Flagged for Review</a> page.</p>
+
+</main>
+<footer><p>Informational research only. Not betting advice. Every value links to a source; values that could not be confirmed are marked UNVERIFIED and listed on the <a href="../pages/flagged.html">Flagged for Review</a> page.
+Legal status of betting in Mexico is an open question (Q-03).</p>
+<p>Source of this site: <a href="https://github.com/sassnarep3-star/FL4">github.com/sassnarep3-star/FL4</a> (branch arena/ce31a137-fl4).</p></footer>
+<script src="../assets/app.js"></script>
+</body></html>

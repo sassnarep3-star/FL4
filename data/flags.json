@@ -1,0 +1,150 @@
+{
+  "as_of": "2026-11-14",
+  "note": "Flagged for Review. These items do NOT block the merge (per the brief). Each item lists the source to check. Status 'Unverified' means the value could not be confirmed from an official source, so it was left blank or marked, not filled in.",
+  "rows": [
+    {
+      "id": "F-01",
+      "area": "Injuries - team placement",
+      "item": "Myles Garrett is listed under Rams (LAR) as LB in the Week 10 report.",
+      "why": "Team placement could not be checked against an official roster; report row kept as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/players/myles-garrett/",
+      "status": "Unverified - check player page"
+    },
+    {
+      "id": "F-02",
+      "area": "Injuries - team placement",
+      "item": "Trent McDuffie is listed under Rams (LAR) as CB in the Week 10 report.",
+      "why": "Could not confirm team against an official roster; row kept as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/players/trent-mcduffie/",
+      "status": "Unverified - check player page"
+    },
+    {
+      "id": "F-03",
+      "area": "Injuries - team placement",
+      "item": "Mike Evans is listed under 49ers (SF) as WR in the Week 10 report.",
+      "why": "Could not confirm team against an official roster; row kept as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/players/mike-evans/",
+      "status": "Unverified - check player page"
+    },
+    {
+      "id": "F-04",
+      "area": "Injuries - internal consistency",
+      "item": "BJ Green II (JAX DE): practice 'Full Participation in Practice' with game status 'Out'.",
+      "why": "Unusual pairing; could be a late change. Kept as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/players/bj-green-ii/",
+      "status": "Unverified - check player page"
+    },
+    {
+      "id": "F-05",
+      "area": "Headlines - length of absence",
+      "item": "Lamar Jackson absence is given as 6-9 weeks (NFL Network headline) and as 6-10 weeks (NFL.com roundup, Nov 13).",
+      "why": "Two official NFL.com headlines disagree on the range. Not used in any value.",
+      "source": "https://www.nfl.com/news/ravens-lamar-jackson-right-thumb-out-6-9-weeks-expects-to-return-this-season ; https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-nov-13",
+      "status": "Unverified - conflicting headlines"
+    },
+    {
+      "id": "F-06",
+      "area": "Injuries - report vs news",
+      "item": "Puka Nacua (LAR WR) is listed as Did Not Participate with no game status, while an NFL.com headline says he is likely to be placed on injured reserve.",
+      "why": "Report and headline do not match. Kept as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/news/rams-wr-puka-nacua-likely-to-be-placed-on-injured-reserve-with-turf-toe-sprained-mcl-and-pcl",
+      "status": "Unverified"
+    },
+    {
+      "id": "F-07",
+      "area": "Injuries - identity",
+      "item": "Jacob Hummel (HOU LB) is linked to the nfl.com slug 'jake-hummel', which differs from the listed first name.",
+      "why": "The player page link is as published; identity not checked further.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/players/jake-hummel/",
+      "status": "Unverified - check player page"
+    },
+    {
+      "id": "F-08",
+      "area": "Injuries - coverage",
+      "item": "Injury rows are limited to players with an injury entry or a game status. Players with neither are not listed.",
+      "why": "Scope decision, not an error. Full list is on the report page.",
+      "source": "https://www.nfl.com/injuries/",
+      "status": "Scope note"
+    },
+    {
+      "id": "F-09",
+      "area": "Mexico law - online betting",
+      "item": "Secondary sources disagree on whether online sports betting is authorised in Mexico. Some say it is legal under a SEGOB permit holder; others say online operation needs a separate DGJS authorisation; one says online gambling is 'legal' with ~30 licensed operators (S14). The official 1947 law text reviewed (S05) contains no online provision in the articles read.",
+      "why": "No official SEGOB statement was retrieved. No operator counts or tax rates were used.",
+      "source": "https://www.diputados.gob.mx/LeyesBiblio/pdf/109.pdf ; https://gamblingmaps.org/map/regulations/mexico",
+      "status": "Unverified - legal review required (Q-03)"
+    },
+    {
+      "id": "F-10",
+      "area": "Mexico law - reforms",
+      "item": "The Cámara ficha lists 'Sin reforma' (no amending decrees). Secondary sources cite a regulation reform of 16 Nov 2023 and a law reform announced in Sep 2026.",
+      "why": "Could not confirm either reform from an official source. Not used.",
+      "source": "https://www.diputados.gob.mx/LeyesBiblio/ref/lfjs.htm",
+      "status": "Unverified"
+    },
+    {
+      "id": "F-11",
+      "area": "NFL gambling policy",
+      "item": "The NFL gambling policy text and the Nov 2025 prop-bet memo were not retrieved from an official source. Quotes come from ESPN, Philadelphia Inquirer and MLive.",
+      "why": "Policy statements are second-hand. Affects Q-02 and SG-09.",
+      "source": "https://www.espn.com/nfl/story/_/id/46957763/in-memo-nfl-details-efforts-curb-prop-betting-light-wider-gambling-probes ; https://www.inquirer.com/eagles/nfl-suspensions-gambling-policy-sports-betting-20230606.html ; https://www.mlive.com/lions/2023/04/what-is-the-nfls-policy-on-sports-betting.html",
+      "status": "Unverified - primary text needed"
+    },
+    {
+      "id": "F-12",
+      "area": "NFL injury-report policy",
+      "item": "The 2017 NFL Personnel (Injury) Report Policy cited by secondary sources was not retrieved. Definitions (Out / Doubtful / Questionable) and the Wed-Fri schedule come from secondary sources.",
+      "why": "Definitions match the secondary sources but are not confirmed from the primary policy.",
+      "source": "https://sports24.us/article/nfl-injury-report-rules-explained ; https://www.nfl.com/injuries/",
+      "status": "Unverified - primary text needed"
+    },
+    {
+      "id": "F-13",
+      "area": "Game-day roster rules",
+      "item": "46 active players per game and 90-minute inactive deadline come from secondary sources only.",
+      "why": "Not confirmed from the 2026 NFL Rulebook or the CBA.",
+      "source": "https://www.bettingpunter.com/nfl/nfl-inactives/ ; https://operations.nfl.com/rules-officiating/2026-nfl-rulebook",
+      "status": "Unverified"
+    },
+    {
+      "id": "F-14",
+      "area": "Kickoff times",
+      "item": "Kickoff times for games other than the 2026 Week 10 schedule page sections read come from the time headers on the injury report page (NFL.com).",
+      "why": "Both pages are NFL.com; the schedule page was only partly read. Times are ET as published.",
+      "source": "https://www.nfl.com/injuries/ ; https://www.nfl.com/schedules/",
+      "status": "Partly cross-checked"
+    },
+    {
+      "id": "F-15",
+      "area": "Time zone",
+      "item": "Mexico City UTC offset used on the site is not verified from an official source.",
+      "why": "Not needed for any value currently shown. Times are shown in ET only.",
+      "source": "None",
+      "status": "Unverified"
+    },
+    {
+      "id": "F-16",
+      "area": "Repo",
+      "item": "Repo has no README content, no source code, no .gitignore, and no CI workflow.",
+      "why": "Recorded for review; see repo review R-02, R-03.",
+      "source": "https://github.com/sassnarep3-star/FL4/tree/ade1d5d7586cd7734f02aaafdc183231df568b8b",
+      "status": "Verified - flagged"
+    },
+    {
+      "id": "F-17",
+      "area": "Repo - branch rules",
+      "item": "Brief's session-<id>/<task> branch naming conflicts with Arena's single-branch rule.",
+      "why": "Followed Arena rule (R-04).",
+      "source": "https://github.com/sassnarep3-star/FL4/blob/arena/ce31a137-fl4/COORDINATION.md",
+      "status": "Verified - flagged"
+    },
+    {
+      "id": "F-18",
+      "area": "Injuries - method",
+      "item": "The 160 injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser). Totals (66 Out, 10 Doubtful, 84 Questionable) are computed from the file, not typed.",
+      "why": "Manual transcription can contain typos. Each row links to its player page so it can be checked one by one.",
+      "source": "https://www.nfl.com/injuries/",
+      "status": "Unverified - second check recommended"
+    }
+  ]
+}
