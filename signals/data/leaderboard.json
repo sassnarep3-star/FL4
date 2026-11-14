@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "dataset": "strategy_leaderboard",
+    "generated_utc": "2026-11-14T03:42:00Z",
+    "purpose": "Turn strategy development into a competition whose winner is chosen by evidence rather than by narrative. The board is the governance device that decides which hypothesis gets compute, data spend and - last - capital.",
+    "entries": [],
+    "entries_explanation": "The board is empty because it is honest. A leaderboard row requires a settled or priced bet record per strategy; no bet record and no price feed exist in this repo. Populating this table with plausible-looking numbers would be the single most damaging thing this project could do to itself, because the board's whole purpose is to be trusted."
+  },
+  "score": {
+    "primary": {
+      "name": "Luck-adjusted CLV score",
+      "definition": "score = (mean CLV in cents per bet) x sqrt(n) / (1 + overfit_penalty), where overfit_penalty = log(1 + variants_tried_in_family) from the decision journal, and n is capped at the sample gate.",
+      "why": "It rewards a real, reproducible price advantage and punishes a family in which many variants were tried to find it. It can be computed the day a bet settles, which is the point."
+    },
+    "secondary": {
+      "name": "Risk-adjusted growth",
+      "definition": "log-growth of a fractional-Kelly bankroll on the realised results, reported only after the sample gate passes; displayed greyed with 'not yet significant' before then.",
+      "why": "Money is the final argument, but it is a slow and noisy argument; showing it without the significance marker invites exactly the luck-chasing the brief forbids."
+    },
+    "tiebreakers": [
+      "Stability across sub-periods (lowest variance of the primary metric across weekly blocks)",
+      "Robustness score from G-7 (fraction of edge retained under input perturbation)",
+      "Capacity at target stake from G-4",
+      "never: recency of a hot streak"
+    ]
+  },
+  "tiers": [
+    {"tier": 0, "name": "Registered", "requirement": "Pre-registered hypothesis, inputs named, missing inputs declared, gates listed.", "consequence": "compute time only"},
+    {"tier": 1, "name": "Backtest", "requirement": "G-1..G-5, G-9, G-11 pass on a frozen run with recorded config+data hashes.", "consequence": "data spend; still zero capital"},
+    {"tier": 2, "name": "Paper-live", "requirement": "Tier 1 plus a forward paper run of at least one full season-week block with real timestamps and real fill assumptions.", "consequence": "priority in the ingestion queue; small non-cash reward"},
+    {"tier": 3, "name": "Capital-eligible", "requirement": "Tier 2 plus G-4, G-6, G-8, G-10, G-12, G-13, G-14 pass and reviewer sign-off on budget.", "consequence": "may receive a capped allocation, one strategy at a time"},
+    {"tier": -1, "name": "Quarantine", "requirement": "any G-14 violation, any G-9 violation, or a kill-switch trigger in G-15.", "consequence": "suspended, evidence preserved, cannot be re-submitted under the same id"}
+  ],
+  "promotion_rules": [
+    "A strategy may not skip a tier and may not be promoted inside an in-progress week.",
+    "Promotion is decided by the gate runner's output file, not by a person reading a page; a person may only veto, never override upward.",
+    "Re-registering a killed strategy under a new id is a G-14 violation; the journal records the family so the rename is visible.",
+    "A strategy whose required input is unavailable is not 'failing' - it stays at Tier 0 with blocked_on populated, and the block is surfaced on the questions page so it is a procurement task rather than a scoreboard loss."
+  ],
+  "rewards": {
+    "design_rule": "Reward the behaviour that produces information, not the behaviour that produces action.",
+    "grants": [
+      {"rank": "top of Tier 1", "reward": "Historical price-data spend for that family, and first claim on the next ingestion slot", "cash": false},
+      {"rank": "first to Tier 2", "reward": "A named allocation review with the reviewer, and a raised weekly cap in the paper book", "cash": false},
+      {"rank": "Tier 3 survivors", "reward": "Capped live allocation, subject to Q-RISK-01 and Q-LEGAL-01", "cash": true, "gate": "reviewer sign-off required; the board never moves money by itself (Q-GOV-03)"},
+      {"rank": "best falsification", "reward": "Award for the cleanest disproof of a popular idea (published in the journal, kills a bad strategy early)", "cash": false, "why": "Without this, the contest rewards only belief and the catalogue fills with unfalsifiable stories."}
+    ],
+    "explicitly_not_rewarded": ["bet count", "volume handle", "win rate on small samples", "biggest single win", "anything measured before the sample gate"]
+  },
+  "anti_gaming": [
+    {"rule": "Append-only, hash-chained bet ledger; a strategy that edits history is quarantined, not corrected.", "protects": "retroactive entry"},
+    {"rule": "Hypothesis must be timestamped before the first bet in that family (min_hours_between_hypothesis_and_first_bet, value pending).", "protects": "post-hoc narrative"},
+    {"rule": "Max 3 bets per game per strategy; duplicate bets on the same side/price by two strategies of the same owner collapse into one for scoring.", "protects": "sample farming"},
+    {"rule": "Every row must carry a re-readable price source; a row whose price cannot be re-verified is void and stays void.", "protects": "unfalsifiable results"},
+    {"rule": "Minimum stake floor equal to the target live stake; sub-threshold bets do not count toward n.", "protects": "free-option backtests at toy size"},
+    {"rule": "Promotion and demotion are logged with the gate output hash.", "protects": "quiet gate bending"}
+  ],
+  "worked_example": {
+    "synthetic": true,
+    "label": "SYNTHETIC ARITHMETIC DEMONSTRATION - NOT A RESULT. Numbers below are invented to show the formula is well-defined. They must never be quoted, screenshotted, or copied into any decision.",
+    "inputs": {"mean_clv_cents": 3.0, "n": 520, "variants_tried_in_family": 8},
+    "computation": "score = 3.0 x sqrt(520) / (1 + log(1 + 8)) = 3.0 x 22.8 / 3.197 = 21.4",
+    "read": "A second strategy at 6 cents CLV over 520 bets but with 1 variant tried scores 6 x 22.8 / 1.69 = 80.9 and outranks it by ~4x, which is the intended behaviour: a clean, cheap, un-tortured edge beats a bigger number found by trying eight things.",
+    "why_included": "To make the scoring auditable before any real entry exists, so the reviewer can reject the *metric* while it is still free to change."
+  },
+  "reviewer_decisions_required": ["Q-RISK-01", "Q-RISK-02", "Q-GOV-03", "Q-LEGAL-03"]
+}

@@ -1,0 +1,26 @@
+{
+  "as_of": "2026-11-14",
+  "note": "Each requirement is restated from the user's brief (session message). Requirements are not factual claims, so their 'Source' column points to the brief. 'Status' is what this session has delivered; 'Partial' or 'Blocked' rows are explained.",
+  "rows": [
+    {"id": "RQ-01", "requirement": "Collect, organise and analyse NFL information against a full requirements list", "status": "Partial", "how_addressed": "Requirements page + data/*.json; analysis limited to Week 10 2026 injury report.", "source": "User brief"},
+    {"id": "RQ-02", "requirement": "Suggestions to improve decision making, in a dedicated section that can be reviewed before any change", "status": "Done", "how_addressed": "Suggestions page: each item is 'Pending your decision'. Nothing implemented.", "source": "User brief"},
+    {"id": "RQ-03", "requirement": "Clear list of questions, information and answers needed before decisions", "status": "Done", "how_addressed": "Questions page: known / missing / how to discover, per question.", "source": "User brief"},
+    {"id": "RQ-04", "requirement": "Originate own NFL lines", "status": "Blocked", "how_addressed": "No line model yet. Requires historical odds (Q-01).", "source": "User brief"},
+    {"id": "RQ-05", "requirement": "Research and develop strategies that generate useful signals", "status": "Partial", "how_addressed": "Framework and gates defined; zero strategies implemented.", "source": "User brief"},
+    {"id": "RQ-06", "requirement": "Leaderboard competition with rewards for top strategies", "status": "Blocked", "how_addressed": "Leaderboard page exists but is empty. Reward definition open (Q-05).", "source": "User brief"},
+    {"id": "RQ-07", "requirement": "Cover single bets, parlays and player-prop combos", "status": "Partial", "how_addressed": "Bet types defined on Strategies page; prop legality open (Q-02).", "source": "User brief"},
+    {"id": "RQ-08", "requirement": "Each strategy must pass validation gates", "status": "Done (framework)", "how_addressed": "Gates G0-G8 defined on Strategies page. Thresholds are proposals pending Q-06.", "source": "User brief"},
+    {"id": "RQ-09", "requirement": "Determine correlation values", "status": "Blocked", "how_addressed": "Correlation table present with blank, unverified values (Q-15).", "source": "User brief"},
+    {"id": "RQ-10", "requirement": "Remove luck from the equation; build selectively skill-based strategies", "status": "Partial", "how_addressed": "Luck-removal gates (permutation test, out-of-sample) defined. Not run.", "source": "User brief"},
+    {"id": "RQ-11", "requirement": "Track injuries, including official status by player", "status": "Done (Week 10 only)", "how_addressed": "Injuries page: all flagged players from the Week 10 2026 official report, each linked to nfl.com.", "source": "User brief"},
+    {"id": "RQ-12", "requirement": "Identify defensive depth deficiencies (2nd/3rd/4th string replacing starters)", "status": "Partial", "how_addressed": "Absences by defensive unit computed from report. Starter/backup status NOT verified (depth charts not ingested, Q-10).", "source": "User brief"},
+    {"id": "RQ-13", "requirement": "Identify offensive depth deficiencies (starters or backups)", "status": "Partial", "how_addressed": "Absences by offensive unit computed from report; headline-level starter changes listed. Depth charts not ingested.", "source": "User brief"},
+    {"id": "RQ-14", "requirement": "Executive summary with important details", "status": "Done", "how_addressed": "Executive summary page and landing page.", "source": "User brief"},
+    {"id": "RQ-15", "requirement": "Repo review line by line with official links and flagged irregularities", "status": "Done", "how_addressed": "Repo review page; irregularities listed on Flagged page.", "source": "User brief"},
+    {"id": "RQ-16", "requirement": "GitHub Pages live site: clean landing page and category subpages, simple dashboard, all entries in tables", "status": "Done", "how_addressed": "Static site generated from data/*.json by tools/build_site.py.", "source": "User brief"},
+    {"id": "RQ-17", "requirement": "Every table row has a source link to an official site; unverifiable values left blank and flagged", "status": "Done (validated by build)", "how_addressed": "tools/build_site.py fails the build if a row has no source; rows with secondary or missing sources are flagged.", "source": "User brief"},
+    {"id": "RQ-18", "requirement": "Coordination file with task board and log", "status": "Done", "how_addressed": "COORDINATION.md.", "source": "User brief"},
+    {"id": "RQ-19", "requirement": "Pull request from integration branch to main, merge, confirm Pages deploy", "status": "Pending", "how_addressed": "Scheduled as final step (T9).", "source": "User brief"},
+    {"id": "RQ-20", "requirement": "Flagged for Review page with source links, not blocking merge", "status": "Done", "how_addressed": "Flagged for Review page.", "source": "User brief"}
+  ]
+}

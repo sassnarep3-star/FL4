@@ -1,57 +1,165 @@
-# COORDINATION — FL4 (NFL Signal Origination & Decision System)
+# COORDINATION.md — shared task board
 
-Shared task board for all agent sessions working on this repo. **Read this before you touch anything.**
+Repo: `sassnarep3-star/FL4` · Working branch: `arena/ce31a137-fl4` (base `ade1d5d`, `main`)
+Live site: https://sassnarep3-star.github.io/FL4/
 
-- Repo: `sassnarep3-star/FL4`
-- Default branch: `main`
-- Site: GitHub Pages (published from `main` via `.github/workflows/deploy-pages.yml`)
-- Session ID convention: short hash from the Arena branch name (branch `arena/<id>-*`) or `session-<id>`.
-- Claim protocol: write your session ID + file scope in the row, commit, and **push the claim immediately** before doing any work.
-- Takeover rule: a claim older than 60 minutes with no commits may be reclaimed by another session; note the handoff in the Log.
-- `needs review` = the item is published on the **Flagged for Review** page and does **not** block anything.
+Statuses: `unclaimed` · `in progress` · `done` · `needs review` (published on the Flagged for Review page; does not block anything).
 
-## Verification policy (binding on every session)
-
-1. Every data row carries `source_url` + `as_of` (UTC date the source was read).
-2. Verification tiers:
-   - **T1 — Official**: the league, team, regulator, or governing body that owns the fact (nfl.com, a team site, a state gaming regulator, a statute).
-   - **T2 — Trusted secondary**: widely used reference/press that reports T1 data (pro-football-reference.com, ESPN, AP). Used to corroborate, never to originate a row marked T1.
-   - **T3 — Unverified**: no source located. Value field is left **blank**, row is flagged, and it surfaces on the Flagged for Review page.
-3. Never infer, interpolate, model, or "fill in" a value. If you cannot read it from the source, it is blank.
-4. Anything a human decides (a number, a policy, a stake) is recorded as a **Question**, not assumed.
-5. Volatile data (injuries, lines, records) must carry `as_of`; the site renders a staleness warning past its TTL.
+> **Branch note (R-04):** the coordination rules ask for `session-<id>/<task>` branches. The Arena session rules fix this session to the single branch `arena/ce31a137-fl4`, so all tasks live on that branch and are separated by file scope.
 
 ## Task board
 
-| # | Task | Status | Owner | File scope | Notes |
-|---|------|--------|-------|-----------|-------|
-| 1 | Repo review + requirements register | in progress | 94107c0d | `REQUIREMENTS.md`, `COORDINATION.md` | Repo was empty (1 file) at session start; register created from scratch. |
-| 2 | Question bank (decision-blocking unknowns) | in progress | 94107c0d | `site/questions.html`, `data/questions.json` | Each question states what we know / don't know / what unlocks it. |
-| 3 | Suggestions backlog + review workflow | in progress | 94107c0d | `site/suggestions.html`, `data/suggestions.json` | Reviewer picks a path; nothing is implemented until status = approved. |
-| 4 | Official injury capture (Week 10, 2026) | in progress | 94107c0d | `data/injuries_wk10_2026.json`, `tools/fetch_injuries*` | NFL.com only, T1. |
-| 5 | Availability-gap / depth-deficiency model | in progress | 94107c0d | `site/depth.html`, `data/depth.json` | Needs depth-chart source; flag tier honestly. |
-| 6 | Line-origination strategy catalogue | in progress | 94107c0d | `site/strategies.html`, `data/strategies.json` | Singles, parlays, prop combos. |
-| 7 | Validation gates (anti-luck protocol) | in progress | 94107c0d | `site/validation.html`, `data/gates.json` | CLV, walk-forward, bootstrap, drawdown, multiple testing. |
-| 8 | Correlation reference for parlay/props | in progress | 94107c0d | `site/correlation.html`, `data/correlations.json` | Must cite measured values; blanks otherwise. |
-| 9 | Leaderboard + rewards design | in progress | 94107c0d | `site/leaderboard.html`, `data/leaderboard.json` | Scoring rules, anti-gaming, no fabricated results. |
-| 10 | Executive summary | in progress | 94107c0d | `site/index.html`, `site/summary.html` | |
-| 11 | Site scaffold (Pages, nav, tables, shared renderer) | in progress | 94107c0d | `site/**`, `assets/**`, `.github/workflows/deploy-pages.yml` | |
-| 12 | Source register | in progress | 94107c0d | `data/sources.json`, `site/sources.html` | |
-| 13 | Flagged for Review page | in progress | 94107c0d | `site/flagged.html`, `data/flagged.json` | |
-| 14 | Final integration: build, link check, PR, merge, Pages verify | pending | 94107c0d | whole repo | Integration owner may touch other scopes once their tasks are done. |
+| Task | Status | Owner (session) | File scope | Sources / verification | Irregularities |
+|---|---|---|---|---|---|
+| T1 Repo review (line by line, official links) | done | ce31a137 | `data/repo_review.json`, `pages/repo-review.html` | git log/ls-tree, `gh api repos/.../pages`; links to the commit and files checked (S15, S16) | R-02 README is one line; R-03 no code/CI/.gitignore; R-04 branch rule conflict; R-05 Pages config OK but live content unverified at baseline |
+| T2 Injury tracking — NFL Week 10 2026 official report | done (manual transcription; F-18) | ce31a137 | `data/injuries_w10_2026.json`, `pages/injuries.html` | NFL.com injury report text fetched 2026-11-14 (S01); 160 flagged rows, each linked to its nfl.com player page; game times from S01/S02 | F-01, F-02, F-03 (team placement), F-04 (Full practice + Out), F-06 (Nacua report vs news), F-07 (slug), F-18 (manual transcription) |
+| T3 Defence/offence depth & backup replacements | done (partial; Q-10 open) | ce31a137 | `data/depth_news.json`, injuries page sections 2 and 4 | Unit absences computed from T2 rows; headlines read on S01 (headline level only) | Depth charts NOT ingested; starter/backup status unverified |
+| T4 Strategy leaderboard, validation gates, correlation | done (framework; 0 strategies) | ce31a137 | `data/strategies.json`, `pages/strategies.html` | Bet-type definitions; NFL prop-category memo via ESPN (S08), flagged | No odds data (Q-01); gates G0-G8 are proposals; correlations blank (UNVERIFIED) |
+| T5 Executive summary | done | ce31a137 | `pages/executive-summary.html`, `index.html` | Numbers computed by `tools/build_site.py` from T2 data | Decisions listed for owner |
+| T6 Requirements + Questions (info gaps) | done | ce31a137 | `data/requirements.json`, `data/questions.json`, pages | Legal: S05 (Ley Federal de Juegos y Sorteos, official text, Art. 1, 3, 4, 8, 12), S06 (ficha) | 16 open questions; Q-03 legal status unresolved |
+| T7 Suggestions (decision board; nothing implemented) | done | ce31a137 | `data/suggestions.json`, `pages/suggestions.html` | — | 9 suggestions pending the owner's choice |
+| T8 Site build, Flagged for Review page, link check | done | ce31a137 | `tools/build_site.py`, `tools/validate.py`, `assets/*`, `pages/flagged.html`, `data/flags.json`, `data/sources.json`, `README.md`, `.nojekyll` | `python3 tools/validate.py` passes (links, placeholders, JSON, sourced rows) | Auto-flags: rows with no official source are listed on the Flagged page |
+| T9 Integration: merge, re-verify, PR to main, merge, Pages check | done (PR #2 → main; see Log) | ce31a137 | repo-wide (final step) | — | — |
 
-## File ownership
+## Log
 
-No other session holds a claim on this repo at the time of writing (`git ls-remote --heads origin` → `main` only). Session `94107c0d` therefore scopes itself to everything above and will keep `main` clean; all work lands on `arena/94107c0d-fl4`.
+- **2026-11-14 ce31a137** — Claimed T1–T9 and pushed the claim (`bb6d515`).
+- **2026-11-14 ce31a137** — Completed T1–T8 on `arena/ce31a137-fl4`. Data files written from official NFL.com and Chamber of Deputies pages; site generated by `tools/build_site.py`; `tools/validate.py` passes.
+- Verification notes: injury rows were transcribed by hand from the fetched NFL.com text (F-18). Totals are computed from the file. Legal and NFL-policy items that rely on secondary sources are flagged (F-09, F-11, F-12, F-13).
+- Sources not reachable from the sandbox (bash allows only github/npm/pypi): the live GitHub Pages URL was not fetched by bash.
 
-## Handoff log
+- **2026-11-14 ce31a137** — T9: integration checks run (`tools/build_site.py`, `tools/validate.py` OK; local serve 200 on 12 files). PR opened: https://github.com/sassnarep3-star/FL4/pull/2 (base main ← arena/ce31a137-fl4). Merge and Pages check follow.
 
-| Time (UTC) | Session | Event |
-|---|---|---|
-| 2026-11-14 | 94107c0d | Session start. Repo contained only `README.md` (`# FL4`, 5 bytes, 1 commit `ade1d5d`). No COORDINATION.md existed → created. No other remote branches → no conflicts. |
+## Handoffs
 
-## Irregularities flagged
+- None.
 
-| # | Item | Detail | Status |
-|---|------|--------|--------|
-| I-1 | Empty repository | The "review the repo" instruction had no code to review: 1 commit, 1 file, no README content, no build, no data, no history. All project structure is therefore net-new. | informational |
+## Merge conflict log (session ce31a137)
+
+- **2026-11-14** — PR #2 was conflicting because `main` gained PR #1 (session `arena/7e07d4cb-fl4`, "Build evidence-first NFL decision dashboard"). Conflicts: `index.html` (add/add), `COORDINATION.md` (add/add), `README.md` (content).
+- **Resolution (nothing discarded):**
+  - `index.html` = this session's dashboard. The other session's page is preserved byte-for-byte as `decision-lab.html` (same folder, so its `styles.css` and `app.js` links still work). The dashboard links to it.
+  - `COORDINATION.md` = this board first, then the other session's board kept verbatim under "Earlier session board".
+  - `README.md` = other session's README kept first, this session's section appended.
+- **Flag ID collision:** the other session's flags F-01..F-06 (on `decision-lab.html`) and this session's flags F-01..F-18 (on `pages/flagged.html`) share IDs. Refer to the other session's flags as DL-F-01..DL-F-06.
+- **Pages:** `main` is set to legacy Pages (branch `main`, path `/`) and `.github/workflows/pages.yml` (other session) deploys via Actions on push to `main`. Both paths publish the same root. Deployment check is recorded below after merge.
+
+---
+
+## Earlier session board (merged from main, PR #1 — preserved verbatim)
+
+> Section below is the other Arena session's board, kept unchanged. Its flag IDs F-01..F-06 are on decision-lab.html; our flag IDs F-01..F-18 are on pages/flagged.html. The two numbering schemes collide, so refer to theirs as DL-F-xx.
+
+# Coordination board
+
+This repository had no coordination board or existing claims when inspected on 2026-11-14. Arena assigns this session to the active branch `arena/7e07d4cb-fl4`; the session cannot create or switch to a separate session branch. Work was therefore done only on that active branch. No other session claims were visible at inspection.
+
+| Task | Status | Owner | File scope |
+|---|---|---|---|
+| Establish NFL decision-support site, executive summary, research framework, questions, and review flags | done | Arena session `arena/7e07d4cb-fl4` | `index.html`, `styles.css`, `app.js`, `README.md`, `COORDINATION.md`, `.github/workflows/pages.yml` |
+
+## Verification log
+
+- Initial repository review: only a five-byte `README.md` and initial commit were present; no site or data existed.
+- Official source links used: NFL.com injury reports (`https://www.nfl.com/injuries/`), inactives (`https://www.nfl.com/inactives/`), team directory (`https://www.nfl.com/teams/`), schedules (`https://www.nfl.com/schedules/`), NFL.com terms (`https://www.nfl.com/terms`), NFL GSIS (`https://www.nflgsis.com/`), and NFL Football Operations analytics (`https://operations.nfl.com/gameday/analytics/`). These are linked as verification/discovery points, not as evidence for fabricated metrics.
+- Web search confirmed the official NFL injury report page is active and presents player, position, injury, practice status, and game status fields. No individual reported injury was copied into this static blueprint.
+- Static HTML validation: 7 section IDs, 27 links, 28 table rows; all in-page anchors resolve and no href is empty. `styles.css`, `app.js`, and Pages workflow exist. `git diff --check` passed.
+- The review flags state the key irregularities: absent data/results, historical market prices and timestamps, archived injury snapshots, measured correlations, data licensing, and leaderboard reward governance. All unknown values are blank or explicitly unverified.
+- No strategy is claimed validated or profitable. The strategy, validation gates, leaderboard and suggestions are research proposals.
+- GitHub Pages workflow was added, but live deployment, GitHub Actions checks, PR, and merge have not been executed/verified in this session. Publication requires merge to `main` and repository Pages configuration. This is not marked as done.
+
+## Irregularities / follow-up
+
+- Official NFL public sources may not supply all historical play-by-play, injury-status, player-prop line, or sportsbook market data needed to estimate strategy correlations or isolate skill. The applicable data rights and provider terms have not been reviewed.
+- Multi-agent separate-branch coordination and final integration could not be performed from this single active Arena branch. No other claimed work existed to integrate.
+- Before making picks or rewarding strategies, source data rights, market feeds, settlement rules, test protocol, legal/compliance requirements, and governance must be resolved.
+
+---
+
+# Session 94107c0d board — signals & origination section (added 2026-11-14)
+
+Branch `arena/94107c0d-fl4` (base `ade1d5d`). Scope: `signals/`, `signals_assets/`, `data/signals/*`,
+`tools/build_signals.py`, `tools/check_signals.py`, `tools/fetch_injuries.py`, `tools/testdata/*`,
+`REQUIREMENTS.md`, `.github/workflows/verify.yml`. No file owned by another session was edited, with
+the two integration exceptions logged below.
+
+## Verification policy applied (binding)
+
+1. Every published row carries `source_url` + `as_of`.
+2. Tiers: **T1** league/club/regulator owns the fact (only tier this section publishes values from);
+   **T2** corroborates, never originates; **T3** recorded as a lead, never as a number.
+3. Never infer. If it cannot be read from the source it is blank, and the blank is a flagged row.
+4. Anything a human must decide is recorded as a question with a stated default, not assumed.
+5. Volatile data carries a TTL and a freshness statement rendered on the page.
+
+## Task board
+
+| # | Task | Status | Owner | Sources / verification performed | Irregularities |
+|---|---|---|---|---|---|
+| 1 | Repo review + requirements register | done | 94107c0d | `git log`/`ls-tree` at `ade1d5d`; `REQUIREMENTS.md` (38 rows) | I-1 repo held 1 file / 5 bytes at start |
+| 2 | Question bank | done | 94107c0d | `data/signals/questions.json`, 26 questions / 6 groups, each with known-unknown-resolve-default | 18 marked blocking |
+| 3 | Suggestions backlog + review control | done | 94107c0d | `data/signals/suggestions.json`, 21 items, 5-phase path; `status` field is the control | nothing auto-approved on silence |
+| 4 | Official injury capture (Wk 10 2026) | done | 94107c0d | `data/signals/injuries_week10_2026.json`: 75 Out/Doubtful rows, 14 games, 28 clubs from nfl.com/injuries/ (8/8 chunks read); parse rule re-implemented in `tools/fetch_injuries.py` and cross-checked against the published dataset (5/5 fixture rows matched, 0 field mismatches) | F-10 (filing cadence), F-14 (player-club pairings) |
+| 5 | Availability / depth-deficiency analysis | done (bounded) | 94107c0d | `signals/depth.html`, unit mapping derived from the captured rows | **replacement names not published**: the official report has no depth field (F-02) |
+| 6 | Line-origination strategy catalogue | done | 94107c0d | `data/signals/strategies.json`: 16 strategies, each with hypothesis, signal, inputs, vetoes, stake, falsification, "how it loses" | every `edge_claim` null by design (F-01) |
+| 7 | Validation gates | done | 94107c0d | `data/signals/gates.json`: 15 gates; pass rules mechanical; fail-closed on missing thresholds | 5 thresholds reviewer-set (F-05) |
+| 8 | Correlation reference | done (protocol only) | 94107c0d | `data/signals/correlations.json`: 11 pairs, phi + excess joint prob + bootstrap, n>=300 | all `measured_value` null; no ledger to measure (F-11) |
+| 9 | Leaderboard + rewards | done (rules), empty (data) | 94107c0d | `data/signals/leaderboard.json`: CLV-primary score, 5 tiers, 6 anti-gaming rules, non-cash rewards, synthetic worked example labelled as such | board empty by design |
+| 10 | Executive summary | done | 94107c0d | `signals/index.html`, `signals/methodology.html` | — |
+| 11 | Site scaffold + generator | done | 94107c0d | `tools/build_signals.py` (14 pages, 9 build-time checks, all PASS) | — |
+| 12 | Source register | done | 94107c0d | `data/signals/sources.json`: 15 entries incl. sources deliberately *not* relied on | 3 sources marked not-read/unverified |
+| 13 | Flagged for Review | done | 94107c0d | `data/signals/flagged.json`: 16 flags with type, action, links | none block the merge |
+| 14 | Integration: merge main, re-verify, PR, merge, Pages | in progress → see log | 94107c0d | merge of `origin/main` (PR #1 + PR #2) with zero discards; both sections rebuilt and validated locally | conflict log below |
+
+## Integration actions performed by this session (shared outputs)
+
+1. **File collisions resolved by relocation, not overwriting.** `data/questions.json`,
+   `data/sources.json`, `data/strategies.json`, `data/suggestions.json` and `tools/build_site.py`
+   exist on `main` (session ce31a137). Main's copies were kept **unchanged**; this session's copies
+   moved to `data/signals/` and `tools/build_signals.py`, and generated pages moved from `site/` to
+   `signals/`. Nothing was deleted from either side.
+2. **Nav + tile entry added to the dashboard generator** (`tools/build_site.py`, one line in `NAV`
+   and one tile on the landing page) so the sections interlink and survive a rebuild. This is the
+   only edit made inside another session's file; it is additive and `tools/validate.py` passes.
+3. **This session's publishing workflow was deleted.** Main's `pages.yml` uploads the repo root,
+   which already contains `signals/`; a second Pages workflow would have raced it for the same
+   deployment. Replacement: `.github/workflows/verify.yml` (no deploy).
+4. Cross-links: `signals/*` → `../index.html` and `../decision-lab.html`; checked by
+   `tools/check_signals.py` (0 broken internal links).
+
+## Merge conflict log (session 94107c0d)
+
+- `git pull --rebase origin main` on 2026-11-14 found `main` had advanced from `ade1d5d` to
+  `388414f` (PR #1 `arena/7e07d4cb-fl4`, PR #2 `arena/ce31a137-fl4`). The rebase hit an add/add
+  conflict on `COORDINATION.md` and was **aborted**, not forced, so no commit was rewritten.
+- Replaced with `git merge origin/main`. Conflicts: `COORDINATION.md`, `README.md`,
+  `data/{questions,sources,strategies,suggestions}.json`, `tools/build_site.py` (7 files, all add/add
+  or content).
+- Resolution: main's version adopted for all five data/tool files; this session's versions relocated
+  (`data/signals/`, `tools/build_signals.py`, `signals/`); `README.md` and `COORDINATION.md`
+  concatenated with main's text first and this section appended. No content from either session was
+  discarded, and both builders were re-run after the merge to prove the tree still generates cleanly.
+- Post-merge verification: `tools/build_site.py` → no drift vs committed `index.html`/`pages/`;
+  `tools/validate.py` → OK (11 pages); `tools/build_signals.py --fail-on-warn` → 9/9 checks pass;
+  `tools/check_signals.py` → 14 pages, 0 broken links.
+
+## Handoffs
+
+- 2026-11-14 94107c0d → any session: the flag ID namespace is per-section. This section's flags are
+  `F-01..F-16` **on `signals/flagged.html`**, and they collide on purpose-of-numbering with
+  ce31a137's `F-01..F-18` on `pages/flagged.html` and with `DL-F-01..DL-F-06` on `decision-lab.html`.
+  When citing, prefix with the page: `signals:F-01`, `pages:F-02`, `DL-F-01`.
+- 2026-11-14 94107c0d → ce31a137: consider folding `data/signals/injuries_week10_2026.json` into
+  `data/injuries_w10_2026.json`. Two independent captures of the same official page now exist
+  (this one filtered by a stated rule to 75 Out/Doubtful rows; theirs 160 flagged rows, marked
+  manual transcription / F-18). A parser with the rule as code exists at `tools/fetch_injuries.py`,
+  which would clear their F-18. Do not merge the two row sets without deciding which rule wins.
+- `arena/121f05ad-fl4` exists on the remote with no PR at the time of writing. It has not been read
+  or touched by this session. If it adds root-level `index.html`/`pages/` content, the collision
+  pattern above (relocate into a namespaced section) is the proven resolution.
+
+## Open items for the owner (do not block the merge)
+
+- 18 blocking questions in `signals/questions.html`; 5 numeric gate thresholds unset (`signals:F-05`).
+- No price feed ⇒ no CLV, no backtest, no originated line, empty leaderboard (`signals:F-01`).
+- Depth source unresolved ⇒ absences are published, replacements are not (`signals:F-02`).

@@ -1,0 +1,63 @@
+name: Verify data, generators and both site sections
+
+# Publishing is handled by .github/workflows/pages.yml (session ce31a137), which uploads the
+# repository root as the Pages artefact. That already contains the `signals/` section generated
+# by tools/build_signals.py, so this workflow only verifies. It deliberately does not touch Pages,
+# so two workflows never race for the same deployment.
+
+on:
+  push:
+    branches: [main, 'arena/**']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: All datasets parse as JSON
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          bad = 0
+          for f in sorted(pathlib.Path('data').rglob('*.json')):
+              try:
+                  json.loads(f.read_text())
+              except Exception as e:
+                  bad += 1
+                  print('FAIL', f, e)
+          print('json datasets ok' if not bad else 'json datasets FAILED')
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Signals section - build with verification checks (fail closed)
+        run: python tools/build_signals.py --fail-on-warn
+
+      - name: Signals section - committed output must match the generator
+        run: |
+          git diff --exit-code -- signals/ || {
+            echo "::error::signals/ is not the output of tools/build_signals.py. Run it and commit.";
+            git --no-pager diff --stat -- signals/; exit 1; }
+
+      - name: Signals section - integrity (links, assets, no fabricated values)
+        run: python tools/check_signals.py
+
+      - name: Research dashboard section - build and validate
+        run: |
+          python tools/build_site.py
+          python tools/validate.py
+          git diff --exit-code -- index.html pages/ assets/ || {
+            echo "::error::root dashboard output is out of date with tools/build_site.py"; exit 1; }
+
+      - name: Fixture test for the capture parser
+        run: |
+          python tools/fetch_injuries.py --raw tools/testdata/report_sample.md -o /tmp/parsed.json | tee /tmp/parse.log
+          grep -q "5 kept as Out/Doubtful across 4 clubs" /tmp/parse.log || { echo "parser fixture expectation failed"; exit 1; }

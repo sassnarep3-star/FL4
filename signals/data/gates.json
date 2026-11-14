@@ -1,0 +1,170 @@
+{
+  "meta": {
+    "dataset": "strategy_validation_gates",
+    "generated_utc": "2026-11-14T03:30:00Z",
+    "purpose": "Each gate exists to remove one specific way a lucky or overfitted strategy can look like skill. A strategy is only promotable when every applicable gate returns PASS from an executed run, not from a promise.",
+    "enforcement": "Proposed implementation is /tools/gates.py (SG-09). Until then these thresholds are documentation and that is stated on the site.",
+    "threshold_convention": "A numeric threshold with value null is a deliberate blank: it is a value the reviewer must set (flagged F-05). No default is silently substituted at run time.",
+    "status_values": ["pass", "fail", "not-run", "not-runnable-missing-data", "needs-threshold"]
+  },
+  "gates": [
+    {
+      "id": "G-1",
+      "name": "Sample sufficiency",
+      "prevents": "Run luck. A 60% hit rate on 40 bets is a coin with a story attached.",
+      "test": "Count settled bets in the frozen evaluation window; require n >= threshold AND the 95% CI of the primary metric to exclude break-even.",
+      "threshold": {"min_bets": 500, "min_distinct_games": 250, "min_weeks": 12},
+      "pass_rule": "Both n and CI conditions must hold on out-of-sample data.",
+      "required_data": ["bet ledger with settlements"],
+      "status": "not-runnable-missing-data",
+      "notes": "min_distinct_games matters because 500 bets on 30 games is 30 bets of information, not 500."
+    },
+    {
+      "id": "G-2",
+      "name": "Walk-forward integrity",
+      "prevents": "Fitting the answer. Re-tuning inside the evaluation window turns noise into a rule.",
+      "test": "Split chronologically: fit window, then a frozen evaluation window. Any parameter, feature flag or threshold changed inside the evaluation window voids the run. Config and data hashes are recorded.",
+      "threshold": {"folds": 3, "min_out_of_sample_share": 0.4, "allow_refit_in_eval": false},
+      "pass_rule": "Edge present in a majority of folds and in the pooled out-of-sample result.",
+      "required_data": ["timestamped lines", "timestamped inputs"],
+      "status": "not-runnable-missing-data",
+      "notes": "Fold boundaries must be whole weeks, never random rows, because games in a week share news events."
+    },
+    {
+      "id": "G-3",
+      "name": "Closing-line-value beat rate",
+      "prevents": "Attributing a hot streak to skill, and attributing a cold streak to bad luck. CLV is measurable per bet, the day it is placed.",
+      "test": "For each bet, cents beaten = fair-implied prob at taken price minus at anchor close. Test mean > 0 (one-sided), plus a beat-rate floor.",
+      "threshold": {"min_mean_clv_cents": null, "min_beat_rate": 0.55, "alpha": 0.05},
+      "pass_rule": "Mean CLV positive at the corrected alpha and beat rate above floor. min_mean_clv_cents is a blank awaiting the reviewer's cost model (F-05).",
+      "required_data": ["anchor closing prices"],
+      "status": "blocked-on-question Q-MKT-02",
+      "notes": "CLV is the primary promotion metric by design (SG-06). It is not proof of profit; it is proof of getting better prices, which is the part that compounds."
+    },
+    {
+      "id": "G-4",
+      "name": "Real cost and capacity",
+      "prevents": "An edge that exists at $1 stakes and dies at $200.",
+      "test": "Re-price the whole backtest at the worst acceptable price actually available at the reviewer's stake size, with vig, limits, and void rules; then test at 2x stake.",
+      "threshold": {"stake_size_test_multiple": 2.0, "promo_value_allowed": 0.0},
+      "pass_rule": "ROI remains positive at 2x stake after costs, with promo/bonus value explicitly excluded.",
+      "required_data": ["per-book limit ladder"],
+      "status": "not-runnable-missing-data",
+      "notes": "Promo value is excluded on purpose: it is real money but it is not a property of the strategy, and counting it hides whether the signal exists."
+    },
+    {
+      "id": "G-5",
+      "name": "Regime stability",
+      "prevents": "An edge that is really one season, one rule change, or one soft book.",
+      "test": "Split the evaluation into disjoint blocks (early/late season, and by year). Require a positive lower confidence bound in each block; measure decay slope.",
+      "threshold": {"min_blocks": 3, "block_lower_bound": "> 0 at 80% CI"},
+      "pass_rule": "No block is negative at its own CI and the trend slope is not significantly negative.",
+      "required_data": [">= 2 seasons of prices (not available today)"],
+      "status": "not-runnable-missing-data"
+    },
+    {
+      "id": "G-6",
+      "name": "Risk of ruin and drawdown",
+      "prevents": "A positive-EV strategy that goes broke before the EV arrives.",
+      "test": "Simulate the staking rule over the realised bet sequence with resampled outcomes; report max drawdown distribution and probability of losing 50% of bankroll.",
+      "threshold": {"kelly_fraction": 0.25, "max_stake_pct_bankroll": 1.5, "acceptable_prob_ruin": null},
+      "pass_rule": "Ruin probability below the reviewer-set tolerance; stakes never exceed the cap even when the model is more confident than the cap allows.",
+      "required_data": ["bankroll (Q-RISK-01)"],
+      "status": "blocked-on-question Q-RISK-01/Q-RISK-02",
+      "notes": "acceptable_prob_ruin is blank by policy: the number is a personal risk decision, not a modelling result."
+    },
+    {
+      "id": "G-7",
+      "name": "Input-error robustness",
+      "prevents": "Fragility on exactly the field we know is noisy: the game-status designation, which is a club's expectation, not a measured probability.",
+      "test": "Perturb inputs: flip +/- 1 designation per team, move Questionable to a 50/50 coin, drop the latest snapshot and use the one before it. Re-run the strategy.",
+      "threshold": {"edge_retention_under_perturbation": 0.5},
+      "pass_rule": "At least half the edge survives the perturbation set; otherwise the strategy is a news-speed trade wearing a model costume.",
+      "required_data": ["multi-day snapshots (SG-02)"],
+      "status": "proposed-not-yet-run",
+      "notes": "A strategy that only works when you are first to the news is a latency business, not a modelling business. That is a legitimate conclusion - it must be stated, not hidden."
+    },
+    {
+      "id": "G-8",
+      "name": "Correlation and portfolio exposure",
+      "prevents": "Hidden concentration: six 'independent' bets that are the same game, the same total, or the same weather.",
+      "test": "Compute the realised covariance of the strategy's bet set; cap aggregate exposure per game, per side of the same market, and per shared driver (QB start, weather, short week).",
+      "threshold": {"max_exposure_per_game": null, "max_shared_driver_exposure": null},
+      "pass_rule": "Portfolio variance computed with measured covariances, never with independence assumed. Thresholds are blank pending Q-RISK-01.",
+      "required_data": ["bet ledger", "measured correlations (SG-11)"],
+      "status": "blocked-on-question Q-MODEL-05"
+    },
+    {
+      "id": "G-9",
+      "name": "No look-ahead",
+      "prevents": "Winning backtests by knowing the future.",
+      "test": "Every field carries published_at. The engine may only read a field when published_at <= bet_ts - safety_margin. A violation raises a hard error. Randomly re-verify 5% of rows against the source page's own timestamps.",
+      "threshold": {"safety_margin_minutes": 15, "allow_null_published_at": false},
+      "pass_rule": "Zero violations; any row with unknown publication time is excluded from pricing, not assumed safe.",
+      "required_data": ["timestamped snapshots"],
+      "status": "design-set-ready",
+      "notes": "allow_null_published_at = false is the load-bearing part. Most 'edge' disappears here."
+    },
+    {
+      "id": "G-10",
+      "name": "Market-microstructure realism",
+      "prevents": "Assuming we can get the price we saw.",
+      "test": "Compare the price at signal time to the price actually fillable N seconds later at the target stake; measure slippage and rejection rate.",
+      "threshold": {"max_fill_latency_seconds": null, "min_fill_rate": 0.9},
+      "pass_rule": "Fill rate above floor, and the strategy's edge exceeds mean slippage.",
+      "required_data": ["order-level execution log"],
+      "status": "not-runnable-missing-data"
+    },
+    {
+      "id": "G-11",
+      "name": "Multiple-testing correction from the decision journal",
+      "prevents": "The leaderboard selecting noise: with 40 variants tried, one will clear 5% significance doing nothing.",
+      "test": "Read the number of variants sharing this hypothesis family from the journal; adjust alpha (Bonferroni at minimum, a deflated-Sharpe style haircut for ROI claims); report the adjusted result.",
+      "threshold": {"correction": "bonferroni", "n_trials_source": "journal (authoritative)"},
+      "pass_rule": "Survives at the corrected alpha. If the journal is missing or incomplete, the gate fails closed.",
+      "required_data": ["journal (SG-08)"],
+      "status": "proposed-not-yet-run"
+    },
+    {
+      "id": "G-12",
+      "name": "Economic significance and crowding decay",
+      "prevents": "A statistically real, economically irrelevant edge that dies the moment it is used.",
+      "test": "Report cents per bet at target stake, weekly capacity, and a decay estimate by re-running the backtest with the price moved one half-point against us.",
+      "threshold": {"min_cents_per_bet_at_target_stake": null, "adversarial_price_shift_half_points": 0.5},
+      "pass_rule": "Still positive after the adversarial shift, and capacity above the reviewer's minimum.",
+      "required_data": ["limits and volumes"],
+      "status": "not-runnable-missing-data"
+    },
+    {
+      "id": "G-13",
+      "name": "Compliance and source licensing",
+      "prevents": "Building a business on data or wagers we are not allowed to make.",
+      "test": "For each source: a recorded terms note and an approval flag. For wagering: jurisdiction and operator licence confirmation. No flag, no ingestion.",
+      "threshold": {"allow_scraping_against_terms": false, "allow_unlicensed_operator": false},
+      "pass_rule": "All sources approved, or restricted to public aggregate facts with attribution (the mode this site currently runs in).",
+      "required_data": ["terms text per source"],
+      "status": "partially-satisfied-by-attribution-policy",
+      "notes": "This build publishes only verified facts from the league's own public pages with a link per row, which is the conservative posture. It does not ingest any price data."
+    },
+    {
+      "id": "G-14",
+      "name": "Anti-gaming controls on the leaderboard itself",
+      "prevents": "The competition being won by whoever games the ranking rather than the market.",
+      "test": "Reject retroactive submissions (ledger is hash-chained and append-only); cap bets per game; forbid two strategies taking the same side of the same price (sample farming); require a pre-registered hypothesis timestamp before the bet; void any row whose price source cannot be re-read.",
+      "threshold": {"max_bets_per_game_per_strategy": 3, "min_hours_between_hypothesis_and_first_bet": null},
+      "pass_rule": "All checks pass on the immutable log; violations demote the strategy to 'quarantine' rather than delete evidence.",
+      "required_data": ["ledger with hashes"],
+      "status": "design-set-ready"
+    },
+    {
+      "id": "G-15",
+      "name": "Kill switch and pre-registered stopping rule",
+      "prevents": "Doubling down. The most expensive failure in wagering systems is not a bad model, it is a bad model that is being defended.",
+      "test": "Before promotion, register the drawdown and CLV-run that ends the strategy. After the trigger fires, the strategy is suspended automatically and can only return through a fresh pre-registered hypothesis.",
+      "threshold": {"max_consecutive_negative_clv_bets": 150, "max_drawdown_pct": null, "review_cadence_days": 7},
+      "pass_rule": "Not a pass/fail - an always-on monitor that can revoke a promotion.",
+      "required_data": ["live ledger"],
+      "status": "design-set-ready"
+    }
+  ]
+}
