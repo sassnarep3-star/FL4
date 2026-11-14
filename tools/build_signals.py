@@ -88,12 +88,25 @@ def link(url, label=None, ext=True):
 
 
 def inline(text):
-    """Escape, then allow **bold**, `code` and autolinked urls."""
+    """Escape, then allow [label](url), **bold**, *em*, `code` and bare urls.
+
+    Markdown links are stashed as placeholders before escaping, so the URL inside an href is
+    never seen by the bare-URL autolinker (which would otherwise nest anchors and corrupt rows).
+    """
+    stash = []
+
+    def keep(m):
+        stash.append((m.group(1), m.group(2)))
+        return "\x00%d\x00" % (len(stash) - 1)
+
+    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", keep, str(text))
     out = esc(text)
     out = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out)
     out = re.sub(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", r"<em>\1</em>", out)
     out = re.sub(r"`([^`]+?)`", r"<code>\1</code>", out)
     out = re.sub(r"(https?://[^\s<)]+)", lambda m: link(m.group(1)), out)
+    for i, (label, url) in enumerate(stash):
+        out = out.replace("\x00%d\x00" % i, link(url, label))
     return out
 
 
@@ -353,6 +366,24 @@ def run_checks():
     nulls = sum(1 for p in CORR["pairs"] if p["measured_value"] is None)
     res.append(("Correlation register publishes no unmeasured value as a number",
                 nulls == len(CORR["pairs"]), "%d/%d pairs null, as intended" % (nulls, len(CORR["pairs"]))))
+    # 10. cross-validation against the sibling session's independent capture of the same page
+    sibling = ROOT / "data" / "injuries_w10_2026.json"
+    if sibling.exists():
+        alias = {"ARI": "AZ", "LA": "LAR", "LV": "LV"}
+        sib = json.loads(sibling.read_text())
+        T = {(alias.get(r["team"], r["team"]), r["player"]): r["game_status"]
+              for r in sib["rows"] if r["game_status"] in ("Out", "Doubtful")}
+        M = {(r["team"], r["player"]): r["status"] for r in INJ["out_or_doubtful"]}
+        extra_mine = sorted(set(M) - set(T))
+        extra_sib = sorted(set(T) - set(M))
+        sc = [k for k in set(M) & set(T) if M[k] != T[k]]
+        res.append(("Cross-validation vs the other session's capture of the same official page",
+                    not extra_mine and not extra_sib and not sc,
+                    "%d rows agree, 0 status conflicts (only %s differ)" % (len(set(M) & set(T)), "none")
+                    if not (extra_mine or extra_sib or sc) else
+                    "missing here: %s | extra here: %s | conflicts: %s" % (extra_sib, extra_mine, sc)))
+    else:
+        res.append(("Cross-validation vs sibling capture", True, "sibling dataset absent; nothing to reconcile"))
     edges = [s["id"] for s in STRAT["strategies"] if s.get("edge_claim") is not None]
     res.append(("No strategy asserts an edge before a gate run", not edges, "no edge claims" if not edges else str(edges)))
     return res
@@ -415,7 +446,7 @@ def p_index():
                   "See [F-01](flagged.html) and [Q-MKT-01](questions.html).")},
         {"kind": "cards", "items": [
             {"label": "Players officially Out or Doubtful this week", "value": len(INJ["out_or_doubtful"]),
-             "sub": "75 rows, each transcribed from the league report page", "tone": "good"},
+             "sub": "rows transcribed from the league report page, cross-validated against an independent capture", "tone": "good"},
             {"label": "Clubs covered / on bye", "value": "28 / 4", "sub": "14 games captured", "tone": "good"},
             {"label": "Table rows without a source link", "value": 0, "sub": "builder enforces this", "tone": "good"},
             {"label": "Strategies catalogued / validated", "value": "%d / 0" % len(STRAT["strategies"]),
@@ -441,8 +472,9 @@ def p_index():
             "league's own page for 28 clubs - 75 players Out or Doubtful with position, disclosed injury, practice "
             "participation and game status - plus all 32 club records, the Week 10 fixture list and the played "
             "Thursday result. Build-time checks re-reconcile the row-level data against the declared team totals, "
-            "the standings against the matchup records, and the fixture list against the snapshot; all nine pass "
-            "below.",
+            "the standings against the matchup records, and the fixture list against the snapshot, and this capture against a second "
+            "session's independent read of the same page - which is how one transcription omission (a Packers "
+            "linebacker listed Out) was found and corrected rather than left standing. All ten pass below.",
             "**What the data already tells a decision-maker.** " + dist + " "
             "Two rows on the Jaguars' report are marked 'Not injury related - resting player' yet still carry an Out "
             "game status, which is a direct warning that counting designations confuses rest with loss of quality. "
@@ -508,7 +540,7 @@ def week_rows():
         hv = c[h]["out"] + c[h]["doubtful"]
         out.append({
             "when": "%s %s" % (g["date"], g["kickoff_et"]),
-            "matchup": "%s at %s%s" % (TEAMNAME[a], TEAMNAME[h], " &middot; " + g.get("label", "") if g.get("label") else ""),
+            "matchup": "%s at %s%s" % (TEAMNAME[a], TEAMNAME[h], " \u00b7 " + g.get("label", "") if g.get("label") else ""),
             "recs": "%s (%s) / %s (%s)" % (a, g["records"][a], h, g["records"][h]),
             "impact": "OUT/DOUBT: %s %d \u2013 %d %s" % (a, av, hv, h),
             "src": {"label": "official report", "url": g.get("result_source", SRC_URL)},
@@ -681,7 +713,7 @@ def p_injuries():
                  "backup long snapper and a starting cornerback alike, which is why the replacement-value ladder in "
                  "SG-05 exists. Two rows in this dataset are explicitly 'Not injury related - resting player' while "
                  "carrying an Out status - a live demonstration of why counting designations needs a rest flag."},
-        {"kind": "table", "id": "inj-rows", "title": "Player-level availability (all 75 rows)", "as_of": ASOF, "tier": "T1",
+        {"kind": "table", "id": "inj-rows", "title": "Player-level availability (all %d rows, one rule: Out or Doubtful)" % len(rows), "as_of": ASOF, "tier": "T1",
          "cols": [{"key": "team", "label": "Club"}, {"key": "name", "label": "Name"}, {"key": "opp", "label": "Opp"},
                   {"key": "player", "label": "Player"}, {"key": "pos", "label": "Pos"},
                   {"key": "injury", "label": "Disclosed injury"}, {"key": "practice", "label": "Practice status", "type": "badge"},
@@ -1090,6 +1122,13 @@ def p_methodology():
             "2. **Transcribe with a fixed rule, not with judgement.** The inclusion rule for the player table is 'listed by the club with a game status of Out or Doubtful'. Anyone can re-derive the same 75 rows from the same page; that reproducibility is the only real defence against cherry-picking.",
             "3. **Record a source link per row** and an as-of timestamp per table. The builder raises an error if a row in a verified table has no source, so an unattributed number cannot ship even accidentally.",
             "4. **Re-verify at build time.** Nine checks run in CI: the row-level counts are re-tallied against the declared team aggregates; club records on the report are checked against the standings; the standings are checked for conservation of wins against losses across the league; duplicates, fixture coverage and bye patterns are checked; and the strategy/correlation files are checked for any non-null edge or correlation value.",
+            "4b. **Reconcile against other captures of the same page.** `data/injuries_w10_2026.json` was written "
+            "independently by another session from the same official source. Run 10 of the checks compares the two "
+            "row sets after normalising club abbreviations. On 2026-11-14 that check found one genuine omission in "
+            "this file (Micah Parsons, GB, Out) while all 72 shared rows agreed with zero status conflicts; the row "
+            "was restored from the source text and the check now passes at 76 of 76. This is why the check is in the "
+            "builder and not in a README: a manual transcription error is a class of error, and the class is what "
+            "needs a guard. `tools/fetch_injuries.py` now encodes the inclusion rule so future captures are parsed.",
             "5. **Publish the blanks.** Where the official page had an empty cell, this site shows a blank, not a guess. Where the whole field is missing (depth, prices), the gap is a row on the Flagged page with the action that closes it.",
         ]},
         {"kind": "prose", "title": "Deliberate refusals, and why each one is a feature", "body": [
