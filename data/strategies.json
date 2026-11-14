@@ -1,0 +1,28 @@
+{
+  "as_of": "2026-11-14",
+  "status": "No strategy has been built, tested or validated. The leaderboard is empty. Validation is blocked by missing historical odds data (Q-01) and by undefined success metric (Q-06).",
+  "bet_types": [
+    {"type": "Single bet", "examples": "Point spread, moneyline, total", "needs": "Historical closing lines (Q-01)", "source": "None verified (bet types are definitions)"},
+    {"type": "Parlay", "examples": "2+ legs combined", "needs": "Per-leg probabilities and leg correlations (Q-15)", "source": "None verified"},
+    {"type": "Player-prop combo", "examples": "Same-game player props combined with spread/total", "needs": "Historical prop lines (Q-02) and legal review of prop categories (S08)", "source": "S08 (reported NFL memo on prohibited prop categories)"}
+  ],
+  "gates": [
+    {"id": "G0", "name": "Data provenance", "rule": "Every input has a source link. Any input without an official or licensed source is rejected.", "threshold": "100% of inputs linked", "status": "Framework defined; no inputs yet", "source": "User brief (verification rule)"},
+    {"id": "G1", "name": "Sample size", "rule": "Minimum number of graded bets before any conclusion.", "threshold": "UNVERIFIED - to be set after Q-06", "status": "Not set", "source": "None (methodology proposal)"},
+    {"id": "G2", "name": "Out-of-sample test", "rule": "Rules frozen before the test period; tested only on games after the freeze date (walk-forward).", "threshold": "Test period never used for design", "status": "Not run", "source": "None (methodology proposal)"},
+    {"id": "G3", "name": "Closing-line value (CLV)", "rule": "Strategy price beats the closing line on average.", "threshold": "UNVERIFIED - to be set after Q-06", "status": "Not run (needs closing lines)", "source": "None (methodology proposal)"},
+    {"id": "G4", "name": "Luck test", "rule": "Permutation or bootstrap test: result must be unlikely under a no-skill null at a pre-set level.", "threshold": "UNVERIFIED - level to be set after Q-06", "status": "Not run", "source": "None (methodology proposal)"},
+    {"id": "G5", "name": "Stability across seasons", "rule": "Sign of the edge is the same in each season tested.", "threshold": "UNVERIFIED", "status": "Not run", "source": "None (methodology proposal)"},
+    {"id": "G6", "name": "Correlation check (combos)", "rule": "Parlay and combo prices must use estimated leg correlations, not assumed independence.", "threshold": "UNVERIFIED", "status": "Not run (Q-15)", "source": "None (methodology proposal)"},
+    {"id": "G7", "name": "Cost-adjusted return", "rule": "Result is measured after the bookmaker margin (vig).", "threshold": "UNVERIFIED", "status": "Not run", "source": "None (methodology proposal)"},
+    {"id": "G8", "name": "Legal and compliance", "rule": "Bet type and market are permitted for the user and for the bookmaker in the user's jurisdiction. Blocked until Q-03 is resolved.", "threshold": "Pass/fail", "status": "Blocked (Q-03)", "source": "S05, S06"}
+  ],
+  "leaderboard": [],
+  "leaderboard_columns": ["Rank", "Strategy", "Bet type", "Sample (graded bets)", "CLV", "ROI after vig", "Gates passed", "Source link"],
+  "correlation": [
+    {"pair": "Spread vs total (same game)", "value": "", "status": "UNVERIFIED - not computed", "source": "None"},
+    {"pair": "QB passing yards prop vs team total", "value": "", "status": "UNVERIFIED - not computed", "source": "None"},
+    {"pair": "Two same-team WR receiving props", "value": "", "status": "UNVERIFIED - not computed", "source": "None"},
+    {"pair": "Spread vs moneyline (same team)", "value": "", "status": "UNVERIFIED - not computed", "source": "None"}
+  ]
+}
