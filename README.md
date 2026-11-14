@@ -55,7 +55,7 @@ bank, the information inventory and a second, independently captured Week 10 ava
 | `signals/` | generated static section (14 pages), published by the root Pages workflow |
 | `signals_assets/` | the section's CSS/JS source; the builder copies it into `signals/assets/` so a clean checkout regenerates everything |
 | `data/signals/*.json` | its datasets (11 files); every row carries `source_url` and `as_of` |
-| `tools/build_signals.py` | renders every page from `data/signals/`, runs 9 verification checks, fails closed |
+| `tools/build_signals.py` | renders every page from `data/signals/`, runs 10 verification checks, fails closed |
 | `tools/check_signals.py` | integrity: links, assets, orphans, leaked `None`, fabricated edge/correlation values |
 | `tools/fetch_injuries.py` | capture pipeline with the parse rule as code (`keep iff Game Status is Out or Doubtful`) |
 | `tools/testdata/report_sample.md` | parser fixture; CI asserts it yields "5 kept as Out/Doubtful across 4 clubs" |

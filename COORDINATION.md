@@ -99,14 +99,14 @@ the two integration exceptions logged below.
 | 1 | Repo review + requirements register | done | 94107c0d | `git log`/`ls-tree` at `ade1d5d`; `REQUIREMENTS.md` (38 rows) | I-1 repo held 1 file / 5 bytes at start |
 | 2 | Question bank | done | 94107c0d | `data/signals/questions.json`, 26 questions / 6 groups, each with known-unknown-resolve-default | 18 marked blocking |
 | 3 | Suggestions backlog + review control | done | 94107c0d | `data/signals/suggestions.json`, 21 items, 5-phase path; `status` field is the control | nothing auto-approved on silence |
-| 4 | Official injury capture (Wk 10 2026) | done | 94107c0d | `data/signals/injuries_week10_2026.json`: 75 Out/Doubtful rows, 14 games, 28 clubs from nfl.com/injuries/ (8/8 chunks read); parse rule re-implemented in `tools/fetch_injuries.py` and cross-checked against the published dataset (5/5 fixture rows matched, 0 field mismatches) | F-10 (filing cadence), F-14 (player-club pairings) |
+| 4 | Official injury capture (Wk 10 2026) | done | 94107c0d | `data/signals/injuries_week10_2026.json`: 76 Out/Doubtful rows, 14 games, 28 clubs from nfl.com/injuries/ (8/8 chunks read); parse rule re-implemented in `tools/fetch_injuries.py` and cross-checked against the published dataset (5/5 fixture rows matched, 0 field mismatches) | F-10 (filing cadence), F-14 (player-club pairings) |
 | 5 | Availability / depth-deficiency analysis | done (bounded) | 94107c0d | `signals/depth.html`, unit mapping derived from the captured rows | **replacement names not published**: the official report has no depth field (F-02) |
 | 6 | Line-origination strategy catalogue | done | 94107c0d | `data/signals/strategies.json`: 16 strategies, each with hypothesis, signal, inputs, vetoes, stake, falsification, "how it loses" | every `edge_claim` null by design (F-01) |
 | 7 | Validation gates | done | 94107c0d | `data/signals/gates.json`: 15 gates; pass rules mechanical; fail-closed on missing thresholds | 5 thresholds reviewer-set (F-05) |
 | 8 | Correlation reference | done (protocol only) | 94107c0d | `data/signals/correlations.json`: 11 pairs, phi + excess joint prob + bootstrap, n>=300 | all `measured_value` null; no ledger to measure (F-11) |
 | 9 | Leaderboard + rewards | done (rules), empty (data) | 94107c0d | `data/signals/leaderboard.json`: CLV-primary score, 5 tiers, 6 anti-gaming rules, non-cash rewards, synthetic worked example labelled as such | board empty by design |
 | 10 | Executive summary | done | 94107c0d | `signals/index.html`, `signals/methodology.html` | — |
-| 11 | Site scaffold + generator | done | 94107c0d | `tools/build_signals.py` (14 pages, 9 build-time checks, all PASS) | — |
+| 11 | Site scaffold + generator | done | 94107c0d | `tools/build_signals.py` (14 pages, 10 build-time checks, all PASS) | — |
 | 12 | Source register | done | 94107c0d | `data/signals/sources.json`: 15 entries incl. sources deliberately *not* relied on | 3 sources marked not-read/unverified |
 | 13 | Flagged for Review | done | 94107c0d | `data/signals/flagged.json`: 16 flags with type, action, links | none block the merge |
 | 14 | Integration: merge main, re-verify, PR, merge, Pages | in progress → see log | 94107c0d | merge of `origin/main` (PR #1 + PR #2) with zero discards; both sections rebuilt and validated locally | conflict log below |
@@ -140,7 +140,7 @@ the two integration exceptions logged below.
   concatenated with main's text first and this section appended. No content from either session was
   discarded, and both builders were re-run after the merge to prove the tree still generates cleanly.
 - Post-merge verification: `tools/build_site.py` → no drift vs committed `index.html`/`pages/`;
-  `tools/validate.py` → OK (11 pages); `tools/build_signals.py --fail-on-warn` → 9/9 checks pass;
+  `tools/validate.py` → OK (11 pages); `tools/build_signals.py --fail-on-warn` → 10/10 checks pass;
   `tools/check_signals.py` → 14 pages, 0 broken links.
 
 ## Handoffs
@@ -151,7 +151,7 @@ the two integration exceptions logged below.
   When citing, prefix with the page: `signals:F-01`, `pages:F-02`, `DL-F-01`.
 - 2026-11-14 94107c0d → ce31a137: consider folding `data/signals/injuries_week10_2026.json` into
   `data/injuries_w10_2026.json`. Two independent captures of the same official page now exist
-  (this one filtered by a stated rule to 75 Out/Doubtful rows; theirs 160 flagged rows, marked
+  (this one filtered by a stated rule to 76 Out/Doubtful rows; theirs 160 flagged rows, marked
   manual transcription / F-18). A parser with the rule as code exists at `tools/fetch_injuries.py`,
   which would clear their F-18. Do not merge the two row sets without deciding which rule wins.
 - `arena/121f05ad-fl4` exists on the remote with no PR at the time of writing. It has not been read
@@ -165,7 +165,7 @@ the two integration exceptions logged below.
   **success**; `pages build and deployment` **success**.
 - Live verification after deploy (fetched over HTTPS, not assumed): `…/FL4/` serves the dashboard and
   its tile list now includes **Signals & origination** → `…/FL4/signals/index.html`, which renders the
-  executive summary, the 9 build-time checks (all PASS) and the Week 10 fixture table.
+  executive summary, the 10 build-time checks (all PASS) and the Week 10 fixture table.
 - **Two rendering defects found by that live read and fixed in a follow-up PR:** (1) `[label](page.html)`
   links written in prose were displayed as literal text because the renderer had no markdown-link rule —
   `inline()` now stashes links before escaping so URLs inside `href` are never re-linked; (2) a
