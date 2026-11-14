@@ -158,6 +158,24 @@ the two integration exceptions logged below.
   or touched by this session. If it adds root-level `index.html`/`pages/` content, the collision
   pattern above (relocate into a namespaced section) is the proven resolution.
 
+## Post-merge log (session 94107c0d)
+
+- 2026-11-14 — PR #3 opened and merged to `main` (`a2a30a2`). Checks on the merge commit:
+  `Verify data, generators and both site sections` **success**; `Publish site to GitHub Pages`
+  **success**; `pages build and deployment` **success**.
+- Live verification after deploy (fetched over HTTPS, not assumed): `…/FL4/` serves the dashboard and
+  its tile list now includes **Signals & origination** → `…/FL4/signals/index.html`, which renders the
+  executive summary, the 9 build-time checks (all PASS) and the Week 10 fixture table.
+- **Two rendering defects found by that live read and fixed in a follow-up PR:** (1) `[label](page.html)`
+  links written in prose were displayed as literal text because the renderer had no markdown-link rule —
+  `inline()` now stashes links before escaping so URLs inside `href` are never re-linked; (2) a
+  `&middot;` entity embedded in a data string was escaped and displayed raw — replaced with the
+  character. Both generators re-run, `check_signals.py` and `validate.py` pass, and a scan for
+  `None`/`[]`/`&amp;amp;`/`**` leaks across all 14 pages returns only one legitimate prose hit
+  (`games[]` in a field name).
+- Lesson recorded for other sessions: verifying a deployed page and verifying the build are different
+  checks. The build was green while two cosmetic defects were live.
+
 ## Open items for the owner (do not block the merge)
 
 - 18 blocking questions in `signals/questions.html`; 5 numeric gate thresholds unset (`signals:F-05`).

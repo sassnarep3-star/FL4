@@ -88,12 +88,25 @@ def link(url, label=None, ext=True):
 
 
 def inline(text):
-    """Escape, then allow **bold**, `code` and autolinked urls."""
+    """Escape, then allow [label](url), **bold**, *em*, `code` and bare urls.
+
+    Markdown links are stashed as placeholders before escaping, so the URL inside an href is
+    never seen by the bare-URL autolinker (which would otherwise nest anchors and corrupt rows).
+    """
+    stash = []
+
+    def keep(m):
+        stash.append((m.group(1), m.group(2)))
+        return "\x00%d\x00" % (len(stash) - 1)
+
+    text = re.sub(r"\[([^\]]+)\]\(([^)\s]+)\)", keep, str(text))
     out = esc(text)
     out = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", out)
     out = re.sub(r"(?<!\*)\*([^*\n]+?)\*(?!\*)", r"<em>\1</em>", out)
     out = re.sub(r"`([^`]+?)`", r"<code>\1</code>", out)
     out = re.sub(r"(https?://[^\s<)]+)", lambda m: link(m.group(1)), out)
+    for i, (label, url) in enumerate(stash):
+        out = out.replace("\x00%d\x00" % i, link(url, label))
     return out
 
 
@@ -508,7 +521,7 @@ def week_rows():
         hv = c[h]["out"] + c[h]["doubtful"]
         out.append({
             "when": "%s %s" % (g["date"], g["kickoff_et"]),
-            "matchup": "%s at %s%s" % (TEAMNAME[a], TEAMNAME[h], " &middot; " + g.get("label", "") if g.get("label") else ""),
+            "matchup": "%s at %s%s" % (TEAMNAME[a], TEAMNAME[h], " \u00b7 " + g.get("label", "") if g.get("label") else ""),
             "recs": "%s (%s) / %s (%s)" % (a, g["records"][a], h, g["records"][h]),
             "impact": "OUT/DOUBT: %s %d \u2013 %d %s" % (a, av, hv, h),
             "src": {"label": "official report", "url": g.get("result_source", SRC_URL)},
