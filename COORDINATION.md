@@ -14,7 +14,8 @@ This repository had no coordination board or existing claims when inspected on 2
 - Static HTML validation: 7 section IDs, 27 links, 28 table rows; all in-page anchors resolve and no href is empty. `styles.css`, `app.js`, and Pages workflow exist. `git diff --check` passed.
 - The review flags state the key irregularities: absent data/results, historical market prices and timestamps, archived injury snapshots, measured correlations, data licensing, and leaderboard reward governance. All unknown values are blank or explicitly unverified.
 - No strategy is claimed validated or profitable. The strategy, validation gates, leaderboard and suggestions are research proposals.
-- GitHub Pages workflow was added, but live deployment, GitHub Actions checks, PR, and merge have not been executed/verified in this session. Publication requires merge to `main` and repository Pages configuration. This is not marked as done.
+- PR #1: https://github.com/sassnarep3-star/FL4/pull/1 — merged to `main` at `0473ff6994a34cbba20d283779ca62a1b4b1f9ae` on 2026-11-14.
+- GitHub Pages workflow run `43549027963` completed successfully (build and deploy jobs). Published URL: https://sassnarep3-star.github.io/FL4/ . GitHub Actions emitted non-blocking runner/Node.js deprecation notices.
 
 ## Irregularities / follow-up
 
