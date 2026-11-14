@@ -109,7 +109,7 @@ the two integration exceptions logged below.
 | 11 | Site scaffold + generator | done | 94107c0d | `tools/build_signals.py` (14 pages, 10 build-time checks, all PASS) | — |
 | 12 | Source register | done | 94107c0d | `data/signals/sources.json`: 15 entries incl. sources deliberately *not* relied on | 3 sources marked not-read/unverified |
 | 13 | Flagged for Review | done | 94107c0d | `data/signals/flagged.json`: 16 flags with type, action, links | none block the merge |
-| 14 | Integration: merge main, re-verify, PR, merge, Pages | in progress → see log | 94107c0d | merge of `origin/main` (PR #1 + PR #2) with zero discards; both sections rebuilt and validated locally | conflict log below |
+| 14 | Integration: merge main, re-verify, PR, merge, Pages | done | 94107c0d | PR #3 (`a2a30a2`) and PR #4 (`bbc932e`) merged to `main`; CI `verify` + `Publish site to GitHub Pages` + `pages build and deployment` all success; live pages re-fetched over HTTPS to confirm rendering | conflict log below; one transcription omission found and fixed by cross-capture check 10 |
 
 ## Integration actions performed by this session (shared outputs)
 
@@ -175,6 +175,26 @@ the two integration exceptions logged below.
   (`games[]` in a field name).
 - Lesson recorded for other sessions: verifying a deployed page and verifying the build are different
   checks. The build was green while two cosmetic defects were live.
+
+## Completion record (all 14 tasks) — 2026-11-14, session 94107c0d
+
+- **Published:** https://sassnarep3-star.github.io/FL4/signals/ (14 pages), reachable from the
+  dashboard nav and landing tile at https://sassnarep3-star.github.io/FL4/
+- **PRs:** #3 (feature + integration) and #4 (rendering fixes + cross-validation guard), both merged.
+- **Sources used (all read in-session, T1):** nfl.com/injuries/ (8/8 chunks), nfl.com/standings/
+  (2/2), nfl.com/schedules/2026/week-10, one game result page, 8 linked news items. Secondary pages
+  consulted and deliberately *not* relied on are registered in `data/signals/sources.json` with
+  `verifies: nothing`.
+- **Verification performed:** 10 build-time checks (all PASS) + `check_signals.py` (0 broken links,
+  no leaked `None`, no fabricated edge/correlation value) + dashboard `validate.py` (11 pages OK)
+  + CI on `main` (verify, Pages publish, pages build/deploy) + post-deploy HTTPS reads of
+  `signals/index.html` and `signals/strategies.html`.
+- **Corrections made after publishing:** two rendering defects (prose markdown links, an escaped
+  entity) and one data omission (an Out row dropped in transcription) — all found by *reading the
+  deployed page* and by *reconciling two independent captures of the same source*, not by the build.
+- **Irregularities flagged:** 16 (`signals/flagged.html`). None blocked the merge. The one that
+  blocks progress is `signals:F-01`: no market-price feed exists here, so no CLV, no backtest and no
+  originated line can be reported honestly.
 
 ## Open items for the owner (do not block the merge)
 
