@@ -1,5 +1,54 @@
 # COORDINATION.md — shared task board
 
+Repo: `sassnarep3-star/FL4` · Current Arena branch: `arena/121f05ad-fl4` (branched from `ade1d5d`; branch is fixed by Arena)
+Live site: https://sassnarep3-star.github.io/FL4/
+
+Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not block publication).
+
+> PRs #1–#6 have already integrated the evidence-first dashboard and a separate, verified `signals/` origination section. This branch must not create another site or alter that section's methodology/data. The current follow-up is limited to distinct root-dashboard improvements: a blank 2nd/3rd/4th-string tracker, precise fair-price/joint-probability formulas, browser-local suggestion selection, source/privacy corrections, and a stricter root-page row audit. One narrowly scoped privacy correction is also claimed for the completed Signals section: remove an Arena-provided session-location observation from `Q-LEGAL-01` and regenerate only `signals/questions.html`. Historical session boards remain below.
+
+## Current task board
+
+| Task | Status | Owner (Arena session) | File scope | Sources / verification | Irregularities |
+|---|---|---|---|---|---|
+| T12 Root dashboard quality follow-up + targeted privacy correction | done (implementation) | `121f05ad`, `arena/121f05ad-fl4` | Root `data/{sources,strategies,questions,requirements,suggestions,flags,injuries_w10_2026,repo_review}.json`, new `data/replacement_tiers.json`, `tools/{build_site,validate}.py`, `assets/{app.js,style.css}`, `decision-lab.html`, generated root pages, README; one Signals privacy-only edit to `data/signals/questions.json` and generated `signals/questions.html` | NFL Week 10 report, NFL Next Gen Stats / stats / Game Books / team directory / terms; NIST and scikit-learn docs; 423 source/evidence rows audited; PRs #3–#6 supply the main origination framework | Keep depth slots blank/unverified. No licensed historical odds, fitted model, measured correlations, or strategy results. F-19 flags the NFL odds-widget / 2026 partnership-list discrepancy. Signals change only removes an environment-location observation; no methodology or injury data changes. Existing Pages workflow is preserved. |
+| T13 Integration, PR/merge, Pages confirmation | in progress | same | repo-wide | Root + Signals builds/checks pass; 72 local HTTP smoke checks pass. Fetch/rebase before push, open PR, run CI, merge, verify deployment via Actions/Pages API and HTTPS | Stay on Arena branch `arena/121f05ad-fl4`; no new branch. |
+
+## Log
+
+- 2026-11-14 — Inspected the repository and `main` after another session's work had already merged as PR #2 (`388414f`). PR #1 and PR #2 are both merged; GitHub Pages is configured at `https://sassnarep3-star.github.io/FL4/`. The Pages deployment run for `388414f` completed successfully (run `43549635924`, workflow `Publish site to GitHub Pages`); `gh api repos/sassnarep3-star/FL4/pages/builds/latest` reported `built`; the published URL fetch returned the site. No open PRs existed. Do not replace that integrated, feature-rich site with a smaller duplicate static app.
+- 2026-11-14 — `origin/main` advanced from `388414f` to `ce7b73e` while this branch was in progress. PRs #3–#6 from session `94107c0d` added the independently verified Signals & origination section, 16 strategy hypotheses, 15 gates, an 11-pair correlation protocol, 26 questions, 16 review flags, a cross-capture injury parser, and build checks. Its Pages publish and verification runs passed. This session now avoids duplicating that section and limits follow-up to root-dashboard affordances that remain distinct.
+- 2026-11-14 — T12 implemented on the root dashboard: added six blank offense/defense 2nd/3rd/4th-string field templates; settlement-aware fair-price and joint-combo formulas; a point-in-time/player-opportunity/skill-versus-luck blueprint; browser-local suggestion selectors; official weekly report links on injury rows; an official-source row/link validator; and a root-only citation/terms update. In the completed Signals section, only the personal-location sentence in Q-LEGAL-01 was removed; strategy and injury data are unchanged.
+- T12 verification: `python3 tools/build_site.py` + `tools/validate.py` passed (11 root HTML pages; 423 source/evidence rows in 19 tables); `python3 tools/build_signals.py --fail-on-warn` + `tools/check_signals.py` passed (10 checks); JS syntax and local-storage harness passed; injury parser fixture passed; 72 root/Signals HTTP requests returned 200. No odds, model estimates, player depth assignments, correlation values, ROI, picks, or rewards were created. F-19 records the official odds-widget / partnership partner-list mismatch without treating either as an odds feed.
+- Official methodology sources verified for the strategy specification:
+  - NFL Football Operations, Next Gen Stats: https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats — official description of tracking-derived fields; this does not establish that raw tracking data is public or licensed here.
+  - NFL player statistics: https://www.nfl.com/stats/player-stats/ — official navigation/source, not treated as a saved statistical dataset.
+  - NFL Game Books support: https://support.nfl.com/hc/en-us/articles/35869678028180-Game-Books — official description of Game Book PDF access in game centers.
+  - NFL injury report index: https://www.nfl.com/injuries/ — official discovery route; direct `/league/2026` returned 404, while the index/week selector and exact Week 10 route resolved. The 2025 Week 8 report body/title mismatch remains flagged; no such records were added.
+  - NFL Week 10 2026 injury report (S31): https://www.nfl.com/injuries/league/2026/reg10 — direct weekly source attached to each root snapshot row alongside the NFL player page.
+  - NFL.com Terms and Conditions (S29): https://www.nfl.com/legal/terms/ — reviewed terms prohibit systematic retrieval absent express prior written consent; no scraping or automatic NFL refresh is configured.
+  - NFL odds-widget FAQ (S27) and 2026 sportsbook partnership notice (S28) list different partner sets; this is explicitly flagged as F-19 and neither page is treated as a market feed or licence.
+  - NFL roster page: https://www.nfl.com/teams/new-england-patriots/roster — official roster view but no explicit depth ordering, so a roster is not treated as a depth chart.
+  - NFL 2026 Rulebook: https://operations.nfl.com/rules-officiating/2026-nfl-rulebook — official rules reference; no rule-based numeric model values inferred.
+  - NIST correlation glossary: https://www.itl.nist.gov/div898/handbook/glossary.htm — correlation definition; a coefficient is not a joint parlay probability or a causal effect.
+  - NIST bootstrap guidance: https://www.itl.nist.gov/div898/handbook/eda/section3/bootplot.htm — uncertainty estimation via resampling, subject to assumptions.
+  - scikit-learn chronological split: https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html — chronological evaluation prevents training on future observations and testing on past observations.
+  - scikit-learn Brier score: https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html — proper scoring loss reference; it is not a return or profitability proof.
+- Sources are method/discovery references only. No new odds, injuries, depth tiers, results, rankings, forecasts, correlation estimates, legal conclusions, or reward values were inferred or added.
+
+## Prior integrated work and historical logs
+
+- PR #2 merged to `main` at `388414f`, following PR #1; both prior source-session boards are retained verbatim below. Their task records describe the evidence-first site that is now the base for T10.
+- PR #2 Pages workflow run: https://github.com/sassnarep3-star/FL4/actions/runs/43549635924 — completed successfully on 2026-11-14; commit `388414fb881d18a6c1b88fc0e667e37512f56fe6`.
+- PRs #3–#6 (Signals & origination, integrity fixes, and rendering corrections) are merged to `main`; the latest build of `ce7b73e` is `built`. `gh run list` reports the Pages publish, verification, and deployment runs successful (latest Pages publish run `43551740148`; Pages API commit `ce7b73e70dcb87469a5ad1077256d50ff705fe83`).
+- Public root and Signals pages reviewed at: https://sassnarep3-star.github.io/FL4/ and https://sassnarep3-star.github.io/FL4/signals/.
+
+---
+
+## Earlier session board (merged from main, PR #2 — preserved verbatim)
+
+# COORDINATION.md — shared task board
+
 Repo: `sassnarep3-star/FL4` · Working branch: `arena/ce31a137-fl4` (base `ade1d5d`, `main`)
 Live site: https://sassnarep3-star.github.io/FL4/
 
