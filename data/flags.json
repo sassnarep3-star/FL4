@@ -86,8 +86,8 @@
       "id": "F-11",
       "area": "NFL gambling policy",
       "item": "The NFL gambling policy text and the Nov 2025 prop-bet memo were not retrieved from an official source. Quotes come from ESPN, Philadelphia Inquirer and MLive.",
-      "why": "Policy statements are second-hand. Affects Q-02 and SG-09.",
-      "source": "https://www.espn.com/nfl/story/_/id/46957763/in-memo-nfl-details-efforts-curb-prop-betting-light-wider-gambling-probes ; https://www.inquirer.com/eagles/nfl-suspensions-gambling-policy-sports-betting-20230606.html ; https://www.mlive.com/lions/2023/04/what-is-the-nfls-policy-on-sports-betting.html",
+      "why": "Official NFL gambling-policy and November 2025 prop-memo text was not retrieved. S04 is only an official search starting point; the cited quotations/reporting remain secondary and unverified.",
+      "source": "S04 ; S08 ; S10 ; S11",
       "status": "Unverified - primary text needed"
     },
     {
@@ -95,7 +95,7 @@
       "area": "NFL injury-report policy",
       "item": "The 2017 NFL Personnel (Injury) Report Policy cited by secondary sources was not retrieved. Definitions (Out / Doubtful / Questionable) and the Wed-Fri schedule come from secondary sources.",
       "why": "Definitions match the secondary sources but are not confirmed from the primary policy.",
-      "source": "https://sports24.us/article/nfl-injury-report-rules-explained ; https://www.nfl.com/injuries/",
+      "source": "S01 ; S04 ; S12",
       "status": "Unverified - primary text needed"
     },
     {
@@ -117,9 +117,9 @@
     {
       "id": "F-15",
       "area": "Time zone",
-      "item": "Mexico City UTC offset used on the site is not verified from an official source.",
-      "why": "Not needed for any value currently shown. Times are shown in ET only.",
-      "source": "None",
+      "item": "No local-time conversion is published by this site; NFL injury/game times remain labelled as source-published ET. No UTC offset is asserted.",
+      "why": "A local-time preference and conversion are not needed for the current tables and have not been added.",
+      "source": "S02 ; S15",
       "status": "Unverified"
     },
     {
@@ -145,6 +145,14 @@
       "why": "Manual transcription can contain typos. Each row links to its player page so it can be checked one by one.",
       "source": "https://www.nfl.com/injuries/",
       "status": "Unverified - second check recommended"
+    },
+    {
+      "id": "F-19",
+      "area": "NFL sportsbook partner lists",
+      "item": "The NFL Support odds-widget FAQ lists FanDuel, Caesars, and DraftKings; the 2026 sportsbook-partnership announcement names DraftKings, FanDuel, and Fanatics Betting and Gaming.",
+      "why": "Both pages are official but may describe different widgets, partners, or periods. Do not treat the lists as interchangeable or as an odds API, price history, or data licence.",
+      "source": "S27 ; S28",
+      "status": "Unverified for a specific widget/provider; no market feed used"
     }
   ]
 }

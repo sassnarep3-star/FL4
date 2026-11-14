@@ -19,8 +19,9 @@ from urllib.parse import urlparse
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 DATA = ROOT / "data"
 AS_OF = "2026-11-14"
-OFFICIAL_HOSTS = ("nfl.com", "operations.nfl.com", "diputados.gob.mx", "gob.mx",
-                  "github.com", "juegosysorteos.gob.mx")
+OFFICIAL_HOSTS = ("nfl.com", "nflgsis.com", "operations.nfl.com", "diputados.gob.mx", "gob.mx",
+                  "github.com", "sassnarep3-star.github.io", "juegosysorteos.gob.mx",
+                  "nist.gov", "scikit-learn.org")
 
 NAV = [
     ("Dashboard", "index.html"),
@@ -86,6 +87,8 @@ def source_cell(text, page, row_id, flag_if_missing=True):
     links = resolve_sources(text)
     official = [l for l in links if l[1] == "official"]
     if not links:
+        if "user brief" in (text or "").lower():
+            return '<span class="badge brief">User brief (scope/requirement; not an external fact)</span>'
         if flag_if_missing:
             AUTO_FLAGS.append((page, row_id, "No source link", text or ""))
         return '<span class="badge unverified">UNVERIFIED - no source</span>'
@@ -148,7 +151,7 @@ def page_shell(title, body, prefix, active):
 </main>
 <footer><p>Informational research only. Not betting advice. Every value links to a source; values that could not be confirmed are marked UNVERIFIED and listed on the <a href="{prefix}pages/flagged.html">Flagged for Review</a> page.
 Legal status of betting in Mexico is an open question (Q-03).</p>
-<p>Source of this site: <a href="https://github.com/sassnarep3-star/FL4">github.com/sassnarep3-star/FL4</a> (branch arena/ce31a137-fl4).</p></footer>
+<p>Source repository: <a href="https://github.com/sassnarep3-star/FL4">github.com/sassnarep3-star/FL4</a> (GitHub Pages publishes the integrated main branch).</p></footer>
 <script src="{prefix}assets/app.js"></script>
 </body></html>
 """
@@ -169,7 +172,7 @@ for r in ROWS:
     r["unit"] = UNIT.get(r["position"], "?")
     r["_src"] = source_cell(r["source"], "injuries", r["player"] + " (" + r["team"] + ")")
     r["_status"] = status_badge(r["game_status"])
-    r["_player_link"] = f'<a href="{esc(r["source"])}" target="_blank" rel="noopener">{esc(r["player"])}</a>'
+    r["_player_link"] = f'<a href="{esc(r["player_url"])}" target="_blank" rel="noopener">{esc(r["player"])}</a>'
     r["_fl"] = r.get("flag", "")
 COUNTS = Counter(r["game_status"] for r in ROWS)
 N_ROWS = len(ROWS)
@@ -195,6 +198,7 @@ STRAT = load("strategies.json")
 REPO = load("repo_review.json")["rows"]
 FLAGS = load("flags.json")["rows"]
 NEWS = load("depth_news.json")["rows"]
+REPLACEMENTS = load("replacement_tiers.json")["rows"]
 SOURCE_ROWS = load("sources.json")["sources"]
 OPEN_Q = sum(1 for q in QUESTIONS if q["status"].lower().startswith("open"))
 PENDING_SG = sum(1 for s in SUGG if s["decision"].lower().startswith("pending"))
@@ -224,6 +228,10 @@ for g in INJ["games"]:
     game_rows.append({"game": g["id"], "kickoff": g["kickoff"], "network": g["network"],
                       "result": g["result"], "flagged": n_flag,
                       "_src": source_cell(g["source"], "injuries", "game " + g["id"])})
+replacement_rows = [
+    dict(r, _src=source_cell(r["source"], "replacement-tiers", r["id"]))
+    for r in REPLACEMENTS
+]
 
 inj_body = f"""
 <p class="lead">Official NFL injury report, Week 10 of the 2026 season, as published on NFL.com ({esc(INJ['report_title'])}). Read on {AS_OF}. Source: <a href="{REPORT_URL}" target="_blank" rel="noopener">nfl.com/injuries</a> (official).</p>
@@ -251,7 +259,11 @@ inj_body = f"""
 <p class="note">Read from headlines on the official report page. Article bodies were not opened, so no snap counts or depth positions are claimed.</p>
 {table([("Date", "date"), ("Team", "team"), ("Headline", "headline"), ("Type", "type"), ("In Week 10 report?", "in_report"), ("Source", "_src")], news_rows, "tbl-news")}
 
-<h2>5. Games in the report</h2>
+<h2>5. Starter replacement chain — tracking schema only</h2>
+<p class="note">The six rows below are blank field templates for both offense and defense, through second-, third-, and fourth-string tiers. Create one record per team, game/week, and position/unit only when a primary source verifies the role; these are not player observations. An NFL roster page or injury report alone is not a depth chart. Verify participation separately in official game books. Effects remain blank until sourced, timestamped, and evaluated out of sample. Source links are review routes, not evidence that a player or tier is confirmed.</p>
+{table([("Side", "side"), ("Tier to verify", "tier_to_verify"), ("Team", "team"), ("Game / week", "game_or_week"), ("Position / unit", "position_or_unit"), ("Absent starter / role", "absent_starter_or_role"), ("Starter status at cutoff", "starter_status_at_cutoff"), ("Replacement player", "replacement_player"), ("Replacement injury / availability", "replacement_injury_or_availability"), ("Forecast cutoff (UTC)", "forecast_cutoff_utc"), ("Observed participation / snaps", "observed_participation_or_snaps"), ("Impact estimate", "impact_estimate"), ("Status", "status"), ("Official source to review", "_src")], replacement_rows, "tbl-replacements")}
+
+<h2>6. Games in the report</h2>
 {table([("Game", "game"), ("Kickoff (ET)", "kickoff"), ("Network", "network"), ("Result", "result"), ("Flagged players", "flagged"), ("Source", "_src")], game_rows, "tbl-games")}
 """
 OUTPUTS["pages/injuries.html"] = ("NFL injuries and depth - Week 10 2026", inj_body, "../", "pages/injuries.html")
@@ -272,10 +284,10 @@ exec_body = f"""
 <ol class="findings">
 <li><b>Injury picture (official):</b> the NFL's Week 10 report lists {N_ROWS} flagged players across {len(INJ['games'])} games: {N_OUT} Out, {N_DOUBT} Doubtful, {N_QUEST} Questionable. Teams with the most Out or Doubtful players: {", ".join(f"{t} ({o} Out, {d} Doubtful)" for t, o, d in TOP_TEAMS)}. <a href="injuries.html">Injuries page</a>. Source: <a href="{REPORT_URL}" target="_blank" rel="noopener">NFL.com</a>.</li>
 <li><b>Starter replacements (headline level, NFL.com):</b> Seahawks QB Sam Darnold ruled out for Week 10; Drew Lock expected to start. Dolphins placed QB Malik Willis on injured reserve with Kyle McCord in line for his first start. Ravens placed Lamar Jackson on injured reserve; Tyler Huntley reported out for the season. Browns (Deshaun Watson) and Cardinals (Carson Beck) start-headlines are from the Nov 11 roundup and may be out of date. <a href="injuries.html">Section 4</a>.</li>
-<li><b>Depth charts are the gap:</b> we cannot yet say which absent player is a starter and who replaced him, on defence or offence. Only headlines were used. Needed: official depth charts (question Q-10, suggestion SG-02).</li>
-<li><b>Betting strategies:</b> zero strategies are built or validated. The leaderboard is empty. We have no historical odds or prop-line data (Q-01, Q-02), and the success metric is not chosen (Q-06). No correlation values were computed; the table shows blanks marked UNVERIFIED.</li>
+<li><b>Depth charts are still the evidence gap:</b> a blank tracker now reserves offense and defense slots for second-, third-, and fourth-string replacements. No player, tier, injury-to-role mapping, snap share, or impact value is populated; official depth evidence and participation checks remain open (Q-10, SG-02).</li>
+<li><b>Line generation remains a blueprint:</b> the Strategies page specifies score-distribution, fair-price, player-prop, joint-combo, and skill-versus-luck methods, but no model or line has been fitted. Historical odds / prop prices are absent (Q-01, Q-02), no threshold is selected (Q-06), and all correlation values remain blank.</li>
 <li><b>Legal status is unresolved:</b> the official Mexican federal law (Ley Federal de Juegos y Sorteos, 1947) prohibits betting games unless SEGOB permits them (Art. 1, 3, 4). Whether and how online sports betting is authorised is not confirmed from an official source (Q-03, flag F-09). NFL personnel are barred from betting on NFL games; this is reported in secondary sources (F-11).</li>
-<li><b>Repository:</b> the repo contained only a one-line README before this session. There is no code, data or CI. GitHub Pages was already set to publish from main at the root. <a href="repo-review.html">Repo review</a>.</li>
+<li><b>Repository history:</b> the initial review of the base commit found only a one-line README; the integrated main branch now contains the dashboard, sourced registries, build/link verification, and Pages workflow. <a href="repo-review.html">Repo review</a>.</li>
 </ol>
 
 <h2>Decisions needed from you</h2>
@@ -284,7 +296,7 @@ exec_body = f"""
 <li>What counts as a useful signal, and the thresholds for the gates (Q-06, SG-05).</li>
 <li>What a "reward" for top strategies is (Q-05).</li>
 <li>Whether to collect multi-season injury history (SG-01) and depth charts (SG-02) next.</li>
-<li>Whether the site should refresh on a schedule (SG-07) or stay manual.</li>
+<li>Whether Pages deployment should be gated on both verification workflows (Q-13, SG-07). No automated NFL data fetch is configured.</li>
 </ul>
 
 <h2>How this summary was checked</h2>
@@ -299,22 +311,39 @@ gate_rows = [dict(g, threshold=g["threshold"] if not g["threshold"].startswith("
              for g in STRAT["gates"]]
 corr_rows = [dict(c, value=c["value"] or "", _src=source_cell(c["source"], "strategies", c["pair"])) for c in STRAT["correlation"]]
 lb_rows = STRAT["leaderboard"]
+line_cards = []
+for section in STRAT.get("line_generation", []):
+    citations = source_cell(section["source"], "strategies-method", section["id"], flag_if_missing=False)
+    line_cards.append(
+        '<article class="model-card">'
+        f'<p class="model-step">{esc(section["id"])}</p>'
+        f'<h3>{esc(section["title"])}</h3>'
+        f'<p>{esc(section["body"])}</p>'
+        f'<pre class="formula">{esc(section["formula"])}</pre>'
+        f'<p class="note">Method / official review links: {citations}</p>'
+        '</article>'
+    )
+line_blueprint_html = '<div class="model-grid">' + ''.join(line_cards) + '</div>'
 strat_body = f"""
 <p class="lead">{esc(STRAT['status'])}</p>
 {callout("<b>Leaderboard:</b> empty. A strategy appears here only after it passes every gate, with its source link. No rewards are defined yet (question Q-05).", "warn")}
 <h2>1. Bet types in scope</h2>
-{table([("Type", "type"), ("Examples", "examples"), ("Needs", "needs"), ("Source", "_src")], bet_rows, "tbl-bets")}
-<h2>2. Validation gates (proposed; thresholds not set)</h2>
-<p class="note">Gates are a method proposal, not verified facts. Thresholds stay blank until Q-06 is answered (suggestion SG-05).</p>
-{table([("ID", "id"), ("Gate", "name"), ("Rule", "rule"), ("Threshold", "threshold"), ("Status", "status"), ("Source", "_src")], gate_rows, "tbl-gates")}
-<h2>3. Leaderboard</h2>
+<p class="note">These rows define project scope from the brief; they are not claims about an available book, a lawful market, or a licensed data feed.</p>
+{table([("Type", "type"), ("Examples", "examples"), ("Needs", "needs"), ("Source / scope", "_src")], bet_rows, "tbl-bets")}
+<h2>2. How an NFL line would be generated (blueprint only)</h2>
+{callout("The following is a proposed calculation design, not a fitted model. No probabilities, fair prices, picks, player estimates, or model correlations have been generated. Official NFL links are discovery/verification routes; they do not establish historical data access or reuse rights.", "info")}
+{line_blueprint_html}
+<h2>3. Validation gates (proposals; thresholds not set)</h2>
+<p class="note">These gates are research-design choices, not empirical facts. Numerical thresholds remain blank until the target metric and decision protocol are pre-registered (Q-06).</p>
+{table([("ID", "id"), ("Gate", "name"), ("Rule", "rule"), ("Threshold", "threshold"), ("Status", "status"), ("Source / method reference", "_src")], gate_rows, "tbl-gates")}
+<h2>4. Leaderboard</h2>
 {table([(c, "") for c in STRAT["leaderboard_columns"]], [], "tbl-leader")}
-<p class="note">No rows yet.</p>
-<h2>4. Correlation values</h2>
-<p class="note">None computed. Values stay blank until historical data is ingested (Q-15).</p>
-{table([("Pair", "pair"), ("Value", "value"), ("Status", "status"), ("Source", "_src")], corr_rows, "tbl-corr")}
+<p class="note">No rows yet. Rewards, eligibility, and governance are not defined (Q-05); no strategy has passed validation.</p>
+<h2>5. Correlation values</h2>
+<p class="note">No values are computed. The NIST reference defines correlation as association; it is not a joint parlay probability. Values stay blank until licensed, timestamped historical outcomes are verified (Q-15).</p>
+{table([("Pair", "pair"), ("Value", "value"), ("Status", "status"), ("Source / method reference", "_src")], corr_rows, "tbl-corr")}
 """
-OUTPUTS["pages/strategies.html"] = ("Strategies, leaderboard and validation", strat_body, "../", "pages/strategies.html")
+OUTPUTS["pages/strategies.html"] = ("Strategies, line generation and validation", strat_body, "../", "pages/strategies.html")
 
 # ---------- Questions ----------
 def src_only(q):
@@ -322,7 +351,7 @@ def src_only(q):
 qrows = [dict(q, _src=src_only(q)) for q in QUESTIONS]
 q_body = f"""
 <p class="lead">Questions and information gaps to close before a decision. Each row says what is known (with sources), what is missing, and how to find it out.</p>
-{callout(f"<b>{OPEN_Q} of {len(QUESTIONS)} questions are open.</b> Blocking: Q-01 (odds data), Q-02 (prop legality), Q-03 (legal status), Q-06 (success metric).", "warn")}
+{callout(f"<b>{OPEN_Q} of {len(QUESTIONS)} questions remain open.</b> Decision blockers: Q-01 (odds data), Q-02 (prop-policy review), Q-03 (legal scope), Q-06 (success metric). Q-12 also blocks automated NFL data collection until express written consent is obtained.", "warn")}
 {table([("ID", "id"), ("Area", "area"), ("Question", "question"), ("Known (sourced)", "known"), ("Missing", "missing"), ("How to discover", "how_to_discover"), ("Source", "_src"), ("Status", "status")], qrows, "tbl-questions", filterable=True)}
 """
 OUTPUTS["pages/questions.html"] = ("Questions and information gaps", q_body, "../", "pages/questions.html")
@@ -340,16 +369,28 @@ req_body = f"""
 OUTPUTS["pages/requirements.html"] = ("Requirements", req_body, "../", "pages/requirements.html")
 
 # ---------- Suggestions ----------
+def suggestion_control(s):
+    if s.get("decision", "").lower().startswith("implemented"):
+        return '<span class="badge done">Implemented in this task</span>'
+    options = ['<option value="">Choose A, B, C, or defer</option>']
+    for option in s["options"]:
+        key = option.split(":", 1)[0].strip().upper()
+        options.append(f'<option value="{esc(key)}">{esc(option)}</option>')
+    options.append('<option value="defer">Defer for now</option>')
+    return (f'<select class="suggestion-choice" data-suggestion-choice="{esc(s["id"])}" '
+            f'aria-label="Select a review choice for {esc(s["id"])}">{"".join(options)}</select>')
+
 srows = []
 for s in SUGG:
     srows.append(dict(s, options=" / ".join(s["options"]), _src=source_cell(s["source"], "suggestions", s["id"]),
-                      _dec='<span class="badge pending">Pending your decision</span>'))
+                      _dec=suggestion_control(s)))
 sg_body = f"""
-<p class="lead">Suggestions to improve the site and the research. <b>Nothing here is implemented.</b> Pick an option (A, B, C) or "defer" for each one; only then is the work done.</p>
-{callout(f"<b>{PENDING_SG} of {len(SUGG)} suggestions are pending your decision.</b> To decide, note the ID and the option letter.", "info")}
-{table([("ID", "id"), ("Suggestion", "suggestion"), ("Closes gap", "closes_gap"), ("Benefit", "benefit"), ("Cost", "cost"), ("Options", "options"), ("Source", "_src"), ("Decision", "_dec")], srows, "tbl-sugg", filterable=True)}
+<p class="lead">Review each suggestion and select A, B, C, or defer. Choices are saved only in this browser; they do not change the code, authorize data collection, or affect other visitors.</p>
+{callout(f"<b>{PENDING_SG} of {len(SUGG)} suggestions remain open.</b> Both site sections have CI verification; SG-07 asks whether Pages publication should depend on those checks. All choices on this page are local review notes only.", "info")}
+<div class="suggestion-tools"><button type="button" class="secondary-button" data-clear-suggestion-choices>Clear choices saved in this browser</button><span class="note" data-suggestion-feedback aria-live="polite">Selections are stored locally on this device only.</span></div>
+{table([("ID", "id"), ("Suggestion", "suggestion"), ("Closes gap", "closes_gap"), ("Benefit", "benefit"), ("Cost", "cost"), ("Options", "options"), ("Source / review route", "_src"), ("Your local choice", "_dec")], srows, "tbl-sugg", filterable=True)}
 """
-OUTPUTS["pages/suggestions.html"] = ("Suggestions - decide before any change", sg_body, "../", "pages/suggestions.html")
+OUTPUTS["pages/suggestions.html"] = ("Suggestions - review and select", sg_body, "../", "pages/suggestions.html")
 
 # ---------- Repo review ----------
 repo_rows = [dict(r, _src=source_cell(r["source"], "repo-review", r["id"])) for r in REPO]
@@ -369,7 +410,7 @@ for s in SOURCE_ROWS:
                      "used_for": s["used_for"],
                      "_link": f'<a href="{esc(s["url"])}" target="_blank" rel="noopener">{esc(s["url"])}</a>'})
 src_body = f"""
-<p class="lead">Every source used, accessed {AS_OF}. Official = NFL, Mexican government, or GitHub. Secondary = news or blog, used only where flagged.</p>
+<p class="lead">Sources reviewed {AS_OF}. Official primary sources include the NFL, Mexican government, GitHub, and the named NIST/scikit-learn methodology documentation. Secondary reports are labelled and used only for review flags. A linked official page is a review route, not proof of data access or reuse rights.</p>
 {table([("ID", "_id"), ("Title", "title"), ("Publisher", "publisher"), ("Type", "_type"), ("Used for", "used_for"), ("Link", "_link")], src_rows, "tbl-sources", filterable=True)}
 """
 OUTPUTS["pages/sources.html"] = ("Sources", src_body, "../", "pages/sources.html")
@@ -404,11 +445,11 @@ idx_body = f"""
 </div>
 <div class="tiles">
 <a class="tile" href="pages/executive-summary.html"><b>Executive summary</b><span>Key findings and decisions needed</span></a>
-<a class="tile" href="pages/injuries.html"><b>Injuries &amp; depth</b><span>Official Week 10 report, absences by unit, starter headlines</span></a>
-<a class="tile" href="pages/strategies.html"><b>Strategies</b><span>Bet types, validation gates, leaderboard (empty)</span></a>
+<a class="tile" href="pages/injuries.html"><b>Injuries &amp; depth</b><span>Official Week 10 report, absences, headline checks, and blank offense/defense replacement slots through fourth string</span></a>
+<a class="tile" href="pages/strategies.html"><b>Strategies</b><span>Line-generation blueprint, validation gates, blank correlations, leaderboard (empty)</span></a>
 <a class="tile" href="pages/questions.html"><b>Questions</b><span>What we know, what is missing, how to find out</span></a>
 <a class="tile" href="pages/requirements.html"><b>Requirements</b><span>Every requirement from the brief and its status</span></a>
-<a class="tile" href="pages/suggestions.html"><b>Suggestions</b><span>Options to choose from before anything changes</span></a>
+<a class="tile" href="pages/suggestions.html"><b>Suggestions</b><span>Review recommendations and record choices locally</span></a>
 <a class="tile" href="pages/repo-review.html"><b>Repo review</b><span>Line-by-line checks with links</span></a>
 <a class="tile" href="pages/sources.html"><b>Sources</b><span>Official and secondary sources used</span></a>
 <a class="tile" href="decision-lab.html"><b>Decision Lab (blueprint)</b><span>Earlier session's evidence-first framework, kept as built</span></a>
