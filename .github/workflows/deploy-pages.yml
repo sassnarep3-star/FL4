@@ -1,0 +1,77 @@
+name: Build and deploy FL4 site to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Validate datasets
+        run: |
+          python - <<'PY'
+          import json, pathlib, sys
+          bad = 0
+          for f in sorted(pathlib.Path('data').glob('*.json')):
+              try:
+                  json.loads(f.read_text())
+                  print('ok   ', f)
+              except Exception as e:
+                  bad += 1
+                  print('FAIL ', f, e)
+          sys.exit(1 if bad else 0)
+          PY
+
+      - name: Build site from data (verification checks must pass)
+        run: python tools/build_site.py --fail-on-warn
+
+      - name: Confirm published HTML is the committed build (no hand-edits, no drift)
+        run: |
+          git diff --exit-code -- site/ || {
+            echo "::error::site/ does not match data/. Run 'python tools/build_site.py' and commit the output.";
+            git --no-pager diff --stat -- site/;
+            exit 1;
+          }
+
+      - name: Site integrity (links, assets, orphan pages, no fabricated values)
+        run: python tools/check_links.py
+
+      - name: Show page sizes
+        run: ls -la site site/assets | tail -30
+
+      - uses: actions/configure-pages@v5
+        if: github.ref == 'refs/heads/main'
+
+      - uses: actions/upload-pages-artifact@v3
+        if: github.ref == 'refs/heads/main'
+        with:
+          path: site
+
+  deploy:
+    if: github.ref == 'refs/heads/main'
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

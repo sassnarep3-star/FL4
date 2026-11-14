@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "dataset": "source_register",
+    "generated_utc": "2026-11-14T03:45:00Z",
+    "tiers": {"T1": "official: the league body, club, regulator or statute that owns the fact", "T2": "trusted secondary: reports T1 data; may corroborate, may not originate", "T3": "unverified/unofficial: never used as the sole basis for a published value", "DERIVED": "arithmetic on rows already at T1/T2"},
+    "policy": "A published table row is only marked verified if its tier is T1, or T2 with a named corroborating T1 artefact. Every row links to the exact page read, not a site root.",
+    "environment_note": "This sandbox reaches the general web only through the page-reader tool; direct programmatic fetches to nfl.com were blocked at the network layer (TLS connection refused for www.nfl.com and for third-party APIs). Every T1 row below was read through that page reader on the stated date."
+  },
+  "sources": [
+    {
+      "id": "SRC-01",
+      "org": "NFL Enterprise (league office)",
+      "title": "2026 NFL Injury Report - Week 10",
+      "url": "https://www.nfl.com/injuries/",
+      "tier": "T1",
+      "accessed_utc": "2026-11-14T03:00:00Z",
+      "read_method": "Full page read, 8/8 chunks",
+      "verifies": "Player-level practice status and game status for 28 clubs; club records shown per matchup; the report's column schema; the news column items listed in SRC-04..",
+      "used_by": ["data/injuries_week10_2026.json", "site: injuries", "site: depth", "site: strategies examples"],
+      "license_posture": "Public league page; published as attributed facts and aggregates only, no payload redistribution.",
+      "freshness_ttl_hours": 48,
+      "limitations": "Contains only players a club elected to list. Contains no depth/replacement information. Contains no IR moves (see SRC-04 example). Game status is a club's stated expectation, not a probability."
+    },
+    {
+      "id": "SRC-02",
+      "org": "NFL Enterprise",
+      "title": "2026 NFL Division Standings",
+      "url": "https://www.nfl.com/standings/",
+      "tier": "T1",
+      "accessed_utc": "2026-11-14T03:05:00Z",
+      "read_method": "Full page read, 2/2 chunks",
+      "verifies": "W-L-T, PCT, PF, PA, net points and streak for all 32 clubs as of the Thursday 12 Nov result",
+      "used_by": ["data/league_state.json", "site: dashboard"],
+      "license_posture": "Attributed facts only.",
+      "freshness_ttl_hours": 72,
+      "limitations": "The split-record blocks (HOME/ROAD/DIV/CONF area) could not be mapped to labels with certainty from the rendered page, so they were omitted rather than guessed - see flag F-04."
+    },
+    {
+      "id": "SRC-03",
+      "org": "NFL Enterprise",
+      "title": "NFL Schedules - 2026 Week 10",
+      "url": "https://www.nfl.com/schedules/2026/week-10",
+      "tier": "T1",
+      "accessed_utc": "2026-11-14T03:05:00Z",
+      "read_method": "Page read (first of 3 chunks sufficient for the fixture list and the completed Thursday result)",
+      "verifies": "Week 10 fixture list, kickoff times, broadcast partners, the Munich international designation, and the final score of the played Thursday game (WAS 24, NYG 21)",
+      "used_by": ["data/injuries_week10_2026.json games[]", "site: strategies rest/travel example"],
+      "license_posture": "Attributed facts only.",
+      "limitations": "Only the first chunk was read; the remaining Sunday/Monday listings were cross-checked against the same fixtures appearing in SRC-01."
+    },
+    {
+      "id": "SRC-04",
+      "org": "NFL Enterprise",
+      "title": "League news items surfaced on the Week 10 report page (8 items, each independently linked)",
+      "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-nov-13",
+      "tier": "T1",
+      "accessed_utc": "2026-11-14T03:00:00Z",
+      "read_method": "Headlines and links read from the report page itself; individual article bodies not opened",
+      "verifies": "Existence and wording of: SEA QB confirmation, BAL QB absence window, CLE/AZ confirmed backup starts, MIA IR move with replacement, LAR WR 'likely' IR, SEA QB1 ruled out, BAL QB2 out for season (worded 'Report:'), BUF/DEN mid-season trades",
+      "used_by": ["data/injuries_week10_2026.json news_items_verified", "site: depth", "questions Q-ROSTER-04/05"],
+      "license_posture": "Attributed headlines only.",
+      "limitations": "Headline-level only; article bodies were not retrieved, so no detail beyond the headline text is asserted. Items worded 'Report:' are treated as unconfirmed by policy."
+    },
+    {"id": "SRC-05", "org": "NFL Enterprise", "title": "Confirmed SEA start article", "url": "https://www.nfl.com/news/drew-lock-no-injury-designation-seahawks-raiders", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "Existence of a league confirmation that a no-designation player starts", "used_by": ["questions Q-ROSTER-05"], "limitations": "Headline-level."},
+    {"id": "SRC-06", "org": "NFL Enterprise", "title": "SEA QB1 ruled out article", "url": "https://www.nfl.com/news/sam-darnold-ruled-out-for-seahawks-week-10-game-vs-raiders-drew-lock-expected-to-start-again", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "Corroborates an Out game status already on the report - two independent T1 artefacts agree", "used_by": ["site: verification method example"], "limitations": "Headline-level."},
+    {"id": "SRC-07", "org": "NFL Enterprise", "title": "MIA QB placed on IR; replacement in line for first start", "url": "https://www.nfl.com/news/dolphins-place-qb-malik-willis-groin-on-injured-reserve-kyle-mccord-in-line-for-first-start", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "That an IR transaction is a distinct event class from a weekly designation, and is not visible as a row in the weekly report", "used_by": ["site: depth", "questions Q-ROSTER-04"], "limitations": "Headline-level."},
+    {"id": "SRC-08", "org": "NFL Enterprise", "title": "LAR WR 'likely' to be placed on IR", "url": "https://www.nfl.com/news/rams-wr-puka-nacua-likely-to-be-placed-on-injured-reserve-with-turf-toe-sprained-mcl-and-pcl", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "That a league headline can use 'likely' while the same week's report lists no game status for the player - a live example of headline/report disagreement", "used_by": ["questions Q-ROSTER-05", "site: flagged"], "limitations": "Headline-level."},
+    {"id": "SRC-09", "org": "NFL Enterprise", "title": "Mid-season trades affecting roster mapping", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-nov-10", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "That clubs changed personnel mid-season, so any season-long player-to-club mapping is stale by construction", "used_by": ["site: depth", "questions Q-ROSTER-01"], "limitations": "Headline-level."},
+    {"id": "SRC-10", "org": "NFL Enterprise", "title": "BAL franchise QB absence window", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-nov-13", "tier": "T1", "accessed_utc": "2026-11-14T03:00:00Z", "read_method": "link present on SRC-01 page; body not opened", "verifies": "A 6-10 week absence stated as a confirmed club position, plus a KC RB listed questionable", "used_by": ["site: depth"], "limitations": "Headline-level; the same page carried a different window (6-9 weeks) in an earlier item, so the number must not be treated as settled - see flag F-08."},
+    {"id": "SRC-11", "org": "NFL Enterprise - stats product", "title": "League statistics surface (candidate source for box scores)", "url": "https://www.nfl.com/stats/", "tier": "T3-in-this-environment", "accessed_utc": null, "read_method": "Not read in this session", "verifies": "nothing yet", "used_by": ["questions Q-MODEL-03"], "limitations": "URL recorded from site navigation only. Automated retrieval and licensing were not tested, so no row depends on it."},
+    {"id": "SRC-12", "org": "NFL Enterprise - tracking product", "title": "Next Gen Stats (candidate source for snaps/usage)", "url": "https://www.nfl.com/next-gen-stats/", "tier": "T3-in-this-environment", "accessed_utc": null, "read_method": "Not read in this session", "verifies": "nothing yet", "used_by": ["questions Q-ROSTER-03", "strategies S-08"], "limitations": "Identified as the likely home of snap/target data; licence and availability unverified. Nothing published depends on it."},
+    {"id": "SRC-13", "org": "Third-party odds vendors (unnamed pending selection)", "title": "Market price feed", "url": null, "tier": "not-available", "accessed_utc": null, "read_method": "no source selected; no network reachability", "verifies": "nothing", "used_by": ["every quantitative gate"], "limitations": "This is the project's binding constraint. Until Q-MKT-01 is answered, no line, no CLV, no ROI and no originated price can be published."},
+    {"id": "SRC-14", "org": "Secondary explainer pages on injury-report terminology", "title": "'Out / Doubtful / Questionable' definitions found via search", "url": "https://sports24.us/article/nfl-injury-report-rules-explained", "tier": "T3", "accessed_utc": "2026-11-14T03:10:00Z", "read_method": "search snippets only; not used to publish any value", "verifies": "nothing in this build", "used_by": ["flag F-03"], "limitations": "These pages assert the league's definitions and the 2016 removal of 'Probable'. The underlying league policy text was not retrieved in this session, so this site publishes no probability attached to any designation. Two independent secondary pages agreed on the wording, which is why it is recorded as a lead to verify rather than as a fact."},
+    {"id": "SRC-15", "org": "Secondary pages on roster/practice-squad rules", "title": "Practice-squad size and game-day elevation counts for 2026", "url": "https://legionreport.com/nfl-practice-squad-tracker/", "tier": "T3", "accessed_utc": "2026-11-14T03:10:00Z", "read_method": "search snippets only", "verifies": "nothing in this build", "used_by": ["flag F-09"], "limitations": "Claims 16-man practice squad and 2 elevations per team per game for 2026. Roster rules govern how deep a team can go after injuries, so they matter to the depth model; they must come from the league/union rule documents, not from a tracker site. Left unverified on purpose."}
+  ]
+}
