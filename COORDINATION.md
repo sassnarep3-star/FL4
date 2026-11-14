@@ -5,19 +5,19 @@ Live site: https://sassnarep3-star.github.io/FL4/
 
 Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not block publication).
 
-> This checkout's current task reuses the evidence-first site already merged to `main` by PRs #1 and #2. It is not a second site or a parallel copy. Preserve the integrated site and improve its source discipline and strategy methodology. The original session boards are retained below as history.
+> PRs #1–#6 have already integrated the evidence-first dashboard and a separate, verified `signals/` origination section. This branch must not create another site or edit `signals/*`, `data/signals/*`, or its generator. The current follow-up is limited to distinct improvements in the original root dashboard: a blank 2nd/3rd/4th-string tracker, precise fair-price/joint-probability formulas, browser-local suggestion selection, source/privacy corrections, and a stricter root-page row audit. Historical session boards remain below.
 
 ## Current task board
 
 | Task | Status | Owner (Arena session) | File scope | Sources / verification | Irregularities |
 |---|---|---|---|---|---|
-| T10 Post-merge source audit and own-line methodology refinement | in progress | `121f05ad`, `arena/121f05ad-fl4` | `data/sources.json`, `data/strategies.json`, `data/questions.json`, `data/requirements.json`, `data/suggestions.json`, `data/flags.json`, `tools/build_site.py`, `tools/validate.py`, generated strategy/requirements/questions/sources/flags pages, `COORDINATION.md` | NIST, scikit-learn, NFL Football Operations, NFL official injury/schedule/stats references checked 2026-11-14; GitHub PR/Pages API; add auditable model blueprint and strict official-source rendering checks | Keep unsupported values blank and flagged. No licensed historical odds, empirical correlations, validated strategies, or verified depth tiers. Do not copy duplicate site from the earlier worktree. |
-| T11 Integration, PR/merge, Pages confirmation | pending | same | repo-wide | Rebase onto current `main`, run source/build/link checks, PR and Actions/Pages API | Continue only on Arena branch; do not use a different branch. |
+| T12 Root dashboard quality follow-up (no duplicate Signals section) | in progress | `121f05ad`, `arena/121f05ad-fl4` | Root `data/{sources,strategies,questions,requirements,suggestions,flags,injuries_w10_2026,repo_review}.json`, new `data/replacement_tiers.json`, `tools/{build_site,validate}.py`, `assets/{app.js,style.css}`, `decision-lab.html`, generated root pages, README; explicitly not `signals/*` or `data/signals/*` | NFL Week 10 report, NFL Next Gen Stats / stats / Game Books / team directory / terms; NIST and scikit-learn docs; PRs #3–#6 already provide the main origination framework | Keep depth slots blank/unverified. No licensed historical odds, fitted model, measured correlations, or strategy results. Do not change the Pages publishing workflow; existing `verify.yml` and `pages.yml` already cover both site sections. |
+| T13 Integration, PR/merge, Pages confirmation | pending | same | repo-wide | Complete root build/row audit, HTTP smoke test, fetch/rebase before push, PR, CI, merge, verify deployment via Actions/Pages API and HTTPS | Stay on Arena branch `arena/121f05ad-fl4`; no new branch. |
 
 ## Log
 
 - 2026-11-14 — Inspected the repository and `main` after another session's work had already merged as PR #2 (`388414f`). PR #1 and PR #2 are both merged; GitHub Pages is configured at `https://sassnarep3-star.github.io/FL4/`. The Pages deployment run for `388414f` completed successfully (run `43549635924`, workflow `Publish site to GitHub Pages`); `gh api repos/sassnarep3-star/FL4/pages/builds/latest` reported `built`; the published URL fetch returned the site. No open PRs existed. Do not replace that integrated, feature-rich site with a smaller duplicate static app.
-- 2026-11-14 — Audited `origin/main`: it includes source-derived Week 10 injury rows, the 11-page dashboard, a renderer, a validator, and a large pre-existing decision-lab page. Noted the validator currently allows rows without a primary URL and does not verify every rendered table row. This current session will tighten that gap and add the line-generation specification to the merged strategy page.
+- 2026-11-14 — `origin/main` advanced from `388414f` to `ce7b73e` while this branch was in progress. PRs #3–#6 from session `94107c0d` added the independently verified Signals & origination section, 16 strategy hypotheses, 15 gates, an 11-pair correlation protocol, 26 questions, 16 review flags, a cross-capture injury parser, and build checks. Its Pages publish and verification runs passed. This session now avoids duplicating that section and limits follow-up to root-dashboard affordances that remain distinct.
 - Official methodology sources verified for the strategy specification:
   - NFL Football Operations, Next Gen Stats: https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats — official description of tracking-derived fields; this does not establish that raw tracking data is public or licensed here.
   - NFL player statistics: https://www.nfl.com/stats/player-stats/ — official navigation/source, not treated as a saved statistical dataset.
@@ -34,8 +34,9 @@ Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not
 ## Prior integrated work and historical logs
 
 - PR #2 merged to `main` at `388414f`, following PR #1; both prior source-session boards are retained verbatim below. Their task records describe the evidence-first site that is now the base for T10.
-- PR #2 Pages workflow run: https://github.com/sassnarep3-star/FL4/actions/runs/43549635924 — completed successfully on 2026-11-14; latest Pages build status `built`, commit `388414fb881d18a6c1b88fc0e667e37512f56fe6`.
-- Public site reviewed at: https://sassnarep3-star.github.io/FL4/.
+- PR #2 Pages workflow run: https://github.com/sassnarep3-star/FL4/actions/runs/43549635924 — completed successfully on 2026-11-14; commit `388414fb881d18a6c1b88fc0e667e37512f56fe6`.
+- PRs #3–#6 (Signals & origination, integrity fixes, and rendering corrections) are merged to `main`; the latest build of `ce7b73e` is `built`. `gh run list` reports the Pages publish, verification, and deployment runs successful (latest Pages publish run `43551740148`; Pages API commit `ce7b73e70dcb87469a5ad1077256d50ff705fe83`).
+- Public root and Signals pages reviewed at: https://sassnarep3-star.github.io/FL4/ and https://sassnarep3-star.github.io/FL4/signals/.
 
 ---
 
