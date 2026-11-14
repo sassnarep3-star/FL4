@@ -19,7 +19,7 @@ Statuses: `unclaimed` · `in progress` · `done` · `needs review` (published on
 | T6 Requirements + Questions (info gaps) | done | ce31a137 | `data/requirements.json`, `data/questions.json`, pages | Legal: S05 (Ley Federal de Juegos y Sorteos, official text, Art. 1, 3, 4, 8, 12), S06 (ficha) | 16 open questions; Q-03 legal status unresolved |
 | T7 Suggestions (decision board; nothing implemented) | done | ce31a137 | `data/suggestions.json`, `pages/suggestions.html` | — | 9 suggestions pending the owner's choice |
 | T8 Site build, Flagged for Review page, link check | done | ce31a137 | `tools/build_site.py`, `tools/validate.py`, `assets/*`, `pages/flagged.html`, `data/flags.json`, `data/sources.json`, `README.md`, `.nojekyll` | `python3 tools/validate.py` passes (links, placeholders, JSON, sourced rows) | Auto-flags: rows with no official source are listed on the Flagged page |
-| T9 Integration: merge, re-verify, PR to main, merge, Pages check | done (PR #2 → main; see Log) | ce31a137 | repo-wide (final step) | — | — |
+| T9 Integration: merge, re-verify, PR to main, merge, Pages check | done (PR #2 merged 388414f; see Final integration record) | ce31a137 | repo-wide (final step) | — | — |
 
 ## Log
 
@@ -43,6 +43,16 @@ Statuses: `unclaimed` · `in progress` · `done` · `needs review` (published on
   - `README.md` = other session's README kept first, this session's section appended.
 - **Flag ID collision:** the other session's flags F-01..F-06 (on `decision-lab.html`) and this session's flags F-01..F-18 (on `pages/flagged.html`) share IDs. Refer to the other session's flags as DL-F-01..DL-F-06.
 - **Pages:** `main` is set to legacy Pages (branch `main`, path `/`) and `.github/workflows/pages.yml` (other session) deploys via Actions on push to `main`. Both paths publish the same root. Deployment check is recorded below after merge.
+
+## Final integration record (session ce31a137)
+
+- **PR:** https://github.com/sassnarep3-star/FL4/pull/2 — base `main` ← `arena/ce31a137-fl4`. Mergeable: MERGEABLE / CLEAN after the conflict resolution above.
+- **Merge:** `gh pr merge 2 --merge` at 2026-11-14T03:03:48Z → merge commit `388414f` on `main`.
+- **Pages deploy:** `Publish site to GitHub Pages` (workflow, run 43549635924) — success. `pages build and deployment` (legacy, run 43549635128) — success. `gh api repos/sassnarep3-star/FL4/pages/builds/latest` → status `built`, commit `388414f`.
+- **Live check:** https://sassnarep3-star.github.io/FL4/pages/injuries.html, `pages/flagged.html`, `pages/executive-summary.html` serve the new content. The bare root URL returned the older Decision Lab page through the Pages CDN cache; the cache-busted URL `/FL4/?v=20261114b` returns the dashboard. Expect the bare root to refresh within the CDN cache window (not fixable from the repo).
+- **Verification before merge:** `python3 tools/build_site.py` and `python3 tools/validate.py` (11 pages, links resolve, no placeholders, all JSON valid, all rows sourced). Local serve returned HTTP 200 for all key files.
+- **Not done:** no check of external links from bash (sandbox network). Injury transcription second pass (F-18) not performed. Flagged items do not block the merge and are on the Flagged for Review page.
+- This record was committed to `arena/ce31a137-fl4` after the merge, so it is on the branch and not on `main` until a later PR.
 
 ---
 
