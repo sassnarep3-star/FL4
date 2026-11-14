@@ -71,6 +71,9 @@ for f in sorted(DATA.glob("*.json")):
         if not obj.get("meta", {}).get("source_url"):
             problems.append("%s has no meta.source_url" % f.name)
 
+# 4b. column-key sanity is enforced in the builder (tools/build_signals.py), which can see the row
+#     dicts and so can tell an intentional blank (key present, value null) from a bug (key absent).
+
 # 5. strategies must not carry a fabricated edge value
 st = json.loads((DATA / "strategies.json").read_text())
 for s in st["strategies"]:
