@@ -33,6 +33,7 @@ NAV = [
     ("Repo review", "pages/repo-review.html"),
     ("Sources", "pages/sources.html"),
     ("Flagged for Review", "pages/flagged.html"),
+    ("Decision Lab (blueprint)", "decision-lab.html"),
 ]
 
 UNIT = {"QB": "QB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
@@ -409,6 +410,7 @@ idx_body = f"""
 <a class="tile" href="pages/suggestions.html"><b>Suggestions</b><span>Options to choose from before anything changes</span></a>
 <a class="tile" href="pages/repo-review.html"><b>Repo review</b><span>Line-by-line checks with links</span></a>
 <a class="tile" href="pages/sources.html"><b>Sources</b><span>Official and secondary sources used</span></a>
+<a class="tile" href="decision-lab.html"><b>Decision Lab (blueprint)</b><span>Earlier session's evidence-first framework, kept as built</span></a>
 <a class="tile warn" href="pages/flagged.html"><b>Flagged for Review</b><span>__FLAGCOUNT__ items to check</span></a>
 </div>
 """

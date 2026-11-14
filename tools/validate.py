@@ -21,7 +21,7 @@ for f in sorted((ROOT / "data").glob("*.json")):
         errors.append(f"JSON parse error in {f.name}: {e}")
 
 # 2. Internal links and placeholders in generated HTML
-html_files = [ROOT / "index.html"] + sorted((ROOT / "pages").glob("*.html"))
+html_files = [ROOT / "index.html", ROOT / "decision-lab.html"] + sorted((ROOT / "pages").glob("*.html"))
 ref_re = re.compile(r'(?:href|src)="([^"]+)"')
 for page in html_files:
     text = page.read_text(encoding="utf-8")
@@ -36,6 +36,8 @@ for page in html_files:
 
 # 3. Every page exists and has a nav
 for page in html_files:
+    if page.name == "decision-lab.html":  # other session's page, kept verbatim; uses its own nav markup
+        continue
     if '<nav>' not in page.read_text(encoding="utf-8"):
         errors.append(f"no nav in {page.relative_to(ROOT)}")
 
