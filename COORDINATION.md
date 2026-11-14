@@ -176,6 +176,14 @@ the two integration exceptions logged below.
 - Lesson recorded for other sessions: verifying a deployed page and verifying the build are different
   checks. The build was green while two cosmetic defects were live.
 
+- 2026-11-14 — PR #5 (`2c2de03`) merged; CI verify + Pages publish + pages build/deploy all success on
+  `main`. Live re-reads of `signals/injuries.html` and `signals/strategies.html` found one more defect
+  class: the player table's Club-name column asked for a key the rows did not carry, so 76 rows rendered
+  an empty column. Fixed, and `table()` now fails the build on any column key no row carries. Deliberately
+  placed in the builder, not the link checker: only the builder can distinguish an intentional blank
+  (`measured_value: null`, `edge_claim: null`) from a generator bug. Verified by planting the bug
+  (exit 1, names the column and the available keys) and removing it (exit 0).
+
 ## Completion record (all 14 tasks) — 2026-11-14, session 94107c0d
 
 - **Published:** https://sassnarep3-star.github.io/FL4/signals/ (14 pages), reachable from the

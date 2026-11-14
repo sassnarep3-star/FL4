@@ -150,9 +150,32 @@ def render_value(v, col=None):
     return esc(v)
 
 
+KEYERRORS = []
+
+
+def check_columns(block):
+    """A column key that no row carries is a code bug, not missing data.
+
+    The distinction matters: a key present with a null value is the intentional published blank
+    (the correlation register and the edge-claim column are blank on every row on purpose), while a
+    key the rows never had renders the same way and silently looks like "the source had nothing".
+    Caught exactly that: the Club-name column of the player table used `name` while rows carried
+    `team_name`, publishing 76 rows with an empty column.
+    """
+    rows = [r for r in block.get("rows", []) if isinstance(r, dict)]
+    if len(rows) < 3:
+        return
+    for c in block.get("cols", []):
+        k = c.get("key")
+        if k and not any(k in r for r in rows):
+            KEYERRORS.append("%s: column key %r is absent from all %d rows (keys present: %s)"
+                             % (block.get("id") or "?", k, len(rows), sorted(rows[0])[:8]))
+
+
 def table(block):
     cols = block["cols"]
     rows = block["rows"]
+    check_columns(block)
     out = []
     fid = "t-" + block.get("id", "x")
     out.append('<div class="tablewrap" id="%s">' % esc(fid))
@@ -714,7 +737,7 @@ def p_injuries():
                  "SG-05 exists. Two rows in this dataset are explicitly 'Not injury related - resting player' while "
                  "carrying an Out status - a live demonstration of why counting designations needs a rest flag."},
         {"kind": "table", "id": "inj-rows", "title": "Player-level availability (all %d rows, one rule: Out or Doubtful)" % len(rows), "as_of": ASOF, "tier": "T1",
-         "cols": [{"key": "team", "label": "Club"}, {"key": "name", "label": "Name"}, {"key": "opp", "label": "Opp"},
+         "cols": [{"key": "team", "label": "Club"}, {"key": "team_name", "label": "Club name"}, {"key": "opp", "label": "Opp"},
                   {"key": "player", "label": "Player"}, {"key": "pos", "label": "Pos"},
                   {"key": "injury", "label": "Disclosed injury"}, {"key": "practice", "label": "Practice status", "type": "badge"},
                   {"key": "status", "label": "Game status", "type": "badge"}, {"key": "src", "label": "Source"}],
@@ -1228,10 +1251,16 @@ def main():
     (SITE / "data").mkdir(exist_ok=True)
     for f in DATA.glob("*.json"):
         (SITE / "data" / f.name).write_text(f.read_text())
+    if KEYERRORS:
+        print("\nCOLUMN-KEY ERRORS (a blank column caused by a wrong key is a defect, not a finding):")
+        for e in KEYERRORS:
+            print("  -", e)
     fails = [c for c in CHECKS if not c[1]]
     print("\nchecks: %d run, %d failed" % (len(CHECKS), len(fails)))
     for n, p, d in CHECKS:
         print("  [%s] %s" % ("PASS" if p else "FAIL", n))
+    if KEYERRORS:
+        return 1
     if "--fail-on-warn" in sys.argv and fails:
         print("Failing build: verification checks failed: %s" % [f[0] for f in fails])
         return 1
