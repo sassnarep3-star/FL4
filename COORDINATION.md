@@ -73,3 +73,93 @@ This repository had no coordination board or existing claims when inspected on 2
 - Official NFL public sources may not supply all historical play-by-play, injury-status, player-prop line, or sportsbook market data needed to estimate strategy correlations or isolate skill. The applicable data rights and provider terms have not been reviewed.
 - Multi-agent separate-branch coordination and final integration could not be performed from this single active Arena branch. No other claimed work existed to integrate.
 - Before making picks or rewarding strategies, source data rights, market feeds, settlement rules, test protocol, legal/compliance requirements, and governance must be resolved.
+
+---
+
+# Session 94107c0d board — signals & origination section (added 2026-11-14)
+
+Branch `arena/94107c0d-fl4` (base `ade1d5d`). Scope: `signals/`, `signals_assets/`, `data/signals/*`,
+`tools/build_signals.py`, `tools/check_signals.py`, `tools/fetch_injuries.py`, `tools/testdata/*`,
+`REQUIREMENTS.md`, `.github/workflows/verify.yml`. No file owned by another session was edited, with
+the two integration exceptions logged below.
+
+## Verification policy applied (binding)
+
+1. Every published row carries `source_url` + `as_of`.
+2. Tiers: **T1** league/club/regulator owns the fact (only tier this section publishes values from);
+   **T2** corroborates, never originates; **T3** recorded as a lead, never as a number.
+3. Never infer. If it cannot be read from the source it is blank, and the blank is a flagged row.
+4. Anything a human must decide is recorded as a question with a stated default, not assumed.
+5. Volatile data carries a TTL and a freshness statement rendered on the page.
+
+## Task board
+
+| # | Task | Status | Owner | Sources / verification performed | Irregularities |
+|---|---|---|---|---|---|
+| 1 | Repo review + requirements register | done | 94107c0d | `git log`/`ls-tree` at `ade1d5d`; `REQUIREMENTS.md` (38 rows) | I-1 repo held 1 file / 5 bytes at start |
+| 2 | Question bank | done | 94107c0d | `data/signals/questions.json`, 26 questions / 6 groups, each with known-unknown-resolve-default | 18 marked blocking |
+| 3 | Suggestions backlog + review control | done | 94107c0d | `data/signals/suggestions.json`, 21 items, 5-phase path; `status` field is the control | nothing auto-approved on silence |
+| 4 | Official injury capture (Wk 10 2026) | done | 94107c0d | `data/signals/injuries_week10_2026.json`: 75 Out/Doubtful rows, 14 games, 28 clubs from nfl.com/injuries/ (8/8 chunks read); parse rule re-implemented in `tools/fetch_injuries.py` and cross-checked against the published dataset (5/5 fixture rows matched, 0 field mismatches) | F-10 (filing cadence), F-14 (player-club pairings) |
+| 5 | Availability / depth-deficiency analysis | done (bounded) | 94107c0d | `signals/depth.html`, unit mapping derived from the captured rows | **replacement names not published**: the official report has no depth field (F-02) |
+| 6 | Line-origination strategy catalogue | done | 94107c0d | `data/signals/strategies.json`: 16 strategies, each with hypothesis, signal, inputs, vetoes, stake, falsification, "how it loses" | every `edge_claim` null by design (F-01) |
+| 7 | Validation gates | done | 94107c0d | `data/signals/gates.json`: 15 gates; pass rules mechanical; fail-closed on missing thresholds | 5 thresholds reviewer-set (F-05) |
+| 8 | Correlation reference | done (protocol only) | 94107c0d | `data/signals/correlations.json`: 11 pairs, phi + excess joint prob + bootstrap, n>=300 | all `measured_value` null; no ledger to measure (F-11) |
+| 9 | Leaderboard + rewards | done (rules), empty (data) | 94107c0d | `data/signals/leaderboard.json`: CLV-primary score, 5 tiers, 6 anti-gaming rules, non-cash rewards, synthetic worked example labelled as such | board empty by design |
+| 10 | Executive summary | done | 94107c0d | `signals/index.html`, `signals/methodology.html` | — |
+| 11 | Site scaffold + generator | done | 94107c0d | `tools/build_signals.py` (14 pages, 9 build-time checks, all PASS) | — |
+| 12 | Source register | done | 94107c0d | `data/signals/sources.json`: 15 entries incl. sources deliberately *not* relied on | 3 sources marked not-read/unverified |
+| 13 | Flagged for Review | done | 94107c0d | `data/signals/flagged.json`: 16 flags with type, action, links | none block the merge |
+| 14 | Integration: merge main, re-verify, PR, merge, Pages | in progress → see log | 94107c0d | merge of `origin/main` (PR #1 + PR #2) with zero discards; both sections rebuilt and validated locally | conflict log below |
+
+## Integration actions performed by this session (shared outputs)
+
+1. **File collisions resolved by relocation, not overwriting.** `data/questions.json`,
+   `data/sources.json`, `data/strategies.json`, `data/suggestions.json` and `tools/build_site.py`
+   exist on `main` (session ce31a137). Main's copies were kept **unchanged**; this session's copies
+   moved to `data/signals/` and `tools/build_signals.py`, and generated pages moved from `site/` to
+   `signals/`. Nothing was deleted from either side.
+2. **Nav + tile entry added to the dashboard generator** (`tools/build_site.py`, one line in `NAV`
+   and one tile on the landing page) so the sections interlink and survive a rebuild. This is the
+   only edit made inside another session's file; it is additive and `tools/validate.py` passes.
+3. **This session's publishing workflow was deleted.** Main's `pages.yml` uploads the repo root,
+   which already contains `signals/`; a second Pages workflow would have raced it for the same
+   deployment. Replacement: `.github/workflows/verify.yml` (no deploy).
+4. Cross-links: `signals/*` → `../index.html` and `../decision-lab.html`; checked by
+   `tools/check_signals.py` (0 broken internal links).
+
+## Merge conflict log (session 94107c0d)
+
+- `git pull --rebase origin main` on 2026-11-14 found `main` had advanced from `ade1d5d` to
+  `388414f` (PR #1 `arena/7e07d4cb-fl4`, PR #2 `arena/ce31a137-fl4`). The rebase hit an add/add
+  conflict on `COORDINATION.md` and was **aborted**, not forced, so no commit was rewritten.
+- Replaced with `git merge origin/main`. Conflicts: `COORDINATION.md`, `README.md`,
+  `data/{questions,sources,strategies,suggestions}.json`, `tools/build_site.py` (7 files, all add/add
+  or content).
+- Resolution: main's version adopted for all five data/tool files; this session's versions relocated
+  (`data/signals/`, `tools/build_signals.py`, `signals/`); `README.md` and `COORDINATION.md`
+  concatenated with main's text first and this section appended. No content from either session was
+  discarded, and both builders were re-run after the merge to prove the tree still generates cleanly.
+- Post-merge verification: `tools/build_site.py` → no drift vs committed `index.html`/`pages/`;
+  `tools/validate.py` → OK (11 pages); `tools/build_signals.py --fail-on-warn` → 9/9 checks pass;
+  `tools/check_signals.py` → 14 pages, 0 broken links.
+
+## Handoffs
+
+- 2026-11-14 94107c0d → any session: the flag ID namespace is per-section. This section's flags are
+  `F-01..F-16` **on `signals/flagged.html`**, and they collide on purpose-of-numbering with
+  ce31a137's `F-01..F-18` on `pages/flagged.html` and with `DL-F-01..DL-F-06` on `decision-lab.html`.
+  When citing, prefix with the page: `signals:F-01`, `pages:F-02`, `DL-F-01`.
+- 2026-11-14 94107c0d → ce31a137: consider folding `data/signals/injuries_week10_2026.json` into
+  `data/injuries_w10_2026.json`. Two independent captures of the same official page now exist
+  (this one filtered by a stated rule to 75 Out/Doubtful rows; theirs 160 flagged rows, marked
+  manual transcription / F-18). A parser with the rule as code exists at `tools/fetch_injuries.py`,
+  which would clear their F-18. Do not merge the two row sets without deciding which rule wins.
+- `arena/121f05ad-fl4` exists on the remote with no PR at the time of writing. It has not been read
+  or touched by this session. If it adds root-level `index.html`/`pages/` content, the collision
+  pattern above (relocate into a namespaced section) is the proven resolution.
+
+## Open items for the owner (do not block the merge)
+
+- 18 blocking questions in `signals/questions.html`; 5 numeric gate thresholds unset (`signals:F-05`).
+- No price feed ⇒ no CLV, no backtest, no originated line, empty leaderboard (`signals:F-01`).
+- Depth source unresolved ⇒ absences are published, replacements are not (`signals:F-02`).

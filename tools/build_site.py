@@ -34,6 +34,7 @@ NAV = [
     ("Sources", "pages/sources.html"),
     ("Flagged for Review", "pages/flagged.html"),
     ("Decision Lab (blueprint)", "decision-lab.html"),
+    ("Signals & origination", "signals/index.html"),
 ]
 
 UNIT = {"QB": "QB", "RB": "RB", "FB": "RB", "WR": "WR", "TE": "TE",
@@ -411,6 +412,7 @@ idx_body = f"""
 <a class="tile" href="pages/repo-review.html"><b>Repo review</b><span>Line-by-line checks with links</span></a>
 <a class="tile" href="pages/sources.html"><b>Sources</b><span>Official and secondary sources used</span></a>
 <a class="tile" href="decision-lab.html"><b>Decision Lab (blueprint)</b><span>Earlier session's evidence-first framework, kept as built</span></a>
+<a class="tile" href="signals/index.html"><b>Signals &amp; origination</b><span>Line-origination strategy catalogue, validation gates, correlation protocol and a second verified Week 10 availability capture (session 94107c0d)</span></a>
 <a class="tile warn" href="pages/flagged.html"><b>Flagged for Review</b><span>__FLAGCOUNT__ items to check</span></a>
 </div>
 """

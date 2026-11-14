@@ -1,0 +1,36 @@
+{
+  "meta": {
+    "dataset": "correlation_reference",
+    "generated_utc": "2026-11-14T03:40:00Z",
+    "purpose": "Parlay and prop-combo pricing must use measured dependence. This file is the register of which pairs we intend to measure, how, and - honestly - that not one of them has been measured in this repo yet.",
+    "value_policy": "measured_value is null for every pair. A null here is not an oversight and must never be replaced by a textbook number or a guess. It means: estimate it with the protocol below, or refuse to price the pair.",
+    "estimation_protocol": {
+      "unit": "paired legs settled on the same game",
+      "primary_statistic": "phi coefficient on the 2x2 joint settlement table, plus the excess over the independence product: p(A and B) - p(A)p(B)",
+      "secondary_statistic": "Spearman rank correlation on continuous outcomes (points, yards) where the pair is not binary",
+      "interval": "nonparametric bootstrap, 10000 resamples, report the 95% interval; if the interval covers the independence value, the pair is labelled 'no detectable dependence' and is not priced on a correlation credit",
+      "minimum_observations": 300,
+      "stratification": "estimate separately by leg family and by game-script proxy (pre-game favourite margin bucket), because a blowout induces dependence that a close game does not",
+      "pitfall": "computing correlation on *win/loss of our bets* rather than on *event outcomes* mixes our pricing errors into the dependence estimate; measure on events, apply to prices"
+    },
+    "sign_policy": "expected_sign is a stated prior about direction, used only to sanity-check a measurement. It is not evidence of magnitude and is never used to price anything."
+  },
+  "pairs": [
+    {"id": "C-01", "leg_a": "Team A team total OVER", "leg_b": "Game total OVER", "expected_sign": "strong positive", "mechanism": "A's points are an additive component of the game total", "measured_value": null, "n_obs": 0, "ci": null, "tier": "derived-direction-only", "note": "Exact correlation is bounded by the ratio of the two teams' scoring variances; both are computable from verified box scores - not computed in this build."},
+    {"id": "C-02", "leg_a": "Team A spread COVER", "leg_b": "Team A moneyline WIN", "expected_sign": "strong positive", "mechanism": "both are monotone in the final margin", "measured_value": null, "n_obs": 0, "ci": null, "tier": "derived-direction-only"},
+    {"id": "C-03", "leg_a": "Team A spread COVER", "leg_b": "Team B spread COVER (same game)", "expected_sign": "negative, structurally near -1 modulo pushes", "mechanism": "same margin, opposite sign; a push is the only deviation", "measured_value": null, "n_obs": 0, "ci": null, "tier": "near-definitional", "use": "This is the pair to use as a correctness test of the estimator: if the estimator does not return approximately -1, it is broken."},
+    {"id": "C-04", "leg_a": "Team A rush attempts OVER", "leg_b": "Team A pass attempts OVER", "expected_sign": "moderate negative", "mechanism": "shared play count; game script substitution", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured"},
+    {"id": "C-05", "leg_a": "QB completions OVER", "leg_b": "WR1 receptions OVER", "expected_sign": "strong positive", "mechanism": "target share concentration; the same catch is in both legs", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "Highest-confidence positive pair in props, and the one books guard hardest with 'same player' rules - the pricing rule matters more than the correlation."},
+    {"id": "C-06", "leg_a": "RB1 rushes OVER", "leg_b": "RB1 rushing yards OVER", "expected_sign": "strong positive", "mechanism": "yards = attempts x efficiency", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "Often disallowed in the same parlay by operator rules; check rules before assuming the correlation is even usable (Q-MKT-04)."},
+    {"id": "C-07", "leg_a": "Game total OVER", "leg_b": "Both teams to score / neither team under threshold", "expected_sign": "context-dependent", "mechanism": "level vs distribution of scoring", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured"},
+    {"id": "C-08", "leg_a": "Weather-driven total UNDER (wind)", "leg_b": "Team A pass attempts OVER", "expected_sign": "ambiguous", "mechanism": "wind suppresses efficiency but raises pass volume", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "A pair where the sign prior is genuinely uninformative; measuring it is the only way to know, and it is a good first experiment."},
+    {"id": "C-09", "leg_a": "Two different games' overs in a parlay", "leg_a_scope": "cross-game", "leg_b": "Two different games' overs in a parlay", "expected_sign": "approximately zero", "mechanism": "no shared driver, unless both games are in the same weather system or the same late-start window", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "Cross-game 'independence' is the assumption parlays are priced on; it is nearly true, which is why the vig - not the correlation - is the cost of a cross-game parlay. Verify, do not assert."},
+    {"id": "C-10", "leg_a": "Availability-delta signal firing on Team A", "leg_b": "Availability-delta signal firing on Team B (same week)", "expected_sign": "positive", "mechanism": "league-wide events (concussion list, flu/illness clusters, Thursday-short-week patterns) correlate injuries across clubs in the same week", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "This is the correlation that makes a same-week *portfolio* riskier than it looks. Visible in the Week 10 snapshot: 'Illness' appears as a listed cause on three different clubs in one slate (NE, HOU, DAL). Correlated availability is a portfolio effect, not a per-game one."},
+    {"id": "C-11", "leg_a": "Our model error on the spread", "leg_b": "Our model error on the total (same game)", "expected_sign": "positive if the shared driver is the availability adjustment", "mechanism": "both prices inherit the same availability score, so a scoring mistake is not diversified", "measured_value": null, "n_obs": 0, "ci": null, "tier": "unmeasured", "note": "Error correlation, not outcome correlation. Gate G-8 must consume this; it is the correlation most betting models never measure and the reason 'diversified' bets blow up together."}
+  ],
+  "portfolio_notes": [
+    "A parlay is only worth its correlation credit if the credit exceeds the extra vig. Compute both, publish both, and refuse the bet when the credit is unmeasured - which today is every bet in this catalogue.",
+    "Same-game legs share the referee, the weather, the game script and the availability report. The portfolio view must therefore cap exposure per *driver*, not per bet; S-01, S-02, S-03, S-07 and S-08 all read from the same injury file, so five strategies agreeing is one bet, not five.",
+    "Correlation between our strategies is more decision-relevant than correlation between two legs, because capital allocation follows strategy diversification."
+  ]
+}
