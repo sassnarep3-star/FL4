@@ -53,7 +53,7 @@
    "Two Week 10 games were not FINAL at capture time",
    "The official schedule page rendered Steelers at Bengals as LIVE in the first quarter (CIN 3, PIT 0) and Chargers at Ravens as scheduled for Mon Nov 16 8:15 PM ET. Both rows are stored with null scores and a per-row note rather than with a zero or a guess.",
    "lab/results.html, data/lab/results_2026.json",
-   "Re-read the official schedule page after both games finish and append the results. Week 10 therefore contributes 13 FINAL games, not 14.",
+   "Re-read the official schedule page after both games finish and append the results. Week 10 therefore contributes 12 FINAL games of 14, and the season total stands at 148, not 150.",
    "https://www.nfl.com/schedules/2026/by-week/week-10"
   ],
   [
