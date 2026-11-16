@@ -169,7 +169,7 @@
    "met",
    "index.html (lab landing)",
    "Q-PRICE-01 to populate",
-   "Panel design and its 4 tests published; values populate after 1 leaderboard run with >=250 settled bets",
+   "Panel design and its 8 tests published; values populate after 1 leaderboard run with >=250 settled bets",
    "Panel renders with blank values and names the n each value requires"
   ],
   [
@@ -229,7 +229,7 @@
    "met",
    "index.html (lab landing)",
    "none",
-   "86 rows published with gate + clearing number",
+   "78 rows published with gate + clearing number (70 from the brief + 8 session meta-requirements)",
    "This table"
   ],
   [
