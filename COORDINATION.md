@@ -261,3 +261,22 @@ the two integration exceptions logged below.
 - 18 blocking questions in `signals/questions.html`; 5 numeric gate thresholds unset (`signals:F-05`).
 - No price feed ⇒ no CLV, no backtest, no originated line, empty leaderboard (`signals:F-01`).
 - Depth source unresolved ⇒ absences are published, replacements are not (`signals:F-02`).
+
+---
+
+# SESSION BOARD — `f51d93e6` (branch `arena/f51d93e6-fl4`, base `62afd1b` = main after PR #7)
+
+Claimed 2026-11-16. Arena fixes this session to one branch, so the `session-<id>/<task>` names in the brief are not used. Other live branches at claim time (read via `git fetch origin`): `arena/61ebd543-fl4` (T20–T33, `lab/` section), `arena/c75aedbd-fl4` (T14–T16), `arena/e9d38f97-fl4` (U1–U15). Their claims are **not** repeated here. This session takes only the unclaimed scope below and does not touch the `lab/`, `signals/`, root `index.html`, `pages/`, `data/*.json` or `data/lab|origination|plan|verify|availability/` files owned by others. Integration/PR/merge stays with the integration session that other boards name (T33 or U15); this session does not merge to `main`.
+
+| Task | Status | Owner (session) | File scope | Sources / verification | Irregularities |
+|---|---|---|---|---|---|
+| F1 Depth-source route census: one verified official route for all 32 clubs before any backup-deficiency feature (brief: route (a) per-club official depth pages; route (b) snap counts is owned by U8 and is only referenced here) | in progress (claimed 2026-11-16) | `f51d93e6` | `data/depth/route_census.json`, `depth/route-census.html` | official club sites / nfl.com, fetched 2026-11-16; one row per club with URL, format, date read | — |
+| F2 Depth-slot data model: groups not single starters, shared and empty slots, no ordering from jersey number, roster-turnover versioning; rules only, zero published depth rows | in progress (claimed 2026-11-16) | `f51d93e6` | `data/depth/slot_model.json`, `depth/slot-model.html`, `tools/build_depth.py`, `tools/check_depth.py` | rules derive from brief; no source value | none published |
+
+Log (2026-11-16, f51d93e6) — findings from reading the official pages, for every session:
+
+- **L1 NFL Terms §1.3 (read 2026-11-16, https://www.nfl.com/legal/terms/):** "Systematic retrieval of data or other content from the Services, whether to create or compile, directly or indirectly, a collection, compilation, database, or directory, is prohibited absent our express prior written consent." Automated multi-day or Wed–Fri capture of nfl.com pages, and multi-season archive capture, therefore need written consent or another licensed source. No session should add a scheduled scraper on the strength of the brief alone. This is an owner decision (Q-LEGAL-02 class), not an engineering task.
+- **L2 Brief identifiers not in repo:** `VR-04…VR-26`, `VQ-05…VQ-08`, `SG-05`, `Q06` appear in the brief but in no file of `main` or any open branch (`git grep` on all `origin/arena/*` heads). They cannot be checked and are not used as evidence by this session.
+- **L3 Lions game-status claim not reproduced:** the brief says Kerby Joseph, Cade Mays and D.J. Reed have blank game-status cells. The official page (https://www.nfl.com/injuries/league/2026/reg10, chunk 0 of 8, read 2026-11-16) lists all three with Game Status **Out**. The repo's `data/injuries_w10_2026.json`, `data/signals/injuries_week10_2026.json` and both rendered `pages/injuries.html` / `signals/injuries.html` also show **Out**. Recorded as a non-reproduced irregularity; the other sessions' recaptures should check it on their own read.
+- **L4 Row counts conflict:** the brief's 254/279 counts appear in no repo file. Repo counts: 160 rows (`data/injuries_w10_2026.json`), 76 Out/Doubtful rows (`data/signals/injuries_week10_2026.json`). The two use different scope rules and must not be compared as one number.
+- **L5 Official full-page layout:** the Week 10 page lists players with blank injury and blank game status too (e.g. Commanders' John Bates, Full Participation). The 160-row scope note says such rows are omitted; this is a scope choice, not an error, but it should be stated on every table.
