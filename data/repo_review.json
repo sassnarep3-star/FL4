@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-16",
+  "as_of": "2026-11-14",
   "method": "Each item was checked by running git or gh in the sandbox on 2026-11-14 (commands listed in 'Evidence'). Links point to the GitHub object checked.",
   "rows": [
     {
@@ -72,7 +72,7 @@
       "evidence": "python JSON count of each file; compare with the 16 Nov transcription (tools/capture_w10.py --check)",
       "source": "https://www.nfl.com/injuries/league/2026/reg10",
       "severity": "High",
-      "status": "Flagged (F-20, F-21, F-28)"
+      "status": "Flagged (F-24, F-25, F-30)"
     },
     {
       "id": "R-09",
@@ -108,7 +108,7 @@
       "evidence": "git log --oneline -- data/injuries_w10_2026.json",
       "source": "https://github.com/sassnarep3-star/FL4/commits/main/data/injuries_w10_2026.json",
       "severity": "Medium",
-      "status": "Flagged - reviewer decision (F-20)"
+      "status": "Flagged - reviewer decision (F-24)"
     },
     {
       "id": "R-13",

@@ -1,689 +1,285 @@
 {
   "as_of": "2026-11-16",
-  "note": "One row per requirement from the brief. 'Status' is what the repo can show today. 'Number that clears it' is the threshold the project itself uses (from data/signals/gates.json, correlations protocol and leaderboard rules) or an explicit count the brief asks for. Where the project has not set a number, the row says NOT SET. Counts are taken from the files named in the row.",
-  "status_key": {
-    "Met": "built and verified in the repo",
-    "Partial": "some of it exists; a named input is missing",
-    "Blocked": "cannot be completed until the blocker is cleared",
-    "Not started": "no work yet",
-    "Not met": "required field absent",
-    "Rejected (policy)": "proposal rejected and recorded"
-  },
+  "note": "Decision-readiness register. One row per requirement area from the 2026-11-16 brief. Status is a project status, not an official NFL value, so it carries no source link. A row is 'Met' only when the deliverable exists on this site. The number in 'Clears' is the threshold the gate needs; 'Current' is what the repository holds today.",
   "rows": [
     {
-      "id": "DR-01",
-      "requirement": "Price snapshot store: opening and closing numbers for every market originated",
+      "area": "Price snapshots (open and close) for every originated market",
+      "requirements": "Price-snapshot store",
       "status": "Blocked",
-      "blocking_gate": "PP-01 price policy + Q-MKT-01 (no licensed price source)",
-      "clearing_number": "100% of originated markets with an open and a close record",
-      "now": "0 snapshots; 0 markets originated",
-      "source": "User brief; S29, S31"
+      "gate": "No price feed or licence (F-01, Q-MKT-01); price-data policy not decided (Q-MKT-01)",
+      "clears": "Licensed feed approved + open and close captured for every originated market",
+      "current": "0 markets priced",
+      "where": "pages/flagged.html"
     },
     {
-      "id": "DR-02",
-      "requirement": "Verified results feed so backtests and ROI can be computed",
+      "area": "Verified results feed and game-level results",
+      "requirements": "Results feed; game-level results for opponent-aware ratings; 136-game corpus",
+      "status": "Blocked",
+      "gate": "No results ingest; terms not cleared for systematic retrieval (S29)",
+      "clears": "136 completed 2026 games, each row linked to an official source",
+      "current": "0 of 136 game results ingested",
+      "where": "pages/sources.html"
+    },
+    {
+      "area": "Originated line: side, then total, then moneyline; fair vs market vs difference",
+      "requirements": "Line origination order and columns",
+      "status": "Blocked",
+      "gate": "No model output and no market line",
+      "clears": "1 model fair line + 1 market line + difference per game, with inputs stored",
+      "current": "0 model outputs",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Pre-registration and freezing of rules",
+      "requirements": "Pre-register each strategy; freeze a rule before data; train/validation/holdout split",
       "status": "Partial",
-      "blocking_gate": "Full-season pull (terms s.1.3 consent) and a corpus gate",
-      "clearing_number": "All completed 2026 games with an official final score",
-      "now": "14 Week 10 games in data/results_feed.json: 12 Final, 1 live at capture, 1 scheduled; 0 earlier weeks",
-      "source": "User brief; S32, S29"
+      "gate": "Rule text not committed with a registration hash; no holdout seasons",
+      "clears": "Commit hash per strategy, recorded before the evaluation window opens",
+      "current": "0 registration hashes",
+      "where": "pages/strategies.html"
     },
     {
-      "id": "DR-03",
-      "requirement": "Originate the side first, then the total, then the moneyline",
+      "area": "Leaderboard: signal separated from staking; backtests barred; divisions; control baselines",
+      "requirements": "Leaderboard rules and divisions",
+      "status": "Design only",
+      "gate": "No settled bet ledger (G-14 needs a hash-chained ledger)",
+      "clears": "≥1 settled strategy per division with a random and a favourites control",
+      "current": "0 settled entries; leaderboard empty",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Removal-of-luck panel and proper-score ranking (Brier skill, game-cluster lower bound)",
+      "requirements": "Removal-of-luck panel; rank by Brier skill with lower bound",
       "status": "Blocked",
-      "blocking_gate": "No originated line exists; price feed (Q-MKT-01)",
-      "clearing_number": "One originated side, total and moneyline per game, each with inputs and sigma",
-      "now": "0 of 3 markets per game",
-      "source": "User brief; S31"
+      "gate": "Sample sufficiency gate G-1 needs settled bets; no probability outputs to score",
+      "clears": "≥500 settled bets on ≥250 distinct games over ≥12 weeks (G-1)",
+      "current": "0 bets",
+      "where": "signals/validation.html"
     },
     {
-      "id": "DR-04",
-      "requirement": "Publish fair line, market line and difference as separate columns",
+      "area": "Demotion gate (live back to paper) and kill switch",
+      "requirements": "Demotion gate; stopping rule",
+      "status": "Design set",
+      "gate": "No live strategies exist to demote; G-15 needs a live ledger",
+      "clears": "Stopping rule registered per live strategy (G-15)",
+      "current": "0 live strategies",
+      "where": "signals/validation.html"
+    },
+    {
+      "area": "Correlations, published with n",
+      "requirements": "Correlation values with n; parlay joint-evidence gate",
       "status": "Blocked",
-      "blocking_gate": "Market line source (Q-MKT-01)",
-      "clearing_number": "Market line with timestamp for each published game",
-      "now": "0 published (no market line and no model line)",
-      "source": "User brief; S31"
+      "gate": "No settled ledger; protocol requires n ≥ 300 per pair from official numbers (F-11)",
+      "clears": "n ≥ 300 settled games per pair, with bootstrap CI",
+      "current": "0 measured pairs",
+      "where": "signals/correlation.html"
     },
     {
-      "id": "DR-05",
-      "requirement": "Separate 'signal' from 'staking' in the leaderboard",
+      "area": "Joint probability for parlays and prop combos",
+      "requirements": "Keep parlays and combos behind a joint-evidence gate",
+      "status": "Policy in place",
+      "gate": "No directly validated joint probability and no operator void/push rules",
+      "clears": "A validated joint probability + void/push rules for each combo",
+      "current": "0 combos eligible",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Model outputs stored as probability plus inputs; 'what would change our mind' field",
+      "requirements": "Store probability plus inputs; two-sided change-our-mind field",
+      "status": "Not built",
+      "gate": "Field absent from the strategy schema (0 occurrences in data/strategies.json and data/signals/strategies.json)",
+      "clears": "One stored output with inputs and hash; the field present on every strategy",
+      "current": "0 outputs; 0 strategies with the field",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Residual vs market published on a schedule",
+      "requirements": "Scheduled residual publication from day one",
+      "status": "Blocked",
+      "gate": "No market line and no model",
+      "clears": "One residual published per schedule slot, with its timestamp",
+      "current": "0 published",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Injury report: timestamped series and surprise (not level)",
+      "requirements": "Store every injury-hub read with clock time; publish delta; daily Wed–kickoff capture",
       "status": "Partial",
-      "blocking_gate": "Leaderboard entries (none exist); G-14 anti-gaming",
-      "clearing_number": "Two distinct columns populated for 1 or more prospective strategies",
-      "now": "Score design present (data/signals/leaderboard.json); 0 entries",
-      "source": "User brief; S29"
+      "gate": "One capture exists (as_of 2026-11-14); no scheduled capture; NFL terms bar systematic retrieval without consent (S29)",
+      "clears": "≥3 timestamped reads for the same week with SHA-256 hashes, after the terms decision",
+      "current": "1 capture (Week 10, 2026)",
+      "where": "pages/injuries.html"
     },
     {
-      "id": "DR-06",
-      "requirement": "Track depth of replacement, not just the fact of replacement",
+      "area": "Injury designation reliability and Questionable calibration",
+      "requirements": "Score designations against inactive lists; calibrate 'Questionable'",
       "status": "Blocked",
-      "blocking_gate": "Verified depth source for 32 clubs (route a or b)",
-      "clearing_number": "32 of 32 clubs with a verified dated depth page",
-      "now": "0 of 32 clubs verified; blank template rows only (data/replacement_tiers.json)",
-      "source": "User brief; S31"
+      "gate": "Needs archived reports and official inactive lists for several seasons (Q06)",
+      "clears": "Multi-season archive matched to official inactive lists (≥1 season)",
+      "current": "1 week archived; 0 inactive lists",
+      "where": "pages/flagged.html"
     },
     {
-      "id": "DR-07",
-      "requirement": "Compute correlations only from official numbers and publish n with each value",
+      "area": "Official inactive lists, Game Books and snap counts",
+      "requirements": "Actual starters and game-day status from Game Books; snap-count starter proxy",
       "status": "Blocked",
-      "blocking_gate": "Settlement ledger (F-11) and estimation protocol",
-      "clearing_number": "n of at least 300 paired observations per pair (protocol minimum)",
-      "now": "0 of 11 pairs measured",
-      "source": "User brief; data/signals/correlations.json"
+      "gate": "No Game Book or snap-count source captured; route not verified",
+      "clears": "Official Game Book or snap-count file for each game, linked",
+      "current": "0 of 136 games",
+      "where": "pages/flagged.html"
     },
     {
-      "id": "DR-08",
-      "requirement": "Demotion gate that sends a live strategy back to paper",
+      "area": "Depth order source: 32 club depth pages (route a) or snap counts (route b)",
+      "requirements": "Resolve depth-order source before any backup-deficiency feature",
+      "status": "Blocked",
+      "gate": "No club depth page verified for all 32 clubs; depth as image or prepended jersey numbers (F-02)",
+      "clears": "32 of 32 clubs verified against one route",
+      "current": "0 of 32 clubs",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Depth as slot groups; shared and empty slots; no jersey-order or salary inference",
+      "requirements": "Model depth slots as groups; represent shared/empty slots; reject jersey-order inference",
+      "status": "Rule set",
+      "gate": "No depth rows captured; replacement tiers are blank by design",
+      "clears": "Groups recorded with shared and empty slots shown, from an official source",
+      "current": "0 slots populated",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Roster / IR sweep of 32 teams before any team-level model",
+      "requirements": "Run 32-team roster/IR sweep; reserve list so 'not listed' is not 'available'",
+      "status": "Not started",
+      "gate": "No sweep; reserve list not captured",
+      "clears": "32 of 32 rosters and IR lists captured with dates",
+      "current": "0 of 32",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Roster turnover as a dated event; flag stale depth rows against transactions",
+      "requirements": "Treat roster turnover as first-class; flag stale depth rows",
+      "status": "Not built",
+      "gate": "Cited VR-/VQ- events not located in repo or official sources here (F-22)",
+      "clears": "Official transaction log captured; depth rows versioned against it",
+      "current": "0 events captured",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Announced-starter evidence field and depth-chart register with date and source",
+      "requirements": "Announced-starter field; depth register with date and source per row",
+      "status": "Not built",
+      "gate": "No dated starter announcement captured (F-22)",
+      "clears": "Each register row with a date and an official URL",
+      "current": "0 rows",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Per-team view: starters out, replacements named, net injury count",
+      "requirements": "Per-team decision view",
       "status": "Partial",
-      "blocking_gate": "Live strategy (none) and G-15 drawdown threshold",
-      "clearing_number": "max_drawdown_pct set by the reviewer; kill-switch rule active",
-      "now": "G-15 design present; max_drawdown_pct NOT SET; 0 live strategies",
-      "source": "User brief; data/signals/gates.json"
+      "gate": "Team counts exist (Out, Doubtful, Questionable); starters and replacements cannot be identified without the depth register",
+      "clears": "Starter per slot from the register; replacements named only with a source",
+      "current": "Counts only; 0 starters named",
+      "where": "pages/injuries.html"
     },
     {
-      "id": "DR-09",
-      "requirement": "Pre-register every strategy; backtest numbers never on the leaderboard",
+      "area": "Matchup deficiency matrix (1st to 4th string)",
+      "requirements": "Offense vs defense matchup matrix",
+      "status": "Blocked",
+      "gate": "Depends on the depth register (above)",
+      "clears": "Register complete for the clubs in the matchup",
+      "current": "0 matchups",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Blank 2nd/3rd/4th-string tracker",
+      "requirements": "Blank offense/defense replacement slots",
+      "status": "Blank by design",
+      "gate": "Depends on the depth register",
+      "clears": "Filled only from official source per slot",
+      "current": "0 slots filled",
+      "where": "pages/injuries.html"
+    },
+    {
+      "area": "Fixture context and venue of every fixture; dated schedule announcement",
+      "requirements": "Fixture-context features from published schedule; venue transcription; schedule beside live page",
+      "status": "Not built",
+      "gate": "No schedule dataset in the repo",
+      "clears": "Every 2026 fixture with venue, from the official schedule, linked",
+      "current": "0 fixtures recorded",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Stadium roof/surface and NWS hourly overlay",
+      "requirements": "Roof designation coupled with forecast",
+      "status": "Not built",
+      "gate": "No official roof designation captured; NWS is not in this session's egress list",
+      "clears": "Roof designation per venue from an official source; forecast captured with time",
+      "current": "0 venues",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Ablations with and without personnel features; chronological holdouts",
+      "requirements": "Injury/depth ablations instead of fixed penalties",
+      "status": "Blocked",
+      "gate": "No backtest corpus and no depth data",
+      "clears": "≥3 seasons of timestamped inputs, chronological split",
+      "current": "0 seasons",
+      "where": "signals/validation.html"
+    },
+    {
+      "area": "Shadow baseline (singles only), frozen version and forecasts before kickoff",
+      "requirements": "Start with singles-only shadow baseline",
+      "status": "Not built",
+      "gate": "No model built; no price data for comparison",
+      "clears": "Frozen model hash and forecast log recorded before kickoff",
+      "current": "0 forecasts",
+      "where": "pages/strategies.html"
+    },
+    {
+      "area": "Weekly 'what changed' diff; drift alarms; durable snapshot storage and alerts",
+      "requirements": "Weekly diff; scraper drift alarm; immutable storage",
+      "status": "Partial",
+      "gate": "Two captures in one week only (no diff possible); parser rule conflicts with data (F-20); no storage or alerting",
+      "clears": "Two weekly snapshots plus an automated row-count and field check that fails the build",
+      "current": "1 week; 1 parser rule in conflict",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Week 10 injury tables re-captured and republished",
+      "requirements": "Re-capture and republish Week 10 counts",
+      "status": "Partial",
+      "gate": "Full eight-chunk capture not completed; counts 254/279 not reproduced (F-21)",
+      "clears": "Row-level reconciliation of all eight chunks against the published table",
+      "current": "160 local rows; 23 sampled rows verified",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Lions Week 10 game-status cells",
+      "requirements": "Populate three Lions designations",
+      "status": "Resolved",
+      "gate": "No defect remains: the current data and the live page both show Out (F-23)",
+      "clears": "Done when the published cells equal the official page",
+      "current": "3 of 3 match",
+      "where": "pages/flagged.html"
+    },
+    {
+      "area": "Public analysis layer vs private data layer; terms review",
+      "requirements": "Split public and private data; read terms first",
+      "status": "Blocked",
+      "gate": "NFL terms prohibit systematic retrieval absent prior written consent (S29); no decision recorded",
+      "clears": "Written terms decision recorded per source",
+      "current": "0 decisions",
+      "where": "pages/sources.html"
+    },
+    {
+      "area": "Questions, suggestions, executive summary, repo review, requirements",
+      "requirements": "Existing dashboard deliverables",
       "status": "Met",
-      "blocking_gate": "None for registration; guard active",
-      "clearing_number": "All strategies hashed (16 of 16) and guard passes",
-      "now": "16 of 16 hashed in data/prereg.json; 0 leaderboard rows; guard passes",
-      "source": "User brief; data/prereg.json"
-    },
-    {
-      "id": "DR-10",
-      "requirement": "Build the availability graph as a dataset: expected to start vs actually started",
-      "status": "Blocked",
-      "blocking_gate": "Expected-starter source and Game Books (S19)",
-      "clearing_number": "Expected and actual starter lists for 14 of 14 Week 10 games",
-      "now": "0 of 14 games",
-      "source": "User brief; S19, S31"
-    },
-    {
-      "id": "DR-11",
-      "requirement": "Model depth from playing time, not jersey order",
-      "status": "Met (policy)",
-      "blocking_gate": "None; depth model not built",
-      "clearing_number": "Policy recorded; no jersey-order input in any model",
-      "now": "No depth model exists; no jersey-order input",
-      "source": "User brief; data/replacement_tiers.json"
-    },
-    {
-      "id": "DR-12",
-      "requirement": "Make the injury signal a surprise, never a level",
-      "status": "Not started",
-      "blocking_gate": "Two or more dated reads per player (see DR-22)",
-      "clearing_number": "At least 2 timestamped reads per player-week",
-      "now": "2 dated reads at report level (2026-11-14 table, 2026-11-16 page); 0 player-level series",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-13",
-      "requirement": "Run the 32-team roster/IR sweep before trusting any team-level model",
-      "status": "Partial",
-      "blocking_gate": "Roster and IR pages for 32 clubs not captured",
-      "clearing_number": "32 of 32 clubs swept",
-      "now": "28 of 32 clubs in the Week 10 injury report (4 on bye); roster/IR sweep 0 of 32",
-      "source": "User brief; S31, S32"
-    },
-    {
-      "id": "DR-14",
-      "requirement": "Fixture-context feature set from published schedule facts only",
-      "status": "Partial",
-      "blocking_gate": "Feature build not started",
-      "clearing_number": "Features computed for 14 of 14 Week 10 fixtures from official facts",
-      "now": "14 of 14 fixtures and results in the feed; 0 features built",
-      "source": "User brief; S32"
-    },
-    {
-      "id": "DR-15",
-      "requirement": "Store every model output as a probability plus its inputs",
-      "status": "Not started",
-      "blocking_gate": "No model output exists",
-      "clearing_number": "One stored output with probability and input hash",
-      "now": "0 outputs",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-16",
-      "requirement": "'Removal of luck' panel on the site dashboard",
-      "status": "Blocked",
-      "blocking_gate": "Sample gates G-1 (500 bets, 250 games, 12 weeks) and G-2",
-      "clearing_number": "Gate G-1 passed for at least one strategy",
-      "now": "0 bets; 0 games; 0 weeks",
-      "source": "User brief; data/signals/gates.json"
-    },
-    {
-      "id": "DR-17",
-      "requirement": "Two-sided 'what would change our mind' field on every strategy",
-      "status": "Not met",
-      "blocking_gate": "Field absent from data/signals/strategies.json",
-      "clearing_number": "16 of 16 strategies carry both sides of the falsifier",
-      "now": "0 of 16 (field absent; how_it_loses present)",
-      "source": "User brief; data/signals/strategies.json"
-    },
-    {
-      "id": "DR-18",
-      "requirement": "Price our own line and publish the residual on a schedule from day one",
-      "status": "Blocked",
-      "blocking_gate": "Price feed (Q-MKT-01) and model (not built)",
-      "clearing_number": "Residual published for every scheduled game",
-      "now": "0 games priced",
-      "source": "User brief; PP-01"
-    },
-    {
-      "id": "DR-19",
-      "requirement": "Turn the 136-game log into the pre-registered backtest corpus",
-      "status": "Blocked",
-      "blocking_gate": "No game-level log exists (F-29); prices absent (PP-01)",
-      "clearing_number": "136 decided games with official results and closing lines",
-      "now": "0 game-level rows; league check shows 136 wins and 136 losses",
-      "source": "User brief; data/league_state.json"
-    },
-    {
-      "id": "DR-20",
-      "requirement": "Decide the price-data policy before any backtest is published",
-      "status": "Met",
-      "blocking_gate": "Owner may amend PP-01",
-      "clearing_number": "Policy adopted and logged",
-      "now": "PP-01 adopted (data/price_policy.json)",
-      "source": "User brief; S29"
-    },
-    {
-      "id": "DR-21",
-      "requirement": "Store every injury-hub read with clock time; publish the delta, never the level",
-      "status": "Partial",
-      "blocking_gate": "Automated timestamped capture (terms s.1.3)",
-      "clearing_number": "Timestamped reads per game-week; delta published",
-      "now": "Delta published as counts (earlier table vs 16 Nov); clock times recorded for 2 captures",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-22",
-      "requirement": "Capture the injury report from Wednesday to kickoff, daily, and keep the series",
-      "status": "Not started",
-      "blocking_gate": "Scheduled capture needs a terms decision (s.1.3)",
-      "clearing_number": "Daily captures Wed to kickoff for each game-week",
-      "now": "0 scheduled captures; 2 manual reads",
-      "source": "User brief; S29, S31"
-    },
-    {
-      "id": "DR-23",
-      "requirement": "Put a decision-readiness table on the landing page",
-      "status": "Met",
-      "blocking_gate": "None",
-      "clearing_number": "One row per requirement with gate and clearing number",
-      "now": "This table",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-24",
-      "requirement": "Transcribe the venue of every fixture from the official game centre",
-      "status": "Not started",
-      "blocking_gate": "Game-centre venue fields not captured",
-      "clearing_number": "14 of 14 Week 10 venues with source",
-      "now": "0 of 14 venues",
-      "source": "User brief; S32"
-    },
-    {
-      "id": "DR-25",
-      "requirement": "Publish the league's dated schedule announcement beside the live schedule",
-      "status": "Not started",
-      "blocking_gate": "Announcement capture",
-      "clearing_number": "Dated announcement linked for each schedule release",
-      "now": "0 linked announcements",
-      "source": "User brief; S32"
-    },
-    {
-      "id": "DR-26",
-      "requirement": "Use official NFL Game Books for actual starters and game-day status",
-      "status": "Blocked",
-      "blocking_gate": "Game Book access (S19) and capture",
-      "clearing_number": "Game Books for 14 of 14 Week 10 games",
-      "now": "0 of 14 Game Books captured",
-      "source": "User brief; S19"
-    },
-    {
-      "id": "DR-27",
-      "requirement": "Ingest game-level results to make ratings opponent-aware",
-      "status": "Partial",
-      "blocking_gate": "Rating model not built; season results incomplete",
-      "clearing_number": "All 136 decided games in the feed",
-      "now": "12 of 136 Week 10 finals in the feed",
-      "source": "User brief; S32"
-    },
-    {
-      "id": "DR-28",
-      "requirement": "Injury and personnel ablations instead of fixed penalties (with and without features, chronological holdouts)",
-      "status": "Blocked",
-      "blocking_gate": "Model not built; personnel features unavailable",
-      "clearing_number": "Paired ablation with a holdout of at least 3 folds (G-2) and uncertainty",
-      "now": "0 models; 0 folds",
-      "source": "User brief; data/signals/gates.json (G-2)"
-    },
-    {
-      "id": "DR-29",
-      "requirement": "Automate immutable multi-day availability snapshots (report and club depth pages, retained hashes)",
-      "status": "Blocked",
-      "blocking_gate": "Automation needs a terms decision (s.1.3)",
-      "clearing_number": "Snapshots retained with hashes for every capture day",
-      "now": "1 private capture (transcription hash, not raw bytes)",
-      "source": "User brief; S29, S31"
-    },
-    {
-      "id": "DR-30",
-      "requirement": "Immutable official snapshots: raw hashes, timestamps and conflict flags",
-      "status": "Partial",
-      "blocking_gate": "Raw fetch bytes not retained by the fetch tool",
-      "clearing_number": "Raw-byte hash plus conflict flag per capture",
-      "now": "Transcription SHA-256 recorded; conflict flags listed in Flagged F-21 and F-22",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-31",
-      "requirement": "Capture official inactive lists and snap counts",
-      "status": "Blocked",
-      "blocking_gate": "Inactive list and snap-count sources not captured",
-      "clearing_number": "Inactive list for 14 of 14 games; snap counts from an official source",
-      "now": "0 of 14 inactive lists; 0 snap-count sources",
-      "source": "User brief; S19, S32"
-    },
-    {
-      "id": "DR-32",
-      "requirement": "Fix the two depth-parsing failures (Texans image, Packers jersey prefix)",
-      "status": "Not started",
-      "blocking_gate": "Depth pages not captured; Texans source needs an authorised structured route",
-      "clearing_number": "Two parser fixtures passing on real captured pages",
-      "now": "0 of 2",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-33",
-      "requirement": "Model depth slots as groups, not one starter (149 slots with more than one rank-1 player, per brief)",
-      "status": "Not started",
-      "blocking_gate": "Depth source (DR-06)",
-      "clearing_number": "All multi-player rank-1 slots stored as groups",
-      "now": "0 of 149 (brief figure, not reproduced)",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-34",
-      "requirement": "Treat roster turnover as a first-class data event (versioned against the last official roster event)",
-      "status": "Not started",
-      "blocking_gate": "Transaction log capture not started",
-      "clearing_number": "Versioned depth and availability rows keyed to roster events",
-      "now": "0 versioned rows",
-      "source": "User brief; F-30"
-    },
-    {
-      "id": "DR-35",
-      "requirement": "Start with a singles-only shadow baseline, frozen and recorded before kickoff",
-      "status": "Not started",
-      "blocking_gate": "Model not built; forecast log not started",
-      "clearing_number": "One forecast per game, time-stamped before kickoff, for 14 of 14 Week 10 games",
-      "now": "0 of 14 forecasts",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-36",
-      "requirement": "Keep parlays and prop combos behind a joint-evidence gate",
-      "status": "Met (gate design)",
-      "blocking_gate": "Joint probability validation (0 of 11 pairs measured)",
-      "clearing_number": "Directly validated joint probability plus void/push rules for each combo",
-      "now": "Gate written; 0 combos rankable",
-      "source": "User brief; data/signals/correlations.json"
-    },
-    {
-      "id": "DR-37",
-      "requirement": "Proper-score leaderboard divisions (singles, game parlays, same-game parlays, prop combos)",
-      "status": "Partial",
-      "blocking_gate": "No entries; divisions not yet implemented",
-      "clearing_number": "Four divisions, each with at least one prospective entry",
-      "now": "Score rules exist; 0 of 4 divisions populated",
-      "source": "User brief; data/signals/leaderboard.json"
-    },
-    {
-      "id": "DR-38",
-      "requirement": "Rank by benchmark-relative Brier skill with a game-cluster lower bound and multiplicity adjustment",
-      "status": "Not started",
-      "blocking_gate": "Forecast log (DR-35); multiplicity count of trials",
-      "clearing_number": "Lower bound above 0 at 80% for one strategy over at least 250 distinct games (G-1)",
-      "now": "0 forecasts; 0 games",
-      "source": "User brief; S23; data/signals/gates.json (G-1, G-11)"
-    },
-    {
-      "id": "DR-39",
-      "requirement": "Durable snapshot storage outside the static site, freshness monitoring and source/schema alerts",
-      "status": "Partial",
-      "blocking_gate": "External durable store and alert channel not configured",
-      "clearing_number": "Off-site store with at least one freshness alert tested",
-      "now": "Private local copy only; CI schema check (check_prereg, capture validator)",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-40",
-      "requirement": "Split the public analysis layer from the private raw-data layer",
-      "status": "Partial",
-      "blocking_gate": "Reviewer decision on terms s.1.3 (F-20)",
-      "clearing_number": "0 row-level player files in the public tree",
-      "now": "Row-level player table still public on pages/injuries.html (160 rows) and two other public files (75 and 76 rows). Counts-only summary exists; not yet wired into the page. See F-20.",
-      "source": "User brief; S29"
-    },
-    {
-      "id": "DR-41",
-      "requirement": "Per-team view: starters out, replacements named, net injury count",
-      "status": "Partial",
-      "blocking_gate": "Depth source (DR-06) for starters and replacements",
-      "clearing_number": "Starters-out and replacements filled for 32 of 32 clubs",
-      "now": "Counts per club for 28 of 32 (Out, Doubtful, Questionable); starters out 0; replacements named 0",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-42",
-      "requirement": "Announced-starter evidence field (not an inferred replacement) for Lock, McCord, Brissett",
-      "status": "Blocked",
-      "blocking_gate": "Dated official source per change",
-      "clearing_number": "Each named change backed by a dated official source",
-      "now": "Official page rows checked: Drew Lock (SEA) Limited Participation, no game status. McCord and Brissett not in the transcription. Starter-change headlines not re-read; none used.",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-43",
-      "requirement": "Official depth-chart register with date and source per row",
-      "status": "Blocked",
-      "blocking_gate": "Depth source (DR-06)",
-      "clearing_number": "At least one dated row per club for 32 clubs",
-      "now": "0 rows",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-44",
-      "requirement": "Calibrate what 'Questionable' means empirically",
-      "status": "Blocked",
-      "blocking_gate": "Several seasons of designations joined to inactive lists (DR-31)",
-      "clearing_number": "Play rate per designation with CI; N set by reviewer (not set)",
-      "now": "0 seasons archived; 1 week captured",
-      "source": "User brief; S19"
-    },
-    {
-      "id": "DR-45",
-      "requirement": "Interactive offense vs defense matchup matrix (1st to 4th string)",
-      "status": "Not started",
-      "blocking_gate": "Depth register (DR-43)",
-      "clearing_number": "Matrix populated for 2 unit pairs per game, 14 games",
-      "now": "Blank template only (6 rows)",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-46",
-      "requirement": "Flag stale depth rows against the official transactions log",
-      "status": "Not started",
-      "blocking_gate": "Transactions log not captured",
-      "clearing_number": "Each depth row checked against a dated transaction",
-      "now": "0 checked",
-      "source": "User brief; F-30"
-    },
-    {
-      "id": "DR-47",
-      "requirement": "Point-in-time snapshot ledger for injuries, depth charts and inactives",
-      "status": "Not started",
-      "blocking_gate": "Scheduled capture (DR-22) and depth source (DR-06)",
-      "clearing_number": "Ledger rows with timestamp, hash and cutoff for each game",
-      "now": "0 rows",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-48",
-      "requirement": "Populate the three missing Lions designations (Joseph, Mays, Reed)",
-      "status": "Met (verified)",
-      "blocking_gate": "None",
-      "clearing_number": "Each shows an official status",
-      "now": "All three show Out on the 16 Nov page and in the repo table (F-23 records the brief's claim as not reproduced)",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-49",
-      "requirement": "Re-capture and republish the Week 10 injury tables",
-      "status": "Partial",
-      "blocking_gate": "Reviewer decision on row-level publication (F-20)",
-      "clearing_number": "Complete capture with counts reconciled to the page",
-      "now": "Complete capture: 347 rows, 28 clubs; counts in data/capture_summary_w10_2026.json. Row-level data NOT yet withheld from the public page (F-20).",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-50",
-      "requirement": "Reject: depth order from jersey number, experience or salary",
-      "status": "Rejected (policy)",
-      "blocking_gate": "None",
-      "clearing_number": "Rule recorded and no such input in code",
-      "now": "Rule recorded (SG-05); no such input exists",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-51",
-      "requirement": "Represent shared and empty depth slots faithfully (SEA shared slot; WAS empty slot)",
-      "status": "Not started",
-      "blocking_gate": "Depth source (DR-06)",
-      "clearing_number": "Both cases stored and rendered",
-      "now": "0 of 2",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-52",
-      "requirement": "Resolve the depth-order source before building the backup-deficiency feature",
-      "status": "Blocked",
-      "blocking_gate": "Route (a) official depth pages for 32 clubs, or route (b) official snap counts",
-      "clearing_number": "One route verified for all 32 clubs",
-      "now": "0 of 32 (route a); route b: no official source found",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-53",
-      "requirement": "Score injury-designation reliability before using it as a feature",
-      "status": "Blocked",
-      "blocking_gate": "Several seasons of designations and inactive lists (DR-44)",
-      "clearing_number": "Play rate per designation with confidence interval",
-      "now": "0 seasons",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-54",
-      "requirement": "Snapshot the injury report every Wednesday, Thursday and Friday; keep a dated history",
-      "status": "Not started",
-      "blocking_gate": "Scheduled capture (terms s.1.3)",
-      "clearing_number": "3 captures per game-week, kept",
-      "now": "0 scheduled; 2 manual reads",
-      "source": "User brief; S29, S31"
-    },
-    {
-      "id": "DR-55",
-      "requirement": "Use snap counts as the starter proxy when depth is unavailable",
-      "status": "Blocked",
-      "blocking_gate": "Official snap-count source (not found)",
-      "clearing_number": "Snap-share table for 32 clubs from an official source",
-      "now": "0 of 32",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-56",
-      "requirement": "Add a control baseline (random picks; favourites only) to every leaderboard run",
-      "status": "Not started",
-      "blocking_gate": "Leaderboard runs (none)",
-      "clearing_number": "Two baselines reported with each run",
-      "now": "0 runs",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-57",
-      "requirement": "Stadium roof/surface and NWS hourly wind/precipitation overlay",
-      "status": "Not started",
-      "blocking_gate": "Roof designations and NWS grids not captured",
-      "clearing_number": "Roof and forecast for 14 of 14 Week 10 venues",
-      "now": "0 of 14",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-58",
-      "requirement": "Two-stage skill leaderboard (Brier skill qualification, then prospective CLV/ROI escrow)",
-      "status": "Not started",
-      "blocking_gate": "Forecast log and price feed",
-      "clearing_number": "Stage 1 qualification and stage 2 escrow each with at least one entry",
-      "now": "0 entries",
-      "source": "User brief; data/signals/leaderboard.json"
-    },
-    {
-      "id": "DR-59",
-      "requirement": "Vig-free market consensus vs originated fair-line decomposition",
-      "status": "Blocked",
-      "blocking_gate": "Market prices (PP-01) and fair lines (DR-03)",
-      "clearing_number": "Both columns for at least one game",
-      "now": "0 games",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-60",
-      "requirement": "Publish every model total twice until a walk-forward comparison picks one",
-      "status": "Not started",
-      "blocking_gate": "Model not built; walk-forward (G-2)",
-      "clearing_number": "Two estimators with gap column, then one chosen by walk-forward",
-      "now": "0 estimators",
-      "source": "User brief; data/signals/gates.json (G-2)"
-    },
-    {
-      "id": "DR-61",
-      "requirement": "Drift alarm on every scraper (pinned row counts and required fields)",
-      "status": "Partial",
-      "blocking_gate": "Scraper coverage: one capture validator",
-      "clearing_number": "Every scraper pinned to expected counts",
-      "now": "1 of 1 current capture pinned (tools/capture_w10.py); fetch_injuries fixture test",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-62",
-      "requirement": "Capture the reserve list so 'not listed' never means 'available'",
-      "status": "Not started",
-      "blocking_gate": "Reserve/IR list not captured",
-      "clearing_number": "Reserve list for 32 clubs, dated",
-      "now": "0 of 32; 3 IR moves seen in headlines (F-26)",
-      "source": "User brief; S31"
-    },
-    {
-      "id": "DR-63",
-      "requirement": "Reject: ranking strategies by season-long ROI",
-      "status": "Rejected (policy)",
-      "blocking_gate": "None",
-      "clearing_number": "Rule recorded in the leaderboard rules",
-      "now": "Rule recorded (ranking uses CLV-based score, not season ROI)",
-      "source": "User brief; data/signals/leaderboard.json"
-    },
-    {
-      "id": "DR-64",
-      "requirement": "Archive weekly injury reports for past seasons (needed to test whether designations change outcomes)",
-      "status": "Blocked",
-      "blocking_gate": "Terms s.1.3 consent and archive capture",
-      "clearing_number": "Archive of 3 or more past seasons of weekly reports",
-      "now": "0 seasons archived",
-      "source": "User brief; S29"
-    },
-    {
-      "id": "DR-65",
-      "requirement": "Pre-register each strategy (definition frozen before results are seen)",
-      "status": "Met",
-      "blocking_gate": "None",
-      "clearing_number": "Each strategy hashed in data/prereg.json",
-      "now": "16 of 16",
-      "source": "User brief; data/prereg.json"
-    },
-    {
-      "id": "DR-66",
-      "requirement": "Freeze a rule before it sees data: commit text, sample window and gates; the commit hash is the registration",
-      "status": "Met (commit recorded)",
-      "blocking_gate": "Sample window not set (Q-06)",
-      "clearing_number": "Commit hash recorded plus sample window set",
-      "now": "Registration commit recorded in data/prereg.json; sample window NOT SET",
-      "source": "User brief; data/prereg.json"
-    },
-    {
-      "id": "DR-67",
-      "requirement": "Split data into train, validation and final-holdout seasons",
-      "status": "Blocked",
-      "blocking_gate": "Multi-season data (DR-64)",
-      "clearing_number": "Three season blocks",
-      "now": "0 of 3 blocks",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-68",
-      "requirement": "2026 kickoff and declared onside-kick regime priors filter",
-      "status": "Not started",
-      "blocking_gate": "Onside-kick declarations not captured; Rulebook is a reference (S03)",
-      "clearing_number": "Declared onside-kick events with source, for 2026 season",
-      "now": "0 events captured",
-      "source": "User brief; S03"
-    },
-    {
-      "id": "DR-69",
-      "requirement": "Suggestions page where the owner reviews and chooses a path before any change",
-      "status": "Met",
-      "blocking_gate": "None",
-      "clearing_number": "Suggestions listed with options and a local choice",
-      "now": "9 suggestions; choices recorded in browser only",
-      "source": "User brief; data/suggestions.json"
-    },
-    {
-      "id": "DR-70",
-      "requirement": "Clear list of questions, information and answers needed before a decision",
-      "status": "Met",
-      "blocking_gate": "Answers outstanding",
-      "clearing_number": "Each question with known, missing, and how to discover",
-      "now": "16 questions in data/questions.json (Signals section keeps its own list)",
-      "source": "User brief; data/questions.json"
-    },
-    {
-      "id": "DR-71",
-      "requirement": "Originate own NFL lines (research and develop strategies as a leaderboard)",
-      "status": "Blocked",
-      "blocking_gate": "PP-01 and DR-01 to DR-04",
-      "clearing_number": "At least one originated line with inputs and a gate result",
-      "now": "0 originated lines",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-72",
-      "requirement": "Correlation values for parlays and props",
-      "status": "Blocked",
-      "blocking_gate": "Settlement ledger (DR-07)",
-      "clearing_number": "n at least 300 per pair",
-      "now": "0 of 11 pairs",
-      "source": "User brief; data/signals/correlations.json"
-    },
-    {
-      "id": "DR-73",
-      "requirement": "Executive summary of important details",
-      "status": "Met",
-      "blocking_gate": "Refresh at each capture",
-      "clearing_number": "Summary matches current counts",
-      "now": "Summary generated from the data files (pages/executive-summary.html)",
-      "source": "User brief"
-    },
-    {
-      "id": "DR-74",
-      "requirement": "Repository review line by line, with links and irregularities flagged",
-      "status": "Met",
-      "blocking_gate": "None",
-      "clearing_number": "Each finding linked to the object checked",
-      "now": "R-01 to R-13 in pages/repo-review.html",
-      "source": "User brief; data/repo_review.json"
-    },
-    {
-      "id": "DR-75",
-      "requirement": "Every table row with an official source link; unverified values blank and flagged",
-      "status": "Met",
-      "blocking_gate": "None",
-      "clearing_number": "Validator passes with 0 unlinked factual rows",
-      "now": "tools/validate.py passes; unverified rows flagged",
-      "source": "User brief; tools/validate.py"
+      "gate": "—",
+      "clears": "—",
+      "current": "Present on the site",
+      "where": "pages/requirements.html"
     }
   ]
 }

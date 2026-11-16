@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-16",
+  "as_of": "2026-11-14",
   "note": "Flagged for Review. These items do NOT block the merge (per the brief). Each item lists the source to check. Status 'Unverified' means the value could not be confirmed from an official source, so it was left blank or marked, not filled in.",
   "rows": [
     {
@@ -156,6 +156,38 @@
     },
     {
       "id": "F-20",
+      "area": "Injury data scope rule (tool vs data vs requirements)",
+      "item": "tools/fetch_injuries.py documents a keep-only-Out/Doubtful rule, but data/injuries_w10_2026.json holds 160 rows that include 84 Questionable rows (66 Out, 10 Doubtful). REQUIREMENTS.md R-15 still says 75 Out/Doubtful rows.",
+      "why": "The three documents describe three different populations. Questionable players are published on the official page (e.g. Malik Harrison, NYG, Questionable; Brenden Schooler, NE, Questionable) and are present in the data, so the parser's documented rule and the CI fixture expectation no longer describe the dataset. Any count on the site must name which population it counts.",
+      "source": "S31",
+      "status": "Unverified as a rule decision; data matches the live page on 23 sampled rows (checked 2026-11-16). Reviewer to choose the population and align tools/fetch_injuries.py, the CI fixture and R-15."
+    },
+    {
+      "id": "F-21",
+      "area": "Week 10 injury counts and no-injury sections (user brief)",
+      "item": "The brief states the live report has 279 rows and 2 no-injury sections, versus 254 rows and 4 sections on the site, and that Seattle and Cincinnati list 15 and 4 players while shown as injury-free. This session could not reproduce these counts: the local file holds 160 rows, with SEA 4 and CIN 4 rows. Live chunks 0–1 of 8 were read; the Seattle and Cincinnati sections are not in those chunks.",
+      "why": "A full eight-chunk capture, reconciled row by row, is needed before any count is republished. Not completed in this session. The 23 sampled rows that were checked match the live page exactly, so the local rows are accurate where checked, but completeness is unproven.",
+      "source": "S31",
+      "status": "Unverified: count and section claims not reproduced; full recapture pending (owner decision on population, see F-20)."
+    },
+    {
+      "id": "F-22",
+      "area": "Roster events and starter announcements cited by the brief (VR-/VQ- references)",
+      "item": "The brief cites VR-04 to VR-08, VR-12, VR-17, VR-21, VR-23 to VR-26 and VQ-05 to VQ-08 for the Colts receiver trades, the Ravens depth rows (Lamar Jackson, Tyler Huntley), the Lock/McCord/Brissett starter changes, Malik Willis on injured reserve, and the Seattle and Washington depth slots. None of these identifiers appears anywhere in this repository (grep of all files, 2026-11-16).",
+      "why": "The referenced evidence is not in the repo and was not located in the official sources available here, so none of these items are verified, and no depth, starter or reserve value is published from them. Each needs its official transaction, depth-chart or report URL supplied and recorded in the sources register before it can be used.",
+      "source": "S31 (checked for the cited events; identifiers not found in that page)",
+      "status": "Unverified: cited identifiers not found; no values published."
+    },
+    {
+      "id": "F-23",
+      "area": "Lions Week 10 game-status cells (user brief)",
+      "item": "The brief says Kerby Joseph, Cade Mays and D.J. Reed have blank game-status cells. In the current data and on the live official page they show Game Status 'Out' (DET; practice 'Did Not Participate In Practice').",
+      "why": "Recorded so the reviewer can see that the claimed defect was checked and is not present in the current file. The live page chunk read on 2026-11-16 is the evidence.",
+      "source": "S31",
+      "status": "Verified 2026-11-16: no blank-cell defect in current data (live page and local file agree)."
+    },
+    {
+      "id": "F-24",
       "area": "Privacy / terms",
       "item": "Three public files carry row-level player data for Week 10 injuries: data/injuries_w10_2026.json (160 rows), data/injuries_week10_2026.json (75 rows) and data/signals/injuries_week10_2026.json (76 rows, shown on the Signals page).",
       "why": "NFL.com Terms s.1.3 prohibit systematic retrieval, and compiling a database from the Services, without express prior written consent. The public injuries page (pages/injuries.html, table tbl-players) still renders the player-level table built from data/injuries_w10_2026.json (160 rows). data/injuries_week10_2026.json (75 rows) and data/signals/injuries_week10_2026.json (76 rows, read by the Signals page) are also public. This session did NOT change those pages; it only added the private raw layer and counts-only summary. Git history keeps earlier copies.",
@@ -163,31 +195,15 @@
       "status": "Open - reviewer decision: remove the row-level tables and files, or confirm permission in writing. Not changed in this session (outside claim)."
     },
     {
-      "id": "F-21",
+      "id": "F-25",
       "area": "Injuries - earlier table",
       "item": "The earlier public table (data/injuries_w10_2026.json, read 2026-11-14) has no section for LAC or BAL, so 12 designated players are missing, and it lists IND's Arden Key as Questionable. The 16 Nov page shows Arden Key with no game status.",
       "why": "Coverage gap plus one status difference. Counts were corrected on the public page from the 16 Nov transcription (347 rows, 28 clubs). The earlier file is kept, marked superseded, because it is used for the delta.",
       "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Corrected in counts; earlier file superseded (see F-20)"
+      "status": "Corrected in counts; earlier file superseded (see F-24)"
     },
     {
-      "id": "F-22",
-      "area": "Injuries - brief claims not reproduced",
-      "item": "Brief claims VR-04 to VR-07: published 254 rows and 4 no-injury sections versus live 279 rows and 2 sections; Seattle and Cincinnati shown injury-free while listing 15 and 4 players.",
-      "why": "Not reproduced. The repo table had 160 rows and showed Seattle and Cincinnati with 4 designated players each. The 16 Nov page lists 347 player rows across 28 club sections, and every section has at least one injury entry or game status. Neither 254 nor 279 could be matched to any capture. No brief figure was adopted.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Not reproduced - reviewer to supply the capture that gave 279 rows"
-    },
-    {
-      "id": "F-23",
-      "area": "Injuries - brief claim not reproduced",
-      "item": "Brief claims VR-08: Kerby Joseph, Cade Mays and D.J. Reed have blank game status on the published table.",
-      "why": "Not reproduced. The repo table already shows Out for all three, and the 16 Nov page shows Out for all three.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Verified Out - no change needed"
-    },
-    {
-      "id": "F-24",
+      "id": "F-26",
       "area": "Injuries - snapshot timing",
       "item": "The 16 Nov capture was read after most Week 10 games had finished: the schedule page shows 12 Finals, PIT-CIN live in Q1, and LAC-BAL still to play.",
       "why": "Game-status and practice fields on the page may reflect post-game state, not the pre-kickoff status a forecast needs. The 16 Nov capture cannot be used as a pre-kickoff snapshot.",
@@ -195,7 +211,7 @@
       "status": "Open - a pre-kickoff capture is needed for any forecast"
     },
     {
-      "id": "F-25",
+      "id": "F-27",
       "area": "Injuries - club codes",
       "item": "The official page uses AZ for Arizona. The earlier root table used ARI.",
       "why": "Normalised in the counts (ARI mapped to AZ for the delta). The Signals table also uses AZ.",
@@ -203,7 +219,7 @@
       "status": "Resolved in counts"
     },
     {
-      "id": "F-26",
+      "id": "F-28",
       "area": "Reserve list",
       "item": "The injury report does not list players on injured reserve. Headlines on the official page report IR moves for Ravens QB Lamar Jackson and Dolphins QB Malik Willis. Patriots RB TreVeyon Henderson is on the page as Out with Illness (row confirmed in the transcription).",
       "why": "Absence from the report does not mean available. No reserve or transactions list has been captured, so IR status is headline-level only and the Willis headline was not re-read this session.",
@@ -211,7 +227,7 @@
       "status": "Open - capture the official reserve/transaction list"
     },
     {
-      "id": "F-27",
+      "id": "F-29",
       "area": "Private raw layer - integrity",
       "item": "private/captures/nfl_injuries_w10_2026_reg10.psv holds 347 rows transcribed by hand from the fetch tool output. The raw fetch bytes were not kept, so the stored SHA-256 is a hash of the transcription, not of the NFL page.",
       "why": "A transcription hash proves the file has not changed since capture; it does not prove the rows match the page byte for byte. Two transcription faults were found and fixed during validation (an extra delimiter; the Cardinals code). The file is git-ignored and is not on the site.",
@@ -219,15 +235,15 @@
       "status": "Open - reviewer may re-read the page to confirm any row"
     },
     {
-      "id": "F-28",
+      "id": "F-30",
       "area": "Signals section - injury table",
       "item": "The Signals injury table (signals/injuries.html, 76 rows) omits three Arizona Out rows and all LAC and BAL rows that are designated on the 16 Nov page.",
-      "why": "Another section's data. Not edited in this session (coordination rule: log requests instead of editing another section's files). It also shows player names, which conflicts with the private-layer requirement (see F-20).",
+      "why": "Another section's data. Not edited in this session (coordination rule: log requests instead of editing another section's files). It also shows player names, which conflicts with the private-layer requirement (see F-24).",
       "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
       "status": "Request logged in COORDINATION.md for the Signals owner"
     },
     {
-      "id": "F-29",
+      "id": "F-31",
       "area": "Backtest corpus - '136-game log'",
       "item": "The brief refers to a 136-game log. The repo has no game-level log. data/league_state.json holds a consistency check only (136 wins, 136 losses, one tied game).",
       "why": "A consistency sum cannot be used as a corpus. A corpus needs every game's official result, and closing lines (none exist: PP-01). Season-long pulls would need terms consent (S29 s.1.3).",
@@ -235,7 +251,7 @@
       "status": "Blocked - corpus not built"
     },
     {
-      "id": "F-30",
+      "id": "F-32",
       "area": "Depth and transaction claims",
       "item": "Brief claims about starters and depth (Lock, McCord, Brissett VR-24/25 and VQ-05; Baltimore QB rows VR-17/26 and VQ-07; Colts receiver trades; Texans and Packers depth pages) are not verified here.",
       "why": "Checked against the official page transcription: Drew Lock (SEA) is listed with Limited Participation and no game status; Brissett and Kyle McCord are not in the transcription. The headline text about who starts was not re-read this session and is not used. No depth chart or transaction log was captured, so no depth row is verified.",
