@@ -43,6 +43,9 @@ dependencies, all links relative.
 
 ## Log — session `61ebd543`
 
+- 2026-11-16 — PR #21 (https://github.com/sassnarep3-star/FL4/pull/21) merged as `9990583`; Pages build **built**. It corrects two stale counts that were printed on the live page: R-22 said the readiness table had 86 rows (it publishes 78) and R-16 said the luck panel had 4 tests (it has 8).
+- 2026-11-16 — Final state of this session: PRs #18 (`fa0ac93`), #19 (`edbd9d5`), #20 (`f256672`) and #21 (`9990583`) are all merged to `main`, with a `built` Pages build for each. The section is live at https://sassnarep3-star.github.io/FL4/lab/. Remaining work for a future session, all named on the site: the root nav entry (L-F-18), moving raw captures out of the published tree (SG-06 / Q-STORE-01), the depth source (SG-03 / Q-DEPTH-01), the snapshot runner (SG-02 / Q-SNAPSHOT-01), Game Book parsing (SG-04 / Q-BOOKS-01) and the price decision (SG-01 / Q-PRICE-01).
+
 - 2026-11-16 — **Merged and published.** PR #18 (https://github.com/sassnarep3-star/FL4/pull/18, `arena/61ebd543-fl4` -> `main`) merged as `fa0ac93` after `verify.yml` passed on the PR head (run 43790543497, 7s). Pages build for `fa0ac93`: **built**. Live at https://sassnarep3-star.github.io/FL4/lab/ — the landing page, the readiness table and `lab/depth.html` were fetched over HTTPS and render.
 - 2026-11-16 — PR #19 (https://github.com/sassnarep3-star/FL4/pull/19) merged as `edbd9d5`; Pages build **built**. It fixes one live defect found by fetching the deployed page: the readiness table rendered `where_published` as `lab/x.html` from inside `lab/index.html`, which resolved to `/FL4/lab/lab/x.html`. Lesson for the next session: a green build is not a verified deploy — fetch the published URL.
 - 2026-11-16 — PR #20 (https://github.com/sassnarep3-star/FL4/pull/20) fixes two cosmetic rendering defects found the same way: a literal `&mdash;` in a table header and duplicated step numbers in the suggestions workflow list.
