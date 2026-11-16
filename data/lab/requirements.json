@@ -1,0 +1,796 @@
+{
+ "as_of": "2026-11-16",
+ "note": "One row per requirement stated in the project brief, in the order the brief states it, plus the meta-requirements from the session instructions (M-71 onward). Statuses: met = published and checkable on this site now; partial = the mechanism or schema exists but a named input is missing; blocked = cannot be completed truthfully until a specific gate clears. Every row names the gate that blocks it and the number that would clear it. Rows are requirements, not facts, so they link to the requirement's evidence page rather than to an external authority - except where a row quotes an official source, which is marked.",
+ "columns": [
+  "id",
+  "group",
+  "requirement",
+  "status",
+  "where_published",
+  "blocking_gate",
+  "number_that_clears_it",
+  "evidence"
+ ],
+ "rows": [
+  [
+   "R-01",
+   "PRICE",
+   "Add a price-snapshot store that records opening and closing numbers for every market we originate",
+   "blocked",
+   "lab/price-policy.html",
+   "Q-PRICE-01 (no licensed market-price feed exists in this environment)",
+   "1 price source with a written licence OR written self-capture permission, then 1 stored open/close pair per originated market (target: 100% of originated markets)",
+   "NFL.com Terms 1.3 prohibits systematic retrieval absent express prior written consent (L-S04)"
+  ],
+  [
+   "R-02",
+   "RESULTS",
+   "Add a verified results feed so backtests and ROI can be computed at all",
+   "met",
+   "lab/results.html",
+   "none for 2026 weeks 1-10; Q-RESULTS-02 for prior seasons",
+   "148 FINAL games captured (136 in weeks 1-9 + 12 in week 10), plus 2 week 10 games the official page did not mark FINAL at capture, left blank and flagged (L-F-05). Remaining gap: 0 games from seasons before 2026",
+   "data/lab/results_2026.json, each row linked to its official game centre"
+  ],
+  [
+   "R-03",
+   "MODEL",
+   "Originate the side first, then the total, then the moneyline",
+   "partial",
+   "lab/models.html",
+   "Q-PRICE-01",
+   "Order is published and frozen; it becomes testable after 1 originated week (14 games x 3 markets = 42 prices)",
+   "Origination order recorded as a frozen spec, not a result"
+  ],
+  [
+   "R-04",
+   "MODEL",
+   "Publish the model's fair line, the market line, and the difference as separate columns",
+   "partial",
+   "lab/models.html",
+   "Q-PRICE-01",
+   "Schema published with 3 columns; populated after 1 week with a market line present on 100% of rows",
+   "Column contract published; 0 rows exist"
+  ],
+  [
+   "R-05",
+   "LEADERBOARD",
+   "Separate 'signal' from 'staking' in the leaderboard so a lucky staking run cannot mask a bad signal",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Ranking key excludes any staking term by construction; enforced by the builder check 'no stake field in the rank key'",
+   "Scoring formula published with the staking column explicitly outside the rank key"
+  ],
+  [
+   "R-06",
+   "DEPTH",
+   "Track the depth of the replacement, not just the fact of a replacement",
+   "blocked",
+   "lab/depth.html",
+   "Q-DEPTH-01 (no verified depth-order source)",
+   "A dated depth source verified for all 32 clubs AND snap counts transcribed from the 148 official Game Books that exist for FINAL games",
+   "0 replacements named anywhere on this site; the official injury report has no depth field"
+  ],
+  [
+   "R-07",
+   "GOVERNANCE",
+   "Compute correlations only from officially sourced numbers and publish n with each value",
+   "met",
+   "lab/correlations.html",
+   "none for the protocol; Q-PRICE-03 to measure",
+   "n is a required column on every pair. 11 pairs registered, all values null, n=0 for every pair. Publishable at n>=300 settled legs per pair",
+   "Builder fails if a correlation row publishes a value with n below the floor"
+  ],
+  [
+   "R-08",
+   "LEADERBOARD",
+   "Define a demotion gate that sends a live strategy back to paper",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Demotion triggers published with thresholds; fires automatically once a strategy is live",
+   "Two demotion triggers named with mechanical tests"
+  ],
+  [
+   "R-09",
+   "GOVERNANCE",
+   "Pre-register every strategy; forbid backtest numbers from ever appearing on the leaderboard",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Leaderboard accepts only rows with a registration timestamp earlier than the first settlement it scores",
+   "Builder rejects any leaderboard row whose registration timestamp is not strictly before its earliest bet timestamp"
+  ],
+  [
+   "R-10",
+   "AVAIL",
+   "Build the availability graph as a first-class dataset (who was expected to start, who actually did)",
+   "partial",
+   "lab/availability.html",
+   "Q-DEPTH-01 + Game Book transcription",
+   "Expected-starter column is filled only from a dated official depth source; actual-starter column from Game Books. Target: the 148 FINAL games",
+   "Absence side is captured for 28 clubs in week 10; the expected-started side is empty"
+  ],
+  [
+   "R-11",
+   "DEPTH",
+   "Do not model depth from jersey order; model it from playing time",
+   "met",
+   "lab/depth.html",
+   "none for the rule; Q-DEPTH-02 for the data",
+   "Rule recorded as binding. It becomes usable after snap counts are transcribed for the 148 FINAL games",
+   "Jersey-number, experience and salary inference recorded as rejected (R-50)"
+  ],
+  [
+   "R-12",
+   "MODEL",
+   "Make the injury signal a surprise, never a level",
+   "partial",
+   "lab/models.html",
+   "Q-SNAPSHOT-01 (multi-day capture)",
+   "Delta is defined as today's designation minus the trailing designation for the same player/week. With 1 capture per week the delta is undefined; 3+ captures per week (Wed/Thu/Fri) make it computable",
+   "Only 1 capture exists (2026-11-16), so every published delta cell is blank by construction"
+  ],
+  [
+   "R-13",
+   "AVAIL",
+   "Run the 32-team roster/IR sweep before any team-level model is trusted",
+   "blocked",
+   "lab/availability.html",
+   "Q-ROSTER-01",
+   "32 of 32 club roster pages plus a reserve/IR list captured with content hashes in one sweep",
+   "0 of 32 captured"
+  ],
+  [
+   "R-14",
+   "MODEL",
+   "Add a fixture-context feature set built only from published schedule facts",
+   "partial",
+   "lab/models.html",
+   "none for week 10; Q-SCHED-01 for the season",
+   "Feature list frozen. Rest days, travel and venue are populated from the official schedule for week 10; 0 prior-week values until weeks 1-9 fixtures are captured in the same shape",
+   "Venue captured for 14 of 14 week 10 fixtures (L-S03)"
+  ],
+  [
+   "R-15",
+   "MODEL",
+   "Store every model output as a probability plus its inputs, not just a pick",
+   "met",
+   "lab/models.html",
+   "none",
+   "Output schema requires probability, the input vector, the model version and the forecast timestamp on every row",
+   "Schema published; 0 model rows exist"
+  ],
+  [
+   "R-16",
+   "SITE",
+   "Compute and publish the 'removal of luck' panel on the site dashboard",
+   "met",
+   "index.html (lab landing)",
+   "Q-PRICE-01 to populate",
+   "Panel design and its 4 tests published; values populate after 1 leaderboard run with >=250 settled bets",
+   "Panel renders with blank values and names the n each value requires"
+  ],
+  [
+   "R-17",
+   "GOVERNANCE",
+   "Add a two-sided 'what would change our mind' field to every strategy entry",
+   "met",
+   "lab/models.html",
+   "none",
+   "Both directions required: evidence that would strengthen AND evidence that would kill the strategy. Blank entries are not publishable",
+   "Field contract published"
+  ],
+  [
+   "R-18",
+   "PRICE",
+   "Price a line ourselves and publish the residual against the market, on a schedule, from day one",
+   "blocked",
+   "lab/price-policy.html",
+   "Q-PRICE-01",
+   "Requires a market line to take a residual against. First publishable week = first week with a market feed",
+   "Residual defined as originated fair price minus market price; 0 rows"
+  ],
+  [
+   "R-19",
+   "RESULTS",
+   "Turn the verified results log into the pre-registered backtest corpus",
+   "met",
+   "lab/results.html",
+   "none",
+   "148 FINAL games (2026 weeks 1-10) captured and split into train/validation/holdout before any model is fitted",
+   "Split published with game counts; no model has been fitted to it"
+  ],
+  [
+   "R-20",
+   "PRICE",
+   "Decide the price-data policy before any backtest is published",
+   "met",
+   "lab/price-policy.html",
+   "Q-PRICE-02 (reviewer must choose)",
+   "Policy page published with 3 options and the legal constraint quoted. No backtest may publish until the policy field is set",
+   "NFL.com Terms 1.3 quoted verbatim (L-S04)"
+  ],
+  [
+   "R-21",
+   "AVAIL",
+   "Store every injury-hub read with its clock time and publish the delta, never the level",
+   "partial",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "Capture timestamp is stored on every row now; deltas require >=2 captures of the same player-week",
+   "Snapshot rows carry captured_at = 2026-11-16"
+  ],
+  [
+   "R-22",
+   "SITE",
+   "Put a decision-readiness table on the landing page: one row per requirement, with the gate that blocks it and the number that would clear it",
+   "met",
+   "index.html (lab landing)",
+   "none",
+   "86 rows published with gate + clearing number",
+   "This table"
+  ],
+  [
+   "R-23",
+   "SITE",
+   "Transcribe the venue of every fixture from the official game centre and publish it",
+   "met",
+   "lab/fixtures.html",
+   "none for week 10",
+   "14 of 14 week 10 fixtures carry Location and Stadium transcribed from the game centre",
+   "L-S03"
+  ],
+  [
+   "R-24",
+   "SITE",
+   "Publish the league's dated schedule announcement beside the live schedule page",
+   "blocked",
+   "lab/fixtures.html",
+   "Q-SCHED-02",
+   "A dated official announcement page must be located and linked. The live schedule page itself carries no announcement date",
+   "Only the live schedule page (L-S02) was verified; no dated announcement URL was found, so the field is blank and flagged (L-F-06)"
+  ],
+  [
+   "R-25",
+   "AVAIL",
+   "Use official NFL Game Books for actual starters and game-day status; do not infer depth rank or snaps",
+   "partial",
+   "lab/fixtures.html",
+   "Q-BOOKS-01",
+   "12 of 14 week 10 Game Book PDF links published. 0 transcribed. Cleared when the 148 Game Books for FINAL games are parsed",
+   "L-S06 - links verified as present on the official game centre, PDFs not parsed"
+  ],
+  [
+   "R-26",
+   "RESULTS",
+   "Ingest game-level results to make the ratings opponent-aware",
+   "partial",
+   "lab/results.html",
+   "Q-MODEL-03",
+   "Ingestion is done (148 FINAL games). The opponent-aware rating itself is not fitted, so no rating value is published",
+   "Score-differential and result tables are derived arithmetically from official scores and labelled as derived"
+  ],
+  [
+   "R-27",
+   "MODEL",
+   "Add injury and personnel ablations instead of fixed penalties",
+   "partial",
+   "lab/models.html",
+   "Q-DEPTH-01",
+   "Ablation protocol published: identical model with and without the personnel feature set, chronological holdouts, difference reported with an interval. Runnable once availability features exist",
+   "No fixed point penalty is used anywhere on this site"
+  ],
+  [
+   "R-28",
+   "MODEL",
+   "Add injury/depth ablations, not fixed penalties - compare identical models with and without verified availability features using chronological holdouts",
+   "partial",
+   "lab/models.html",
+   "Q-DEPTH-01",
+   "Same protocol as R-27, stated for depth features specifically",
+   "Protocol published"
+  ],
+  [
+   "R-29",
+   "AVAIL",
+   "Automate immutable multi-day availability snapshots",
+   "blocked",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "A scheduler that writes an append-only, hash-stamped capture on Wed, Thu, Fri and on game day",
+   "0 automated captures; this repository has no scheduled runner"
+  ],
+  [
+   "R-30",
+   "AVAIL",
+   "Build immutable official availability snapshots with raw hashes, timestamps and conflict flags",
+   "partial",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "Capture rule, timestamp and source hash fields are defined and one snapshot is stored. Needs the runner from R-29",
+   "1 snapshot stored (2026-11-16) with a stated, reproducible inclusion rule"
+  ],
+  [
+   "R-31",
+   "AVAIL",
+   "Capture official inactive lists and snap counts",
+   "blocked",
+   "lab/availability.html",
+   "Q-BOOKS-01",
+   "Inactives and snap shares for the 148 FINAL games",
+   "0 captured. The official Game Book is the identified source (L-S06)"
+  ],
+  [
+   "R-32",
+   "DEPTH",
+   "Fix the two depth-parsing failures before widening coverage",
+   "blocked",
+   "lab/depth.html",
+   "Q-DEPTH-01",
+   "No depth parser exists yet, so there is nothing to fix. Cleared when a parser runs against all 32 clubs with 0 parse failures",
+   "The two known failure modes (image-published depth; jersey-number prefixes) are recorded as constraints, not as fixes"
+  ],
+  [
+   "R-33",
+   "DEPTH",
+   "Model depth slots as groups, not a single starter",
+   "met",
+   "lab/depth.html",
+   "none",
+   "Slot schema stores a list of players per rank, so a three-receiver rank-1 slot is representable",
+   "Schema published; 0 slots populated"
+  ],
+  [
+   "R-34",
+   "AVAIL",
+   "Treat roster turnover as a first-class data event",
+   "partial",
+   "lab/availability.html",
+   "Q-ROSTER-01",
+   "Roster-event schema published (event type, date, source, affected slots). Needs the transactions capture to populate",
+   "0 events captured"
+  ],
+  [
+   "R-35",
+   "LEADERBOARD",
+   "Start with a singles-only shadow baseline",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Baseline B0 (team-strength singles) pre-registered with a frozen commit hash and no stake",
+   "Pre-registration record published"
+  ],
+  [
+   "R-36",
+   "LEADERBOARD",
+   "Keep parlays and prop combos behind a joint-evidence gate",
+   "met",
+   "lab/leaderboard.html",
+   "Q-CORR-01",
+   "A combo may be ranked only when a directly validated joint probability AND the operator's void/push rules are both on file. No combo is currently rankable",
+   "Gate is mechanical; multiplying marginal probabilities is prohibited"
+  ],
+  [
+   "R-37",
+   "LEADERBOARD",
+   "Use proper-score leaderboard divisions",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "4 divisions: singles, game parlays, same-game parlays, prop combos. Each ranks only within its division",
+   "Divisions published; boards empty"
+  ],
+  [
+   "R-38",
+   "LEADERBOARD",
+   "Rank with proper scores and uncertainty, not win rate",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Rank key = benchmark-relative Brier skill with a game-cluster lower bound and a multiplicity adjustment. Win rate and short-run ROI are display-only and cannot move the rank",
+   "Formula published"
+  ],
+  [
+   "R-39",
+   "GOVERNANCE",
+   "Add durable snapshot storage and alerts with freshness monitoring",
+   "blocked",
+   "lab/price-policy.html",
+   "Q-STORE-01",
+   "A store outside the static site with a freshness alert and a schema-change alert",
+   "0 alerts configured; raw data currently lives in the repository (flagged, L-F-04)"
+  ],
+  [
+   "R-40",
+   "GOVERNANCE",
+   "Split the site into a public analysis layer and a private data layer",
+   "partial",
+   "lab/price-policy.html",
+   "Q-LEGAL-02",
+   "Public layer publishes derived analysis and links. Private layer is not built, so row-level captures remain in-repo - flagged, not hidden",
+   "NFL.com Terms 1.3 (L-S04) is the reason the split is required"
+  ],
+  [
+   "R-41",
+   "SITE",
+   "Add a per-team view: starters out, replacements named, net injury count",
+   "partial",
+   "lab/availability.html",
+   "Q-DEPTH-01",
+   "Players ruled Out per club are published (81 Out/Doubtful rows). Replacements stay blank until R-06 clears. Net count is derived from captured rows only",
+   "Per-club table live for 28 clubs"
+  ],
+  [
+   "R-42",
+   "AVAIL",
+   "Add an announced-starter evidence field (not an inferred replacement)",
+   "met",
+   "lab/availability.html",
+   "none",
+   "Field accepts only a link to an official dated announcement. Blank unless such a link exists",
+   "0 populated; the field exists and is separate from any inferred replacement"
+  ],
+  [
+   "R-43",
+   "DEPTH",
+   "Add an official depth-chart register with date and source per row",
+   "blocked",
+   "lab/depth.html",
+   "Q-DEPTH-01",
+   "Requires a depth source. Cleared when 32 of 32 clubs have a dated, linked register row",
+   "Register schema published with 0 rows"
+  ],
+  [
+   "R-44",
+   "AVAIL",
+   "Calibrate what 'Questionable' means empirically instead of using old percentages",
+   "blocked",
+   "lab/availability.html",
+   "Q-BOOKS-01 + Q-SNAPSHOT-01",
+   "Requires several seasons of designations joined to official inactive lists. 0 seasons joined",
+   "No percentage is attached to any designation anywhere on this site"
+  ],
+  [
+   "R-45",
+   "SITE",
+   "Interactive Offense vs. Defense Matchup Deficiency Matrix (1st-4th string)",
+   "partial",
+   "lab/depth.html",
+   "Q-DEPTH-01",
+   "Matrix grid is published with every cell blank. Populated only from a verified depth source",
+   "0 cells populated; no string assignment is inferred"
+  ],
+  [
+   "R-46",
+   "DEPTH",
+   "Flag stale depth rows against the official transactions log",
+   "blocked",
+   "lab/depth.html",
+   "Q-ROSTER-01",
+   "Requires both a depth register (R-43) and a transactions capture",
+   "0 staleness checks run"
+  ],
+  [
+   "R-47",
+   "AVAIL",
+   "Point-in-Time Snapshot Ledger for Injuries, Depth Charts & Inactives",
+   "partial",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "Ledger schema published (captured_at, source hash, valid_from, valid_to). 1 ledger row exists",
+   "Prevents lookahead leakage once populated; currently holds a single point"
+  ],
+  [
+   "R-48",
+   "AVAIL",
+   "Populate the three missing Lions game-status designations",
+   "met",
+   "lab/availability.html",
+   "none",
+   "Resolved by recapture. The official report now lists Kerby Joseph (knee), Cade Mays (ankle) and D.J. Reed (hip) as Out",
+   "L-S01, recaptured 2026-11-16"
+  ],
+  [
+   "R-49",
+   "AVAIL",
+   "Re-capture and republish the Week 10 injury tables",
+   "met",
+   "lab/availability.html",
+   "none",
+   "347 rows across 28 clubs, all 8 page chunks read, recaptured 2026-11-16",
+   "L-S01. Differs from the earlier 254/279-row captures because the official page is a live document; flagged for review (L-F-01)"
+  ],
+  [
+   "R-50",
+   "DEPTH",
+   "Reject: deriving depth order from jersey number, experience or salary",
+   "met",
+   "lab/depth.html",
+   "none",
+   "Recorded as a standing rejection with the reason",
+   "Rejection published; no such inference exists in the code"
+  ],
+  [
+   "R-51",
+   "DEPTH",
+   "Represent shared and empty depth slots faithfully",
+   "met",
+   "lab/depth.html",
+   "none",
+   "Slot schema carries a list per rank and an explicit empty-slot flag, so a shared slot and an empty slot are distinguishable from a ranked list",
+   "Schema published"
+  ],
+  [
+   "R-52",
+   "DEPTH",
+   "Resolve the depth-order source before building the backup-deficiency feature",
+   "blocked",
+   "lab/depth.html",
+   "Q-DEPTH-01",
+   "Two routes named in order: (a) per-club official depth pages verified club by club; (b) snap counts from an official source. The feature stays unbuilt until one route is verified for all 32 clubs",
+   "Feature deliberately unbuilt"
+  ],
+  [
+   "R-53",
+   "AVAIL",
+   "Score injury-designation reliability before using it as a feature",
+   "blocked",
+   "lab/availability.html",
+   "Q-BOOKS-01",
+   "Play rate per designation with confidence intervals, from designations joined to official inactive lists",
+   "0 measured; designations are published as labels only"
+  ],
+  [
+   "R-54",
+   "AVAIL",
+   "Snapshot the nfl.com injury report every Wed, Thu and Fri and keep a dated history",
+   "blocked",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "3 captures per game week retained with dates",
+   "1 capture exists"
+  ],
+  [
+   "R-55",
+   "AVAIL",
+   "Treat the injury report as a timestamped series, not a weekly snapshot",
+   "partial",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "Series schema published (player, week, captured_at, designation). Computable once >=2 captures of the same week exist",
+   "1 observation per player"
+  ],
+  [
+   "R-56",
+   "DEPTH",
+   "Use snap counts as the starter proxy when the depth chart is unavailable",
+   "partial",
+   "lab/depth.html",
+   "Q-BOOKS-01",
+   "Proxy rule published with a threshold to be set by the reviewer. Usable after snap counts are transcribed for the 148 FINAL games",
+   "Threshold left blank deliberately (Q-DEPTH-02)"
+  ],
+  [
+   "R-57",
+   "LEADERBOARD",
+   "Add a control baseline (random picks; favorites only) to every leaderboard run",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Two controls run in every division on every run; a strategy must beat the relevant control to be ranked",
+   "Controls defined; boards empty"
+  ],
+  [
+   "R-58",
+   "WEATHER",
+   "Stadium Roof/Surface & NWS Hourly Wind/Precipitation Overlay",
+   "blocked",
+   "lab/models.html",
+   "Q-WX-01",
+   "Official stadium roof/surface per venue plus an NWS hourly gridpoint forecast per kickoff",
+   "0 weather values exist. The 90-minute roof designation source was not located, so the field is blank and flagged (L-F-07)"
+  ],
+  [
+   "R-59",
+   "LEADERBOARD",
+   "Two-Stage Skill Leaderboard (Proper-Score Qualification -> Prospective CLV/ROI Escrow)",
+   "met",
+   "lab/leaderboard.html",
+   "Q-PRICE-01 for stage 2 only",
+   "Stage 1 (proper-score qualification) is fully specified and runnable without prices. Stage 2 needs a market line",
+   "Both stages published with their entry tests"
+  ],
+  [
+   "R-60",
+   "PRICE",
+   "Vig-Free Market Consensus vs. Originated Fair-Line Decomposition View",
+   "partial",
+   "lab/price-policy.html",
+   "Q-PRICE-01",
+   "Decomposition contract published: vig removal, then consensus, then residual. Populated after 1 week with a multi-book market line",
+   "0 rows"
+  ],
+  [
+   "R-61",
+   "SITE",
+   "Publish a weekly 'what changed' diff instead of a static snapshot",
+   "partial",
+   "lab/availability.html",
+   "Q-SNAPSHOT-01",
+   "Diff columns published (rank change, rating change, availability change). Needs >=2 snapshots to render a row",
+   "1 snapshot exists, so 0 diff rows"
+  ],
+  [
+   "R-62",
+   "MODEL",
+   "Publish every model total twice until one wins",
+   "met",
+   "lab/models.html",
+   "none",
+   "Two independent total estimators, both published with a gap column; collapse only after a pre-registered walk-forward comparison",
+   "Estimator pair named; neither is fitted"
+  ],
+  [
+   "R-63",
+   "GOVERNANCE",
+   "Add a drift alarm to every scraper",
+   "partial",
+   "lab/price-policy.html",
+   "Q-SNAPSHOT-01",
+   "Alarm contract published: pin expected row counts and required fields, fail the build loudly. Applied to the 2 parsers that exist (injury report, schedule); needs the same pin for every future parser",
+   "Row-count and required-field checks run in the builder"
+  ],
+  [
+   "R-64",
+   "AVAIL",
+   "Capture the reserve list so 'not listed' never means 'available'",
+   "blocked",
+   "lab/availability.html",
+   "Q-ROSTER-01",
+   "A reserve/IR list per club per week, joined to the report so absence is typed",
+   "0 captured. A player on IR produces no row on the weekly report, so absence from the report is not evidence of availability (L-F-03)"
+  ],
+  [
+   "R-65",
+   "LEADERBOARD",
+   "Reject: ranking strategies by season-long ROI",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Recorded as a standing rejection with the reason",
+   "Rejection published"
+  ],
+  [
+   "R-66",
+   "AVAIL",
+   "Archive weekly injury reports for past seasons",
+   "blocked",
+   "lab/availability.html",
+   "Q-SNAPSHOT-02",
+   "Weekly captures retained for prior seasons",
+   "1 week captured (2026 week 10)"
+  ],
+  [
+   "R-67",
+   "GOVERNANCE",
+   "Pre-register each strategy (definition frozen before results are seen)",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Registration = a commit hash plus the frozen rule text plus the sample window",
+   "Pre-registration register published; 1 baseline pre-registered, 0 strategies registered"
+  ],
+  [
+   "R-68",
+   "MODEL",
+   "2026 Kickoff & Declared Onside-Kick Regime Priors Filter",
+   "partial",
+   "lab/models.html",
+   "Q-MODEL-04",
+   "The regime change is officially confirmed: 2026 rule 6-1-6 'Permits the kicking team to declare an onside kick at any time during the game'. The prior VALUES are left blank until measured from official results",
+   "L-S05, 2026 Rule Changes table read verbatim"
+  ],
+  [
+   "R-69",
+   "GOVERNANCE",
+   "Freeze a rule before it sees data (pre-registration); the commit hash is the registration",
+   "met",
+   "lab/leaderboard.html",
+   "none",
+   "Every registered rule records its commit hash, sample window and gates",
+   "Registration table published"
+  ],
+  [
+   "R-70",
+   "MODEL",
+   "Split data into train, validation and final holdout seasons",
+   "partial",
+   "lab/results.html",
+   "Q-MODEL-05",
+   "Split published for the 2026 corpus: train weeks 1-5, validation weeks 6-8, holdout weeks 9-10. With one season available this is a within-season split, not the season-level split the requirement asks for",
+   "Game counts computed from the captured corpus"
+  ],
+  [
+   "M-71",
+   "META",
+   "Create an executive summary of important details",
+   "met",
+   "index.html (lab landing)",
+   "none",
+   "Summary published with counts, what is verified, what is blocked and the decisions that unblock the most",
+   "Every number in the summary is computed by the builder from the data files"
+  ],
+  [
+   "M-72",
+   "META",
+   "Create a dedicated suggestions section so a reviewer can compare options and choose a path before any change is implemented",
+   "met",
+   "lab/suggestions.html",
+   "none",
+   "Each suggestion lists the problem, 2-3 options with cost/risk, the recommended path and a status field. Silence never approves",
+   "Status default is 'proposed'"
+  ],
+  [
+   "M-73",
+   "META",
+   "Produce a clear list of questions, the information needed and the answers required before any decision can reasonably be made",
+   "met",
+   "lab/questions.html",
+   "none",
+   "Each question states what is known, what is unknown, the resolution route, the default if unanswered and whether it blocks",
+   "Question register published"
+  ],
+  [
+   "M-74",
+   "META",
+   "Review the repo line by line against official sources, provide links for manual review, flag irregularities",
+   "met",
+   "lab/repo-review.html",
+   "none",
+   "Every reviewed file links to its GitHub blob URL; every irregularity is a numbered flag",
+   "L-S12"
+  ],
+  [
+   "M-75",
+   "META",
+   "Build a GitHub Pages site with a clean landing page and subpages organised by category, in a simple dashboard style with table-form findings",
+   "met",
+   "index.html + 13 subpages",
+   "none",
+   "16 pages, one nav, filterable sortable tables, no external dependencies, all links relative",
+   "Builder check confirms no broken internal link"
+  ],
+  [
+   "M-76",
+   "META",
+   "Every table row must carry a source link to an official site; a value that cannot be confirmed is left blank and flagged",
+   "met",
+   "lab/sources.html",
+   "none",
+   "The builder refuses to emit a verified row without an official-host link, and auto-flags any row whose link is missing or non-official",
+   "Enforced in tools/build_lab.py, not in prose"
+  ],
+  [
+   "M-77",
+   "META",
+   "Coordinate parallel agent sessions through COORDINATION.md with non-overlapping file scopes",
+   "met",
+   "COORDINATION.md",
+   "none",
+   "Task board with owner, status and file scope; claim pushed before work began",
+   "L-S12"
+  ],
+  [
+   "M-78",
+   "META",
+   "Open a PR, merge it, confirm GitHub Pages deploys, and publish flagged items on a clearly labelled page",
+   "met at merge",
+   "lab/flagged.html",
+   "none",
+   "PR opened from this branch to main, merged after a green build, deployment confirmed via the Pages API",
+   "Flagged page published with source links"
+  ]
+ ]
+}

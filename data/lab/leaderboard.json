@@ -1,0 +1,226 @@
+{
+ "as_of": "2026-11-16",
+ "board_status": "Empty by design. 0 strategies are registered and 0 bets have been settled. An empty board is the correct rendering of a project that has not yet made a bet it can be judged on.",
+ "divisions": [
+  {
+   "id": "DIV-1",
+   "name": "Singles",
+   "eligible": "One market on one game",
+   "rankable_now": true,
+   "entries": 0
+  },
+  {
+   "id": "DIV-2",
+   "name": "Game parlays",
+   "eligible": "Two or more legs across different games",
+   "rankable_now": false,
+   "blocked_by": "Q-CORR-01",
+   "entries": 0
+  },
+  {
+   "id": "DIV-3",
+   "name": "Same-game parlays",
+   "eligible": "Two or more legs within one game",
+   "rankable_now": false,
+   "blocked_by": "Q-CORR-01",
+   "entries": 0
+  },
+  {
+   "id": "DIV-4",
+   "name": "Prop combos",
+   "eligible": "Player-prop combinations",
+   "rankable_now": false,
+   "blocked_by": "Q-CORR-01 and the absence of prop line history",
+   "entries": 0
+  }
+ ],
+ "joint_evidence_gate": {
+  "rule": "A combo may be ranked only when (a) a directly validated joint probability exists for that specific combination, measured on settled data with n published, and (b) the operator's void and push rules for that combination are on file.",
+  "prohibited": "Multiplying marginal probabilities. Under dependence it is invalid, and in same-game parlays dependence is the whole problem.",
+  "why": "A product of marginals is not a conservative estimate; it is a different quantity. Publishing it would produce a ranking that rewards the modelling error the gate exists to prevent.",
+  "status": "Closed. 0 combos are rankable."
+ },
+ "ranking": {
+  "rank_key": "Benchmark-relative Brier skill score, with a game-cluster lower bound used as the ranking statistic and a multiplicity adjustment for the number of strategies tried.",
+  "why_not_win_rate": "Win rate cannot separate a good process from a good run at any realistic sample size, and it ignores the price taken. Two strategies with identical win rates can have opposite expected value.",
+  "why_not_roi": "Season-long ROI is the ranked metric this project explicitly rejects. Short-run ROI is dominated by variance and by stake size, so ranking on it selects for luck and for bold staking.",
+  "uncertainty": "Every published skill score carries an interval from a bootstrap clustered by game, so bets on the same game do not pretend to be independent observations.",
+  "multiplicity": "The adjustment uses a journal of all variants tried, including the failed ones. A leaderboard that only sees survivors measures the author's persistence, not the strategy's skill.",
+  "display_only_columns": [
+   "win_rate",
+   "roi",
+   "stake_size",
+   "number_of_bets"
+  ],
+  "note_on_display_only": "These columns are shown for context and cannot move the rank, which is how a lucky staking run is prevented from masking a bad signal."
+ },
+ "signal_vs_staking": {
+  "rule": "Signal is scored and ranked. Staking is recorded and displayed. The two never mix in the rank key.",
+  "why": "A strategy with a mediocre signal and an aggressive staking schedule can post the best return in any short sample. Ranking signal separately means the leaderboard answers 'is this a good forecast', not 'did this get lucky with size'.",
+  "enforcement": "The builder rejects any ranking expression containing a stake field."
+ },
+ "two_stage": {
+  "stage_1": {
+   "name": "Proper-score qualification",
+   "purpose": "Decide whether the strategy forecasts better than the benchmark at all, before any money concept is introduced.",
+   "entry_tests": [
+    "Pre-registration recorded with a commit hash before the evaluation window opens",
+    "Chronological evaluation only; no fold trains on a later date",
+    "Benchmark-relative Brier skill above the qualification bar, with the game-cluster lower bound above zero",
+    "Input-perturbation robustness: the skill survives perturbing each input within its measurement error",
+    "No-lookahead timestamp rule: every input timestamp is strictly earlier than the forecast timestamp, which is strictly earlier than kickoff",
+    "Sample floor met, counted in settled bets across distinct games"
+   ],
+   "runnable_without_prices": true
+  },
+  "stage_2": {
+   "name": "Prospective CLV and ROI escrow",
+   "purpose": "Confirm the qualified skill converts into beating the closing line, prospectively, on bets that were recorded before kickoff.",
+   "entry_tests": [
+    "Stage 1 passed, with the result and its interval published",
+    "A market price exists for every bet scored (Q-PRICE-01)",
+    "Closing-line value measured against the stored closing price, per bet, with n published",
+    "A prospective window agreed before the window opens; the window's bets are escrowed, not selected afterwards"
+   ],
+   "runnable_without_prices": false,
+   "blocked_by": "Q-PRICE-01"
+  }
+ },
+ "control_baselines": {
+  "rule": "Every leaderboard run, in every division, includes the two controls below. A strategy must beat the relevant control to be ranked at all.",
+  "controls": [
+   {
+    "id": "CTL-RAND",
+    "name": "Random picks",
+    "description": "A coin-flip selection over the same markets in the same window, run with the same number of bets.",
+    "purpose": "Establishes what pure chance looks like in this specific window and sample size."
+   },
+   {
+    "id": "CTL-FAV",
+    "name": "Favourites only",
+    "description": "Always take the market favourite, using the market line as the favourite's identity, run over the same markets.",
+    "purpose": "Beating 'always back the favourite' is a much higher bar than beating zero, and it is the bar that actually matters."
+   }
+  ],
+  "note": "CTL-FAV needs a market line, so it becomes runnable at the same time as stage 2 (Q-PRICE-01). CTL-RAND is runnable now but is not informative without prices to score against."
+ },
+ "demotion_gate": {
+  "rule": "A live strategy is sent back to paper automatically when either trigger fires. Neither requires a human to notice.",
+  "triggers": [
+   {
+    "id": "DEM-1",
+    "name": "Closing-line value decay",
+    "test": "Trailing CLV over the agreed window falls below the demotion floor, with the game-cluster upper bound also below the floor.",
+    "threshold": null,
+    "why_null": "Threshold must be set before the first live run. An unset threshold fails closed, which is the intended behaviour."
+   },
+   {
+    "id": "DEM-2",
+    "name": "Calibration break",
+    "test": "The forecast probabilities and the observed outcomes diverge beyond the calibration tolerance on the trailing window, judged by a proper score rather than by win rate.",
+    "threshold": null,
+    "why_null": "Same as DEM-1."
+   }
+  ],
+  "on_demotion": "The strategy returns to paper, the demotion is logged with the window and the test that fired, and it may only return after a new pre-registration. A demoted strategy is never silently re-promoted when the number recovers."
+ },
+ "pre_registration": {
+  "rule": "The registration is the commit. Rule text, sample window and gates are committed before the evaluation window opens; the commit hash is the registration.",
+  "required_fields": [
+   "strategy_id",
+   "rule_text",
+   "sample_window",
+   "gates",
+   "commit_hash",
+   "registered_at_utc",
+   "what_would_change_our_mind_for",
+   "what_would_change_our_mind_against"
+  ],
+  "registered": [
+   {
+    "id": "B0",
+    "name": "Singles-only shadow baseline (team strength)",
+    "rule_text": "A simple team-strength model on singles only, no stake, run in shadow. It exists to prove the leaderboard plumbing works and to provide the first benchmark.",
+    "sample_window": "2026 weeks 11-14",
+    "gates": [
+     "no-lookahead timestamp rule",
+     "chronological evaluation",
+     "sample floor"
+    ],
+    "status": "registered (shadow)",
+    "note": "Registration recorded in the commit that introduced this file. It has not run, because its inputs require a rating that is deliberately unfitted (Q-MODEL-03). It is a shadow baseline for this section only; the 16 strategies registered in prereg/ belong to the signals section and are not duplicated here."
+   }
+  ],
+  "not_registered": 0,
+  "note": "Backtest numbers can never appear on the leaderboard. The leaderboard scores only bets registered before the settlement they are scored against, and the builder rejects any row that violates this.",
+  "canonical": "The repository's canonical pre-registration is prereg/REGISTRATION.md on main (registration 2026-11-16), which freezes data/signals/{strategies,gates,leaderboard,correlations}.json with file hashes checked on every build. This page is the lab's decision-first view of the same rules and does not supersede it. Where the two disagree, the frozen registration wins until a new dated registration is committed."
+ },
+ "anti_gaming": [
+  {
+   "id": "AG-1",
+   "rule": "Registration timestamp must be strictly earlier than the first bet timestamp it scores.",
+   "enforced": "builder"
+  },
+  {
+   "id": "AG-2",
+   "rule": "A strategy may not be edited inside its own evaluation window. The edit creates a new strategy with a new registration.",
+   "enforced": "review"
+  },
+  {
+   "id": "AG-3",
+   "rule": "Failed variants are recorded in the multiplicity journal. Deleting a failed variant is a reporting violation, not a tidy-up.",
+   "enforced": "review"
+  },
+  {
+   "id": "AG-4",
+   "rule": "Rewards are non-cash. A cash reward converts a research leaderboard into a staking competition and selects for variance.",
+   "enforced": "policy"
+  },
+  {
+   "id": "AG-5",
+   "rule": "No capital is exposed at any stage until stage 1 and stage 2 both pass prospectively.",
+   "enforced": "policy"
+  },
+  {
+   "id": "AG-6",
+   "rule": "Staking is displayed, never ranked.",
+   "enforced": "builder"
+  }
+ ],
+ "rewards": {
+  "type": "non-cash",
+  "tiers": [
+   {
+    "tier": 1,
+    "name": "Qualified",
+    "test": "Stage 1 passed",
+    "reward": "Published with the result and interval"
+   },
+   {
+    "tier": 2,
+    "name": "Ranked",
+    "test": "Beats the relevant control baseline on the rank key",
+    "reward": "Ranked in its division"
+   },
+   {
+    "tier": 3,
+    "name": "Promoted",
+    "test": "Stage 2 passed prospectively",
+    "reward": "Eligible for live tracking, still non-cash"
+   },
+   {
+    "tier": 4,
+    "name": "Reserved",
+    "test": "Sustains tier 3 across two windows without a demotion trigger",
+    "reward": "Named owner credit in the register"
+   },
+   {
+    "tier": 5,
+    "name": "Benchmark",
+    "test": "Becomes the new benchmark other strategies are measured against",
+    "reward": "Benchmark status; replaces CTL-FAV for future windows"
+   }
+  ],
+  "note": "No monetary value is attached to any tier. Nothing here is a prize, and nothing here is betting advice."
+ }
+}

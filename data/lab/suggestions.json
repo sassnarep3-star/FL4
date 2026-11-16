@@ -1,0 +1,310 @@
+{
+ "as_of": "2026-11-16",
+ "note": "Decision board, not a work log. Each suggestion states the problem, the candidate paths with their cost and risk, the recommended path and what it depends on. The 'status' field is the control: nothing below is approved until the owner sets it. Silence never approves. Selection controls on the rendered page are stored in the browser only - they change no code and trigger no capture.",
+ "review_workflow": [
+  "1. Read the problem and the options for a suggestion.",
+  "2. Choose one option, or write your own in the free-text field.",
+  "3. Record the choice locally with the 'Save my choice' control so it survives a reload.",
+  "4. To make it binding, set 'status' for that row in data/lab/suggestions.json to 'approved' and name the approver. Only that edit changes what the project will do."
+ ],
+ "columns": [
+  "id",
+  "title",
+  "problem",
+  "options",
+  "recommended_path",
+  "depends_on",
+  "effort",
+  "risk",
+  "status",
+  "discovers"
+ ],
+ "rows": [
+  [
+   "SG-01",
+   "Decide the price source first, and let everything else queue behind it",
+   "Eleven of the requirements on the readiness table are blocked by the absence of a market price. Building more strategy scaffolding before that is decided produces more empty columns, not more capability.",
+   [
+    "A) License a vendor feed - cost: money and a contract; risk: redistribution terms may forbid what we want to publish",
+    "B) Exchange or broker API - cost: integration; risk: liquidity and timing differ from the sportsbook market we would actually bet",
+    "C) Self-capture one operator with written permission - cost: engineering and a fragile parser; risk: terms, and a single-book view is not a market",
+    "D) Research-only: never take a price - cost: no backtest, no ROI, no CLV ever; risk: none of the performance requirements can be met"
+   ],
+   "D until the owner chooses otherwise, then re-cost A and C in that order. Publishing no number is cheaper than publishing a wrong one.",
+   "Q-PRICE-01",
+   "1 decision",
+   "none if D; contractual if A",
+   "proposed",
+   "Whether the project is a research layer or a trading operation - which decides the next six months"
+  ],
+  [
+   "SG-02",
+   "Stand up the scheduled availability snapshot runner before adding a single depth feature",
+   "One capture exists. Every requirement that needs a change over time - injury as surprise, the timestamped series, the weekly diff, the point-in-time ledger - is undefined with a single observation.",
+   [
+    "A) Scheduled runner, Wed/Thu/Fri plus game day, append-only with content hashes - cost: a runner and a store; risk: terms of capture",
+    "B) Daily capture - cost: more storage; risk: same terms question, more rows to reconcile",
+    "C) Weekly only - cost: nothing new; risk: deltas stay impossible and the surprise signal never exists"
+   ],
+   "A, but only after Q-PRICE-02 and Q-STORE-01 are answered, because the runner writes the data whose storage policy is undecided.",
+   "Q-SNAPSHOT-01, Q-STORE-01",
+   "2-3 days",
+   "medium - it is the job that makes availability a series instead of a photo",
+   "proposed",
+   "How fast designations actually move, which is the empirical basis for the injury signal"
+  ],
+  [
+   "SG-03",
+   "Resolve the depth source club by club before writing any deficiency feature",
+   "The brief asks for 2nd/3rd/4th-string replacements on both sides of the ball. No official source read this session publishes a replacement. Building the feature anyway means inventing a starter.",
+   [
+    "A) Per-club official depth pages, verified 32/32 before use - cost: slow, and at least one club publishes depth as an image; risk: coverage gaps block the feature",
+    "B) Snap counts from official Game Books as the starter proxy - cost: PDF parsing at scale; risk: a proxy is not a club's stated depth",
+    "C) Publish absences only and refuse to name replacements - cost: the deficiency matrix stays empty; risk: none"
+   ],
+   "C now, A as the target, B as the fallback, and the matrix stays visibly empty until one route verifies for all 32 clubs.",
+   "Q-DEPTH-01, Q-BOOKS-01",
+   "1-2 weeks for A",
+   "high if skipped - an invented starter corrupts every downstream signal",
+   "proposed",
+   "Whether an official, dated depth source exists for all 32 clubs at all"
+  ],
+  [
+   "SG-04",
+   "Parse official Game Books for starters, inactives and snap counts",
+   "Game Book PDFs are published on the official game centre for 12 of 14 week 10 fixtures. They are the only non-inferred route to who actually started and who was inactive - and therefore to designation reliability.",
+   [
+    "A) Parse and retain derived fields only (starters, inactives, snap counts) - cost: a PDF parser and per-game verification; risk: layout drift between seasons",
+    "B) Parse and retain the PDFs as well - cost: storage; risk: redistribution terms",
+    "C) Do not parse - cost: R-25, R-31, R-44 and R-53 stay blocked; risk: none"
+   ],
+   "A, with a per-game row-count pin so a layout change fails the build instead of silently dropping a player.",
+   "Q-BOOKS-01",
+   "1 week",
+   "medium - parser drift is the main operational risk; the drift alarm covers it",
+   "proposed",
+   "The empirical play rate per injury designation, which is the number the brief keeps asking for"
+  ],
+  [
+   "SG-05",
+   "Reject once, in writing: no depth from jersey number, experience or salary",
+   "It is the fastest way to fill the matrix and the most reliable way to be confidently wrong. Recorded here so the shortcut does not get re-proposed during a schedule crunch.",
+   [
+    "A) Keep the rejection as a standing rule - cost: the matrix stays empty longer; risk: none",
+    "B) Use an attribute-inferred order as a temporary placeholder - cost: none; risk: every downstream number inherits a fabricated starter"
+   ],
+   "A. If a placeholder is ever needed, it must be labelled 'inferred' in the column and excluded from every model input.",
+   "none",
+   "0",
+   "high if reversed",
+   "approved (rejection recorded)",
+   "Nothing - this closes a dead end rather than opening one"
+  ],
+  [
+   "SG-06",
+   "Move raw captures out of the published tree",
+   "GitHub Pages publishes the repository root. Raw captures currently live in it, so the public/private split is a convention, not a control.",
+   [
+    "A) Private store with freshness and schema-change alerts - cost: a store and two alerts; risk: none material",
+    "B) Keep raw data in the public tree and rely on discipline - cost: nothing; risk: one commit publishes everything",
+    "C) Delete raw captures after deriving - cost: nothing is replayable; risk: no re-verification, no audit"
+   ],
+   "A. Until it is done the site states the limitation on the price-policy page rather than implying the boundary is enforced.",
+   "Q-STORE-01, Q-PRICE-02",
+   "1-2 days",
+   "medium - this is a compliance boundary, not a convenience",
+   "proposed",
+   "Whether the current publication model is acceptable at all"
+  ],
+  [
+   "SG-07",
+   "Pre-register the singles-only baseline and run it in shadow for a full cycle",
+   "The brief asks for a shadow baseline before anything else competes. A baseline that has never run tells us nothing about the leaderboard's plumbing.",
+   [
+    "A) Pre-register B0 (team-strength singles) and run it in shadow for 4 weeks with no stake - cost: one run per week; risk: none, no capital is exposed",
+    "B) Skip straight to candidate strategies - cost: nothing saved; risk: there is no control to compare the first real strategy against",
+    "C) Run the baseline and the two controls together from week 1 - cost: one extra job; risk: none"
+   ],
+   "C, which is A plus the control baselines the brief also asks for. The commit that freezes B0 is the registration.",
+   "Q-MODEL-03",
+   "1 day to register, then weekly",
+   "low",
+   "approved (baseline registered)",
+   "Whether the leaderboard's plumbing works at all before any strategy is judged by it"
+  ],
+  [
+   "SG-08",
+   "Keep the combo divisions closed until joint probabilities exist",
+   "Same-game parlays and prop combos are where dependence is largest and where a product of marginals looks most profitable.",
+   [
+    "A) Keep the joint-evidence gate closed - cost: two divisions stay empty; risk: none",
+    "B) Rank combos on marginal products and disclose the assumption - cost: none; risk: the ranking rewards exactly the modelling error the gate exists to prevent",
+    "C) Rank only combos with a directly validated joint on settled data - cost: slow; risk: none beyond sample size"
+   ],
+   "A now, C later. Option B is the specific failure mode the gate is written to stop.",
+   "Q-CORR-01, Q-PRICE-03",
+   "0",
+   "high if reversed",
+   "approved (gate closed)",
+   "The actual dependence structure between legs, once settled data exists"
+  ],
+  [
+   "SG-09",
+   "Publish the 'removal of luck' panel before any strategy result exists",
+   "If the panel appears only after the first results, the temptation is to tune it until the numbers look good. Publishing the method first freezes the test.",
+   [
+    "A) Publish the method, the control baselines and the required n now, with blank values - cost: an empty panel; risk: none",
+    "B) Publish it with the first results - cost: none; risk: the test is chosen after seeing the answer",
+    "C) Publish a retrospective panel - cost: none; risk: it is not a test, it is a story"
+   ],
+   "A. The panel is on the landing page with blank values and the n each value needs.",
+   "none",
+   "done",
+   "low",
+   "approved (published blank)",
+   "Nothing by itself - it protects every later result from post-hoc selection"
+  ],
+  [
+   "SG-10",
+   "Add the drift alarm to the two parsers that exist, then to every future one",
+   "Both captures this session were transcribed from live pages that will change layout without notice. A silent parse failure looks exactly like a quiet week.",
+   [
+    "A) Pin expected row counts and required fields, and fail the build loudly - cost: a few lines per parser; risk: noisy failures on legitimate bye weeks",
+    "B) Warn only - cost: nothing; risk: warnings get ignored and the failure ships",
+    "C) Add it later - cost: nothing now; risk: the first layout change corrupts a capture we then trust"
+   ],
+   "A, with the pin expressed as a range so bye weeks and international games do not cause false alarms.",
+   "Q-SNAPSHOT-01",
+   "half a day",
+   "medium - a false-alarm-prone alarm is a disabled alarm",
+   "proposed",
+   "How stable the official pages actually are, which is a direct input to capture design"
+  ],
+  [
+   "SG-11",
+   "Type every absence: listed, reserve, or unknown",
+   "A player on injured reserve produces no row on the weekly report. Treating 'no row' as 'available' is a silent, systematic error in exactly the direction that inflates a team's health.",
+   [
+    "A) Join a reserve list so absence is typed - cost: another capture; risk: terms",
+    "B) Type every report absence as 'unknown' rather than 'available' - cost: a less useful table; risk: none",
+    "C) Do nothing and keep reading absence as availability - cost: none; risk: systematic bias in every availability feature"
+   ],
+   "B immediately, A as soon as the reserve source is confirmed. Option C is the error this suggestion exists to remove.",
+   "Q-ROSTER-01",
+   "0 for B",
+   "high if C",
+   "approved (B applied)",
+   "The true denominator for 'net injury count' per team"
+  ],
+  [
+   "SG-12",
+   "Capture prior seasons before trusting any within-season split",
+   "The train/validation/holdout split is inside a single 2026 season. Roster context and the new kickoff regime leak across folds.",
+   [
+    "A) Capture prior seasons' results and re-split by season - cost: repeated schedule reads; risk: none beyond volume",
+    "B) Keep the within-season split and publish the limitation - cost: nothing; risk: optimistic validation",
+    "C) Do not use the holdout until a season-level split exists - cost: nothing is validated; risk: none"
+   ],
+   "A is the goal; B is what is published now with the limitation stated on the results page; C is the safe default if A never happens.",
+   "Q-MODEL-05",
+   "1 day per season",
+   "medium",
+   "proposed",
+   "Whether the regime change found in the 2026 rulebook is visible in the results"
+  ],
+  [
+   "SG-13",
+   "Reject ranking by season-long ROI, and say why in writing",
+   "Season ROI cannot separate a good process from a good run inside one season. It is the single most likely way a bad strategy gets promoted.",
+   [
+    "A) Keep the rejection - cost: the headline number becomes skill score, not ROI; risk: none",
+    "B) Rank on ROI - cost: none; risk: the leaderboard selects for variance"
+   ],
+   "A. ROI remains visible as a display column and can never move the rank.",
+   "none",
+   "0",
+   "high if reversed",
+   "approved (rejection recorded)",
+   "Nothing - it closes a selection bias"
+  ],
+  [
+   "SG-14",
+   "Add the stadium roof/surface and NWS weather overlay only after the roof source is found",
+   "Two Week 10 fixtures were played in Munich and one in Madrid this season alone, so venue context is not a rounding error. But half a weather feature is worse than none.",
+   [
+    "A) Find the official roof designation source, then wire NWS hourly per venue - cost: one lookup plus a forecast job; risk: none if the source is official",
+    "B) Use NWS only and treat roof as unknown - cost: less work; risk: a closed roof makes wind irrelevant and an assumed-outdoor model wrong",
+    "C) No weather features - cost: totals and passing props may misprice in wind; risk: none of fabrication"
+   ],
+   "C until the roof source is confirmed, then A. Option B should be avoided: it looks rigorous while assuming the one thing that matters.",
+   "Q-WX-01",
+   "2-3 days",
+   "medium",
+   "proposed",
+   "Whether the league publishes a per-game roof designation at all"
+  ],
+  [
+   "SG-15",
+   "Make the weekly 'what changed' diff the default view rather than the snapshot",
+   "A static table says who is hurt. A diff says what moved, which is the decision-relevant part.",
+   [
+    "A) Render the diff as soon as two snapshots exist - cost: a diff job; risk: none",
+    "B) Keep the snapshot - cost: nothing; risk: the reader has to remember last week"
+   ],
+   "A, gated on the snapshot runner from SG-02. The diff columns are already defined.",
+   "Q-SNAPSHOT-01",
+   "1 day",
+   "low",
+   "proposed",
+   "Which designations actually change between Wednesday and kickoff"
+  ],
+  [
+   "SG-16",
+   "Keep the deficiency matrix on the site while it is empty",
+   "An empty grid is honest and it is the single clearest statement of what the depth gap costs. Removing it would hide the largest open risk in the project.",
+   [
+    "A) Ship the empty matrix with every cell blank and the blocking gate named - cost: none; risk: none",
+    "B) Hide it until it is populated - cost: a tidier page; risk: the biggest unmet requirement becomes invisible",
+    "C) Populate it from inferred depth - cost: none; risk: fabricated starters"
+   ],
+   "A. The matrix is on the depth page with all cells blank and Q-DEPTH-01 named in the header.",
+   "none",
+   "done",
+   "low",
+   "approved (published blank)",
+   "Nothing - it makes the cost of the depth gap legible"
+  ],
+  [
+   "SG-17",
+   "Freeze every threshold before the first run, not after the first result",
+   "A gate whose threshold is chosen after seeing the results is not a gate. The builder already fails closed when a threshold is unset, which is the desired behaviour.",
+   [
+    "A) Leave thresholds unset and let gates fail closed - cost: nothing can be promoted; risk: none",
+    "B) Use the conservative defaults published on the leaderboard page - cost: none; risk: defaults may not suit the strategy mix",
+    "C) Set thresholds after the first run - cost: none; risk: the thresholds are fitted to the noise they were meant to filter"
+   ],
+   "A now, B once the owner confirms the defaults. C is the specific practice this whole governance layer exists to prevent.",
+   "Q-GOV-02",
+   "1 decision",
+   "high if C",
+   "proposed",
+   "What the owner considers an acceptable evidence bar"
+  ],
+  [
+   "SG-18",
+   "Name the approver before the board has anything to approve",
+   "The suggestions board currently has no named approver, so a decision and a comment look identical in the file. Adding one while there are 18 rows to decide is cheaper than adding one after the first dispute.",
+   [
+    "A) Name a single approver in the governance block - cost: one line; risk: a bottleneck if that person is unavailable",
+    "B) Two-person rule for anything touching data capture or publication - cost: one more name; risk: slower decisions",
+    "C) Leave it unnamed and decide ad hoc - cost: nothing; risk: the last editor of a file becomes the decision maker"
+   ],
+   "A now, with B as the escalation for anything touching capture or the publication boundary. It belongs in the readiness table so it is visible rather than implied.",
+   "Q-GOV-01",
+   "1 decision",
+   "low if A; medium if C",
+   "proposed",
+   "Whether anyone is actually accountable for these decisions, which is the question every other row assumes an answer to"
+  ]
+ ]
+}

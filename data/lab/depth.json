@@ -1,0 +1,151 @@
+{
+ "as_of": "2026-11-16",
+ "coverage": {
+  "clubs_with_a_verified_depth_source": 0,
+  "depth_register_rows": 0,
+  "replacements_named_on_this_site": 0,
+  "snap_counts_captured": 0,
+  "games_with_game_books_parsed": 0,
+  "statement": "This site publishes who is officially unavailable. It does not publish who replaces them, because no official source read in this session names a replacement. Inventing one would corrupt the very signals the deficiency feature is meant to produce."
+ },
+ "slot_model": {
+  "rule": "A depth slot is a group of players at one rank, not a single starter. A slot may hold several players and may be empty.",
+  "why": "Several position slots across the league list more than one player at rank 1 - three receivers, three inside linebackers. Treating column 1 as 'the starter' fabricates a starter the club never named.",
+  "fields": [
+   "club",
+   "unit",
+   "position_slot",
+   "rank",
+   "players (list, ordered as published)",
+   "source_url",
+   "source_published_date",
+   "captured_at",
+   "empty_slot_flag",
+   "shared_slot_flag",
+   "raw_string"
+  ],
+  "shared_slot": "Two or more players listed at the same rank for the same slot. Stored as a list; the render shows both and flags the slot as shared. It must never be silently reduced to one name.",
+  "empty_slot": "A slot the club publishes with no player in it. Stored with an explicit flag, so an empty slot is distinguishable from a slot we failed to capture.",
+  "raw_string": "The published string is stored verbatim next to the parsed fields, so a parser change can be replayed against the original text. This is what recovers clubs whose pages prepend jersey numbers."
+ },
+ "rejections": [
+  {
+   "id": "REJ-1",
+   "rejected": "Deriving depth order from jersey number",
+   "reason": "Jersey number correlates with nothing that determines who plays. It would produce a confident, wrong ordering on every club that renumbered a free-agent signing.",
+   "status": "standing rejection"
+  },
+  {
+   "id": "REJ-2",
+   "rejected": "Deriving depth order from experience",
+   "reason": "Experience is a proxy for past availability, not for the club's current intent. Rookies start; veterans sit.",
+   "status": "standing rejection"
+  },
+  {
+   "id": "REJ-3",
+   "rejected": "Deriving depth order from salary",
+   "reason": "Salary is a proxy for past negotiation, not for this week's game plan, and it is wrong in the direction that matters most when a cheap replacement has already taken the job.",
+   "status": "standing rejection"
+  },
+  {
+   "id": "REJ-4",
+   "rejected": "Inferring a replacement from the injury report",
+   "reason": "The official report has no replacement field. Any name attached to an absence would be a guess presented as a fact.",
+   "status": "standing rejection"
+  },
+  {
+   "id": "REJ-5",
+   "rejected": "Transcribing a depth chart published as an image by eye",
+   "reason": "It is unverifiable and unreplayable. The requirement names the correct fix: an authorised structured source, not transcription.",
+   "status": "standing rejection"
+  }
+ ],
+ "known_parse_failures": [
+  {
+   "club": "Houston Texans",
+   "failure": "Depth published as an image",
+   "proposed_fix": "Number stripping does not help. Requires an authorised structured source.",
+   "status": "unresolved, blocks that club only"
+  },
+  {
+   "club": "Green Bay Packers",
+   "failure": "Jersey numbers prepended to player names",
+   "proposed_fix": "Number stripping plus storing the raw string recovers the rows.",
+   "status": "fix specified, not applied - no parser exists yet"
+  }
+ ],
+ "snap_count_proxy": {
+  "rule": "Where a club's depth chart is unavailable, snap counts are the starter proxy - playing time, not jersey order.",
+  "source": "https://www.nfl.com/games/49ers-at-cowboys-2026-reg-10",
+  "threshold": null,
+  "why_threshold_is_null": "The threshold defines the label. Setting it after seeing who it labels is fitting the definition to the answer. It must be set before the first transcription (Q-DEPTH-02).",
+  "minimum_games": null,
+  "status": "Proxy specified; 0 snap counts captured.",
+  "source_id": "L-S06",
+  "source_note": "Official Game Book PDFs are published per game on the official game centre; 12 of the 14 week 10 fixtures publish one. None has been parsed."
+ },
+ "deficiency_matrix": {
+  "purpose": "One screen showing offense vs defense mismatches by string: a WR1 against a promoted 2nd or 3rd string cornerback, or an EDGE1 against a 2nd or 3rd string tackle or guard.",
+  "rows": "Offensive units by string (1st, 2nd, 3rd, 4th)",
+  "columns": "Defensive units by string (1st, 2nd, 3rd, 4th)",
+  "cell_contents": "The matchup, the string on each side, and a link to the dated source for each side",
+  "populated_cells": 0,
+  "status": "Grid published and empty. Every cell requires a verified depth source (Q-DEPTH-01). It ships empty on purpose: an empty grid states the cost of the depth gap, and a filled-by-inference grid would hide it.",
+  "why_shipped_empty": "Requirement R-52 says resolve the depth-order source before building the backup-deficiency feature. The grid is the feature's shape, published early so the gap is visible, not the feature itself."
+ },
+ "per_team_view": {
+  "purpose": "Quick team-level decision view: starters out, replacements named, net injury count.",
+  "columns": [
+   {
+    "column": "club",
+    "status": "populated",
+    "source": "official report (L-S01)"
+   },
+   {
+    "column": "players_officially_out",
+    "status": "populated",
+    "source": "official report (L-S01)",
+    "note": "Count of rows with game status Out. Doubtful is counted separately, not folded in."
+   },
+   {
+    "column": "players_doubtful",
+    "status": "populated",
+    "source": "official report (L-S01)"
+   },
+   {
+    "column": "players_questionable",
+    "status": "populated",
+    "source": "official report (L-S01)"
+   },
+   {
+    "column": "starters_out",
+    "status": "blank",
+    "reason": "Requires a verified depth source to know who is a starter (Q-DEPTH-01)"
+   },
+   {
+    "column": "replacement_named",
+    "status": "blank",
+    "reason": "The official report has no replacement field"
+   },
+   {
+    "column": "net_injury_count",
+    "status": "blank",
+    "reason": "Net against what baseline? Without a reserve list and a depth source the denominator is unknown, so publishing a net number would invent one"
+   }
+  ]
+ },
+ "staleness_check": {
+  "rule": "Flag any depth row that is older than the last official roster event affecting that club's unit.",
+  "requires": [
+   "a dated depth register (R-43)",
+   "an official transactions capture (Q-ROSTER-01)"
+  ],
+  "status": "Not running. 0 checks performed.",
+  "why_it_matters": "Roster turnover redefines depth for weeks. A depth row that predates a trade or an injured-reserve move is worse than no row, because it looks current."
+ },
+ "announced_starter_field": {
+  "rule": "An announced-starter field records a link to an official dated announcement of a starter change. It is never filled by inference and never used to imply a replacement.",
+  "populated_rows": 0,
+  "note": "This is deliberately a different field from 'replacement'. A club announcing a new starting quarterback is an official fact; who that pushes to second string is not published and is not inferred."
+ }
+}

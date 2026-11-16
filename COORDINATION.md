@@ -5,6 +5,59 @@ Live site: https://sassnarep3-star.github.io/FL4/
 
 Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not block publication).
 
+# ACTIVE BOARD — session `61ebd543` (branch `arena/61ebd543-fl4`, base `62afd1b`)
+
+Claimed 2026-11-16. `origin/main` = `62afd1b` (PR #7 merged) at claim time. Root `index.html`,
+`pages/`, `data/*.json`, `tools/build_site.py`, `tools/validate.py`, `signals/`, `data/signals/`,
+`tools/build_signals.py`, `tools/check_signals.py`, `prereg/` and `data/readiness*.json` are
+**owned by other sessions and are not modified by this session.** The additive root nav entry
+named in the original claim was **not taken**: `main` advanced through PRs #13–#17 while this
+session worked, and root `index.html` / `tools/build_site.py` are now contested shared outputs.
+The lab section is reachable from its own URL and links back to every other section; adding the
+one root nav entry is left to the integration pass (recorded as L-F-18).
+
+**This session's scope = a new, namespaced section `lab/` ("Decision Lab")** plus its own data
+(`data/lab/*.json`), builder (`tools/build_lab.py`) and checker (`tools/check_lab.py`). It adds
+the requirement register for the full brief, the decision-readiness table, the verified results
+feed, the availability capture, the depth/deficiency view, the model specification, the
+leaderboard, the correlation protocol, the price policy, the questions and suggestions boards,
+the repo review, the sources register and the flagged register. 16 pages, no external
+dependencies, all links relative.
+
+| Task | Status | Owner (session) | File scope | Sources / verification | Irregularities |
+|---|---|---|---|---|---|
+| T20 Claim + branch hygiene | done | `61ebd543` | `COORDINATION.md` | claim pushed before work started; `git pull --rebase` before each push | none |
+| T21 Official capture: Week 10 2026 injury report (full recapture, all clubs, all rows) | done (commit `3d6249a`) | `61ebd543` | `data/lab/injuries_week10_2026.json`, `lab/availability.html` | https://www.nfl.com/injuries/league/2026/reg10 (8/8 chunks, captured 2026-11-16) | 347 rows / 28 clubs; 171 carry a game status; Out 70, Questionable 90, Doubtful 11, blank 176. One IND row (Jonathan Taylor) truncated at a chunk boundary — all three of its fields are null (L-F-02). Three row sets for the same page now exist (L-F-01, L-F-16). |
+| T22 Official capture: 2026 results feed, weeks 1–10 (verified final scores) | done (commit `27dd699`) | `61ebd543` | `data/lab/results_2026.json`, `lab/results.html` | https://www.nfl.com/schedules/2026/by-week/week-N (weeks 1–10); 11 game centres re-checked | 150 rows = **148 FINAL** (136 weeks 1–9 + 12 week 10) + 2 not-FINAL (steelers-at-bengals LIVE, chargers-at-ravens not kicked off), stored blank (L-F-05). An earlier draft of the register said 149/13; corrected. |
+| T23 Official capture: Week 10 venue/stadium/Game Book from the game centre | done (commit `b82f820`) | `61ebd543` | `data/lab/fixtures_week10_2026.json`, `lab/fixtures.html` | https://www.nfl.com/games/<game_id>-2026-reg-10 for all 14 fixtures | 12 of 14 publish a Game Book PDF link; 2 null (L-F-11, links are Cloudinary-signed and will expire). Game-centre injury cards use coarser practice wording than the report; the report wins (L-F-08). |
+| T24 Requirement register for the full brief + decision-readiness table | done | `61ebd543` | `data/lab/requirements.json`, `lab/index.html` | 78 rows (R-01…R-70 + M-71…M-78); each names its blocking gate and the number that clears it | 37 met / 23 partial / 18 blocked. Every `where_published` target is checked to exist by `tools/check_lab.py`. |
+| T25 Price-data policy + snapshot/ledger design (drift alarms, immutability, cadence) | done | `61ebd543` | `data/lab/price_policy.json`, `lab/price-policy.html` | https://www.nfl.com/legal/terms/ section 1.3 quoted verbatim (page updated May 16 2024); §§15–18 not read and not characterised | policy default POL-A (derived analysis only) chosen as the strictest default, not by the owner. No price, odds, line or CLV exists anywhere in the repo (L-F-13). |
+| T26 Model spec: side→total→ML, probability+inputs, two totals, ablations, priors | done | `61ebd543` | `data/lab/models.json`, `lab/models.html` | 2026 rulebook changes 6-1-3, 6-1-5, 6-1-6, 19-2 quoted from https://operations.nfl.com/rules-officiating/2026-nfl-rulebook | no model fitted; every coefficient and every regime prior is null. Ablations by refit, never a fixed point penalty. |
+| T27 Leaderboard: proper-score divisions, two-stage escrow, control baselines, demotion gate, pre-registration | done | `61ebd543` | `data/lab/leaderboard.json`, `lab/leaderboard.html` | board empty by design; one shadow baseline B0 registered | **Defers to `prereg/REGISTRATION.md` on main** (L-F-19): this section restates governance another session already froze. Where they disagree, the frozen registration wins. |
+| T28 Question bank (known / unknown / needed to decide) | done | `61ebd543` | `data/lab/questions.json`, `lab/questions.html` | 21 questions; 12 blocking | every gate named in `requirements.json` is defined here (checked by `tools/check_lab.py`). Q-GOV-01 is defined but not yet referenced by a requirement. |
+| T29 Suggestions review board with selectable paths | done | `61ebd543` | `data/lab/suggestions.json`, `lab/suggestions.html` | browser-local selection only; nothing auto-approved on silence | 18 suggestions; approval requires editing `status` in the JSON and naming an approver |
+| T30 Repo review line by line with official links + irregularity flags | done | `61ebd543` | `data/lab/repo_review.json`, `lab/repo-review.html` | 85 tracked files listed with a blob link each; 8 findings | reviewed against `origin/main` at `4d76668`; link points at main where the file exists there, otherwise at this branch |
+| T31 Sources register + flagged-for-review page | done | `61ebd543` | `data/lab/sources.json`, `data/lab/flagged.json`, `lab/sources.html`, `lab/flagged.html` | 12 sources (L-S01…L-S12); only 6 marked `read` | 19 flags (L-F-01…L-F-19), each with an https source link. A source marked `not-read` verifies nothing. |
+| T32 Builder + checker | done | `61ebd543` | `tools/build_lab.py`, `tools/check_lab.py` | `build_lab.py --fail-on-warn` and `check_lab.py` both pass | builder fails on a leaked `None`, on a column no row carries, and on any price-derived value reaching a page; checker fails on a sourced row with no official link |
+| T33 Integration: rebase, link check, PR, merge, Pages | in progress | `61ebd543` | repo-wide (additive only) | rebase onto `origin/main`, rebuild, run both checkers, PR, merge, confirm Pages | root nav entry deliberately not taken (see header) |
+
+## Log — session `61ebd543`
+
+- 2026-11-16 — **Merge conflict resolved without discarding anyone's work.** Rebasing this branch onto `origin/main` (`4d76668`) conflicted in `COORDINATION.md`, because other sessions had rewritten the top of the file while this session worked. Resolution: both boards are kept — this session's board at the top, the other sessions' board below under a heading. No task row, log entry or handoff from any other session was removed. Other sessions' files (`prereg/`, `data/readiness.json`, `tools/capture_w10.py`, `data/flags.json` F-27…F-31, `data/repo_review.json` R-08…R-12) are untouched by this branch.
+- 2026-11-16 — Claimed T20–T33 with scope `lab/`, `data/lab/`, `tools/build_lab.py`, `tools/check_lab.py`. `git ls-remote` showed PR #7 as the only merged PR at claim time; PRs #13–#17 from other sessions merged into `main` while this session worked, so this branch is rebased onto `origin/main` before the final push.
+- 2026-11-16 — Week 10 injury report re-read in 8/8 chunks and transcribed verbatim (347 rows, 28 clubs). Earlier sessions' captures of the same page (160-row manual set, 76-row Out/Doubtful set) are retained and not merged; the count difference is a rule difference plus a live-document difference, published as L-F-01 rather than reconciled away.
+- 2026-11-16 — Results feed: 150 rows. Count corrected from an earlier draft's "149 FINAL (136 + 13)" to **148 FINAL (136 weeks 1–9 + 12 week 10)** after the two non-FINAL week 10 games were confirmed from the official schedule page and the game centres. `49ers-at-cowboys` verified FINAL 46–40 against its game centre.
+- 2026-11-16 — All 14 week 10 venue/stadium/Game Book links transcribed from the official game centres. Two fixtures have no Game Book (one LIVE, one not kicked off); both are null, not guessed.
+- 2026-11-16 — Built the section: 16 pages + `data/lab/*.json` (14 files) + builder + checker. `tools/build_lab.py --fail-on-warn` reports 0 price-derived values and 0 auto-flags; `tools/check_lab.py` reports 0 failures and 0 warnings across 14 pages, 78 requirement rows, 21 questions, 19 flags and 12 sources.
+- 2026-11-16 — Correction: an early draft of `requirements.json` cited `tools/build_lab.py` and 13 `lab/*.html` pages that did not exist. All `where_published` targets now exist and are verified by the checker at build time.
+- 2026-11-16 — Correction: an early draft of `flagged.json` (L-F-05) said week 10 contributed 13 FINAL games. Corrected to 12 of 14, with the season total at 148.
+- 2026-11-16 — Deference recorded: `main` carries `prereg/REGISTRATION.md`, which freezes the signals section's strategies, gates, leaderboard and correlation protocol with hash checks. This section's leaderboard rules are a parallel restatement and are flagged (L-F-19) rather than presented as new.
+
+---
+
+
+# OTHER BOARDS — sessions `810f9f1f` / `c7c287d6` / `c75aedbd` / `6eca50ae` / `f54713e3` / `121f05ad` (already on `main`)
+
 > PRs #1–#6 have already integrated the evidence-first dashboard and a separate, verified `signals/` origination section. This branch must not create another site or alter that section's methodology/data. The current follow-up is limited to distinct root-dashboard improvements: a blank 2nd/3rd/4th-string tracker, precise fair-price/joint-probability formulas, browser-local suggestion selection, source/privacy corrections, and a stricter root-page row audit. One narrowly scoped privacy correction is also claimed for the completed Signals section: remove an Arena-provided session-location observation from `Q-LEGAL-01` and regenerate only `signals/questions.html`. Historical session boards remain below.
 
 ## Current task board
@@ -19,6 +72,18 @@ Statuses: `unclaimed` · `in progress` · `done` · `needs review` (flags do not
 | T18 Week 10 private-layer reconciliation: private 347-row transcription vs public files, counts-only summary, capture validator | done (PR #14 merged to `main` at `d6e137d`; verify run 43788134399 success; Pages build and deploy success for `d6e137d`) | `c75aedbd`, `arena/c75aedbd-fl4` | `tools/capture_w10.py`, `data/capture_summary_w10_2026.json`, `private/` (git-ignored, not published), `data/flags.json` (F-27 to F-31 only), `data/repo_review.json` (R-08 to R-12 only), `data/sources.json` (S32 only), `.github/workflows/verify.yml` (one capture step) | nfl.com/injuries/league/2026/reg10 read in 8 chunks on 2026-11-16 (transcription); nfl.com/schedules/2026/reg10 (S32) | Private file matches public `data/injuries_w10_2026.json` on all 171 designated rows after ARI/AZ normalisation. `data/injuries_week10_2026.json` omits 6 designated rows (F-31). Public row-level tables still published (F-27, reviewer decision). |
 
 ## Log
+
+## Log — session `61ebd543`
+
+- 2026-11-16 — Claimed T20–T33 with scope `lab/`, `data/lab/`, `tools/build_lab.py`, `tools/check_lab.py`. `git ls-remote` showed PR #7 as the only merged PR at claim time; PRs #13–#17 from other sessions merged into `main` while this session worked, so this branch is rebased onto `origin/main` before the final push.
+- 2026-11-16 — Week 10 injury report re-read in 8/8 chunks and transcribed verbatim (347 rows, 28 clubs). Earlier sessions' captures of the same page (160-row manual set, 76-row Out/Doubtful set) are retained and not merged; the count difference is a rule difference plus a live-document difference, published as L-F-01 rather than reconciled away.
+- 2026-11-16 — Results feed: 150 rows. Count corrected from an earlier draft's "149 FINAL (136 + 13)" to **148 FINAL (136 weeks 1–9 + 12 week 10)** after the two non-FINAL week 10 games were confirmed from the official schedule page and the game centres. `49ers-at-cowboys` verified FINAL 46–40 against its game centre.
+- 2026-11-16 — All 14 week 10 venue/stadium/Game Book links transcribed from the official game centres. Two fixtures have no Game Book (one LIVE, one not kicked off); both are null, not guessed.
+- 2026-11-16 — Built the section: 16 pages + `data/lab/*.json` (14 files) + builder + checker. `tools/build_lab.py --fail-on-warn` reports 0 price-derived values and 0 auto-flags; `tools/check_lab.py` reports 0 failures and 0 warnings across 14 pages, 78 requirement rows, 21 questions, 19 flags and 12 sources.
+- 2026-11-16 — Correction: an early draft of `requirements.json` cited `tools/build_lab.py` and 13 `lab/*.html` pages that did not exist. All `where_published` targets now exist and are verified by the checker at build time.
+- 2026-11-16 — Correction: an early draft of `flagged.json` (L-F-05) said week 10 contributed 13 FINAL games. Corrected to 12 of 14, with the season total at 148.
+- 2026-11-16 — Deference recorded: `main` carries `prereg/REGISTRATION.md`, which freezes the signals section's strategies, gates, leaderboard and correlation protocol with hash checks. This section's leaderboard rules are a parallel restatement and are flagged (L-F-19) rather than presented as new.
+
 
 - 2026-11-16 — T18 closed by `c75aedbd`. PR #14 (https://github.com/sassnarep3-star/FL4/pull/14, `arena/c75aedbd-fl4` → `main`) merged with a merge commit (`d6e137d`, 01:46:51Z) after `verify.yml` succeeded on the PR head (run 43788134399). Pages build and deploy succeeded for `d6e137d`. Not done under T18: changing the public row-level tables (F-27, reviewer decision); the ARI/AZ normalisation (F-29); the 75-row Out/Doubtful list (F-31). The live site could not be fetched from the sandbox; the Pages run is the deployment record.
 

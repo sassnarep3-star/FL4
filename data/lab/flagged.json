@@ -1,0 +1,186 @@
+{
+ "as_of": "2026-11-16",
+ "note": "Items published here are known gaps, conflicts or irregularities. None of them blocks the merge; every one of them is stated rather than papered over. Where a value could not be confirmed from an official source it was left blank in the data and the blank is recorded here with the reason.",
+ "columns": [
+  "id",
+  "type",
+  "what",
+  "detail",
+  "affected",
+  "action",
+  "source"
+ ],
+ "rows": [
+  [
+   "L-F-01",
+   "data conflict",
+   "Three captures of the same official Week 10 injury report disagree on row counts",
+   "This session's recapture (2026-11-16) yields 347 rows across 28 clubs: 171 rows carry a game status, 81 are Out or Doubtful, 90 Questionable, 11 Doubtful. Earlier sessions published 254 rows and 279 rows, and one published 76 Out/Doubtful rows. The differences come from two causes: the official page is a live document that changes between Friday and Monday, and each capture applied a different inclusion rule.",
+   "lab/availability.html, data/lab/injuries_week10_2026.json",
+   "Do not merge the row sets. Record one inclusion rule as code and re-run it over every retained snapshot. Until the snapshot runner exists, treat any cross-session row-count comparison as invalid rather than as an error.",
+   "https://www.nfl.com/injuries/league/2026/reg10"
+  ],
+  [
+   "L-F-02",
+   "incomplete capture",
+   "One Colts row is truncated at a page-chunk boundary",
+   "Jonathan Taylor (IND, RB) appears at the end of one chunk of the official report and the row resumes in the next chunk at the following player. His injury, practice status and game status could not be read, so all three are stored as null and render blank.",
+   "lab/availability.html",
+   "Re-read the page for that row, or capture with an overlap between chunks so no row can straddle a boundary.",
+   "https://www.nfl.com/injuries/league/2026/reg10"
+  ],
+  [
+   "L-F-03",
+   "silent bias",
+   "Absence from the injury report does not mean available",
+   "A player on injured reserve produces no row on the weekly report. Reading 'no row' as 'available' biases every availability feature in the same direction, and it is invisible in the table.",
+   "lab/availability.html, lab/models.html",
+   "Type every player-week as listed, on reserve, or unknown. Until a reserve list is captured, 'unknown' is the only honest type for a player with no row. Suggestion SG-11.",
+   "https://www.nfl.com/injuries/league/2026/reg10"
+  ],
+  [
+   "L-F-04",
+   "publication boundary",
+   "Raw capture data sits in the tree that GitHub Pages publishes",
+   "The Pages workflow uploads the repository root, so every raw row in data/lab/ is publicly served. The public/private split required by the brief is currently a convention, not a control.",
+   "lab/price-policy.html, data/lab/*",
+   "Move raw captures to a private store with freshness and schema-change alerts (SG-06), or delete them after derivation. Blocking question Q-STORE-01.",
+   "https://github.com/sassnarep3-star/FL4/blob/main/.github/workflows/pages.yml"
+  ],
+  [
+   "L-F-05",
+   "incomplete data",
+   "Two Week 10 games were not FINAL at capture time",
+   "The official schedule page rendered Steelers at Bengals as LIVE in the first quarter (CIN 3, PIT 0) and Chargers at Ravens as scheduled for Mon Nov 16 8:15 PM ET. Both rows are stored with null scores and a per-row note rather than with a zero or a guess.",
+   "lab/results.html, data/lab/results_2026.json",
+   "Re-read the official schedule page after both games finish and append the results. Week 10 therefore contributes 13 FINAL games, not 14.",
+   "https://www.nfl.com/schedules/2026/by-week/week-10"
+  ],
+  [
+   "L-F-06",
+   "source not found",
+   "No dated official schedule announcement was located",
+   "The live official schedule page was read for weeks 1-10. No separately dated announcement page was found for the 2026 schedule, so the field is blank rather than filled with the live page's capture date presented as an announcement date.",
+   "lab/fixtures.html",
+   "Locate the dated announcement, or publish the finding that none is available. Blocking question Q-SCHED-02.",
+   "https://www.nfl.com/schedules/2026/by-week/week-10"
+  ],
+  [
+   "L-F-07",
+   "source not found",
+   "No official per-game stadium roof designation was located",
+   "Venue and stadium are transcribed for all 14 Week 10 fixtures, but the roof designation (open, closed, retractable and its 90-minute decision) was not found on any official page read this session, so the field is blank.",
+   "lab/models.html, lab/fixtures.html",
+   "Locate the official roof designation source before wiring any weather feature. Assuming 'outdoor' is the mispricing the requirement exists to prevent. Blocking question Q-WX-01.",
+   "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook"
+  ],
+  [
+   "L-F-08",
+   "cross-source wording conflict",
+   "The game centre's injury cards use coarser practice wording than the official report",
+   "For example, Jaylinn Hawkins (BAL) shows 'Did participate' on the game centre's pre-game card and 'Limited Participation in Practice' on the official injury report. Both carry the same game status (Out).",
+   "lab/fixtures.html, lab/availability.html",
+   "Where the two disagree, publish the injury report's wording, and record the discrepancy rather than reconciling it silently.",
+   "https://www.nfl.com/games/chargers-at-ravens-2026-reg-10"
+  ],
+  [
+   "L-F-09",
+   "page behaviour",
+   "Bye-week blocks on past-week schedule pages show current records",
+   "The 'Teams on Bye' block on a completed week's schedule page lists each club's record as of today, not as of that week - Week 5's block lists Carolina at 4-5 and Kansas City at 7-2. Reading it as a historical record would be wrong.",
+   "lab/results.html",
+   "Bye lists are transcribed as club identities only. No historical record is taken from that block.",
+   "https://www.nfl.com/schedules/2026/by-week/week-5"
+  ],
+  [
+   "L-F-10",
+   "absent data",
+   "No depth source is verified for any club, so no replacement is named anywhere",
+   "0 of 32 clubs have a verified depth source. The official injury report has no depth or replacement field, and the official roster page publishes no depth ordering. The deficiency matrix ships with every cell blank.",
+   "lab/depth.html, lab/availability.html",
+   "Resolve the depth-order source club by club before building the backup-deficiency feature, as the brief requires. Blocking question Q-DEPTH-01.",
+   "https://www.nfl.com/injuries/league/2026/reg10"
+  ],
+  [
+   "L-F-11",
+   "unused authoritative source",
+   "Official Game Book PDFs are linked but not parsed",
+   "A Game Book PDF link is published on the official game centre for 12 of the 14 Week 10 fixtures. None has been parsed, so no actual starter, inactive list or snap count exists anywhere on this site.",
+   "lab/fixtures.html",
+   "Pre-register a parser with a per-game row-count pin, then run it. Terms must be read first. Blocking question Q-BOOKS-01.",
+   "https://static.www.nfl.com/image/upload/v1794777676/gamecenter/ab582f5b-4feb-11f1-abca-2c54536568a9.pdf"
+  ],
+  [
+   "L-F-12",
+   "gate closed",
+   "Every correlation is null and every n is 0, so the two combo divisions are closed",
+   "11 pairs are registered with n = 0 and no measured value. The joint-evidence gate stays closed, so no game parlay, same-game parlay or prop combo can be ranked.",
+   "lab/correlations.html, lab/leaderboard.html",
+   "This is the intended behaviour, not a defect. It can only clear after settlement data exists. Blocking questions Q-PRICE-01 and Q-CORR-01.",
+   "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html"
+  ],
+  [
+   "L-F-13",
+   "absent data",
+   "No market price exists in this environment",
+   "No odds, line, closing number or book is stored anywhere in the repository across all three sections. Closing-line value, backtests, ROI, correlations of settled legs and originated residuals are all defined and all unmeasurable.",
+   "lab/price-policy.html, lab/leaderboard.html, lab/correlations.html",
+   "Answer Q-PRICE-01. Until then every performance field stays null, which is why this site publishes no edge number.",
+   "https://www.nfl.com/legal/terms/"
+  ],
+  [
+   "L-F-14",
+   "unset threshold",
+   "Gate thresholds are deliberately unset, so every gate fails closed",
+   "The demotion triggers, the stage-1 qualification bar and the correlation floor all have null thresholds. A null threshold is not zero and not a default: the gate refuses to run.",
+   "lab/leaderboard.html, lab/correlations.html",
+   "Set each threshold once, before the first run, and record it with the commit that set it. Choosing thresholds after seeing results is the failure mode the governance layer exists to prevent. Blocking question Q-GOV-02.",
+   "https://github.com/sassnarep3-star/FL4/blob/main/COORDINATION.md"
+  ],
+  [
+   "L-F-15",
+   "method limitation",
+   "The train/validation/holdout split is inside a single season",
+   "Only the 2026 season has been captured, so the split (train weeks 1-5, validation weeks 6-8, holdout weeks 9-10) is within-season. Roster context and the 2026 kickoff regime leak across folds, so validation will be optimistic relative to a season-level split.",
+   "lab/results.html, lab/models.html",
+   "Capture prior seasons and re-split by season. Until then the limitation is published next to the split rather than buried. Blocking question Q-MODEL-05.",
+   "https://www.nfl.com/schedules/2026/by-week/week-1"
+  ],
+  [
+   "L-F-16",
+   "duplicate data",
+   "Three row sets now describe the same official page",
+   "data/injuries_w10_2026.json, data/signals/injuries_week10_2026.json and data/lab/injuries_week10_2026.json each capture the official Week 10 2026 injury report under different rules and on different days.",
+   "lab/repo-review.html, lab/availability.html",
+   "Pick one rule and make it code. The reconciliation value of having two independent captures is real - it is how an earlier session found a dropped row - but three unlabelled sets is a hazard, not an audit.",
+   "https://www.nfl.com/injuries/league/2026/reg10"
+  ],
+  [
+   "L-F-17",
+   "legal constraint",
+   "Scheduled league capture cannot be implemented lawfully until the terms question is answered",
+   "NFL.com Terms section 1.3 permits use only for individual non-commercial informational purposes and prohibits systematic retrieval to compile a collection or database absent express prior written consent. Eight requirements on the brief ask for daily or weekly scheduled capture of league pages.",
+   "lab/price-policy.html, lab/availability.html",
+   "Answer Q-PRICE-02 before building any runner. No automated capture is configured in this repository, and none should be until then.",
+   "https://www.nfl.com/legal/terms/"
+  ],
+  [
+   "L-F-18",
+   "structure",
+   "Three overlapping site sections now share one repository and one Pages deployment",
+   "The root dashboard, the signals/ section and this lab/ section each carry their own questions, suggestions, flagged and sources pages, with three different flag namespaces (F-*, signals F-*, L-F-*).",
+   "lab/repo-review.html",
+   "Namespaces are kept distinct and cross-linked. A future integration pass should merge the three question registers into one board.",
+   "https://github.com/sassnarep3-star/FL4"
+  ],
+  [
+   "L-F-19",
+   "duplicate governance",
+   "The lab section restates rules another session already froze in prereg/",
+   "main already carries prereg/REGISTRATION.md (registration 2026-11-16), which freezes the signals section's strategies, gates, leaderboard and correlation protocol with file hashes checked on every build, plus data/readiness.json (31 rows) as the readiness register. This lab section publishes its own leaderboard rules, division structure and correlation protocol, so the repository now holds two versions of the same governance text. Where they disagree, the frozen registration in prereg/ wins.",
+   "lab/leaderboard.html, lab/correlations.html, lab/index.html",
+   "Do not edit prereg/ from this section. A future integration pass should make the lab pages point at the frozen registration rather than restating it, or record a new dated registration for this section's rules.",
+   "https://github.com/sassnarep3-star/FL4/blob/main/prereg/REGISTRATION.md"
+  ]
+ ]
+}
