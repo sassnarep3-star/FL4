@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Leaderboard | NFL Decision Lab</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top">
+  <div class="brand"><a href="index.html">NFL Decision Lab</a><span>Data as of 2026-11-16</span></div>
+  <nav><a href="index.html" class="">Lab home</a><a href="index.html#readiness" class="">Decision readiness</a><a href="results.html" class="">Results feed</a><a href="availability.html" class="">Availability</a><a href="depth.html" class="">Depth &amp; deficiency</a><a href="models.html" class="">Models</a><a href="leaderboard.html" class="active">Leaderboard</a><a href="correlations.html" class="">Correlations</a><a href="price-policy.html" class="">Price policy</a><a href="fixtures.html" class="">Fixtures</a><a href="questions.html" class="">Questions</a><a href="suggestions.html" class="">Suggestions</a><a href="repo-review.html" class="">Repo review</a><a href="sources.html" class="">Sources</a><a href="flagged.html" class="">Flagged for Review</a></nav>
+</header>
+<main>
+<h1>Leaderboard</h1>
+<p class="lead">Empty by design. The board publishes the rules it will be judged by before there is anything to judge.</p>
+
+<div class="callout warn">Empty by design. 0 strategies are registered and 0 bets have been settled. An empty board is the correct rendering of a project that has not yet made a bet it can be judged on.</div>
+<div class="kpis">
+<div class="kpi"><div class="kpi-v">4</div><div class="kpi-l">divisions</div><div class="kpi-n">1 open, 3 closed on the joint-evidence gate</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">registered strategies</div><div class="kpi-n">one shadow baseline is registered (B0)</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">settled bets</div><div class="kpi-n">no price, so nothing can be settled</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">backtest numbers</div><div class="kpi-n">backtest results can never appear on this board</div></div>
+</div>
+
+<h2>Divisions</h2>
+<div class="table-wrap"><table id="divs"><thead><tr><th>#</th><th>Division</th><th>Eligible</th><th>Rankable now</th><th>Entries</th></tr></thead><tbody><tr><td>DIV-1</td><td>Singles</td><td>One market on one game</td><td><span class="badge met">rankable</span></td><td>0</td></tr><tr><td>DIV-2</td><td>Game parlays</td><td>Two or more legs across different games</td><td><span class="badge blocked">closed &mdash; Q-CORR-01</span></td><td>0</td></tr><tr><td>DIV-3</td><td>Same-game parlays</td><td>Two or more legs within one game</td><td><span class="badge blocked">closed &mdash; Q-CORR-01</span></td><td>0</td></tr><tr><td>DIV-4</td><td>Prop combos</td><td>Player-prop combinations</td><td><span class="badge blocked">closed &mdash; Q-CORR-01 and the absence of prop line history</span></td><td>0</td></tr></tbody></table></div>
+
+<h2>Joint-evidence gate &mdash; currently closed</h2>
+<p>A combo may be ranked only when (a) a directly validated joint probability exists for that specific combination, measured on settled data with n published, and (b) the operator&#x27;s void and push rules for that combination are on file.</p>
+<div class="callout warn"><strong>Prohibited:</strong> Multiplying marginal probabilities. Under dependence it is invalid, and in same-game parlays dependence is the whole problem. A product of marginals is not a conservative estimate; it is a different quantity. Publishing it would produce a ranking that rewards the modelling error the gate exists to prevent.</div>
+<p>Status: Closed. 0 combos are rankable.</p>
+
+<h2>Ranking</h2>
+<p>Rank key: <strong>Benchmark-relative Brier skill score, with a game-cluster lower bound used as the ranking statistic and a multiplicity adjustment for the number of strategies tried.</strong></p>
+<ul>
+<li><strong>Not win rate</strong> &mdash; Win rate cannot separate a good process from a good run at any realistic sample size, and it ignores the price taken. Two strategies with identical win rates can have opposite expected value.</li>
+<li><strong>Not ROI</strong> &mdash; Season-long ROI is the ranked metric this project explicitly rejects. Short-run ROI is dominated by variance and by stake size, so ranking on it selects for luck and for bold staking.</li>
+<li><strong>Uncertainty</strong> &mdash; Every published skill score carries an interval from a bootstrap clustered by game, so bets on the same game do not pretend to be independent observations.</li>
+<li><strong>Multiplicity</strong> &mdash; The adjustment uses a journal of all variants tried, including the failed ones. A leaderboard that only sees survivors measures the author&#x27;s persistence, not the strategy&#x27;s skill.</li>
+</ul>
+<p>Display-only columns, which cannot move the rank: win_rate, roi, stake_size, number_of_bets.
+These columns are shown for context and cannot move the rank, which is how a lucky staking run is prevented from masking a bad signal.</p>
+
+<h2>Signal vs staking</h2>
+<p>Signal is scored and ranked. Staking is recorded and displayed. The two never mix in the rank key. A strategy with a mediocre signal and an aggressive staking schedule can post the best return in any short sample. Ranking signal separately means the leaderboard answers &#x27;is this a good forecast&#x27;, not &#x27;did this get lucky with size&#x27;. Enforcement: The builder rejects any ranking expression containing a stake field.</p>
+
+<h2>Two-stage qualification</h2>
+<h3>Stage 1 &mdash; Proper-score qualification</h3>
+<p>Decide whether the strategy forecasts better than the benchmark at all, before any money concept is introduced. Runnable without prices: <span class="badge met">True</span></p>
+<div class="table-wrap"><table id="s1"><thead><tr><th>Entry test</th></tr></thead><tbody><tr><td>Pre-registration recorded with a commit hash before the evaluation window opens</td></tr><tr><td>Chronological evaluation only; no fold trains on a later date</td></tr><tr><td>Benchmark-relative Brier skill above the qualification bar, with the game-cluster lower bound above zero</td></tr><tr><td>Input-perturbation robustness: the skill survives perturbing each input within its measurement error</td></tr><tr><td>No-lookahead timestamp rule: every input timestamp is strictly earlier than the forecast timestamp, which is strictly earlier than kickoff</td></tr><tr><td>Sample floor met, counted in settled bets across distinct games</td></tr></tbody></table></div>
+<h3>Stage 2 &mdash; Prospective CLV and ROI escrow</h3>
+<p>Confirm the qualified skill converts into beating the closing line, prospectively, on bets that were recorded before kickoff. Runnable without prices: <span class="badge blocked">False</span>
+&mdash; blocked by <a class="badge gate" href="questions.html">Q-PRICE-01</a></p>
+<div class="table-wrap"><table id="s2"><thead><tr><th>Entry test</th></tr></thead><tbody><tr><td>Stage 1 passed, with the result and its interval published</td></tr><tr><td>A market price exists for every bet scored (Q-PRICE-01)</td></tr><tr><td>Closing-line value measured against the stored closing price, per bet, with n published</td></tr><tr><td>A prospective window agreed before the window opens; the window&#x27;s bets are escrowed, not selected afterwards</td></tr></tbody></table></div>
+
+<h2>Control baselines</h2>
+<p>Every leaderboard run, in every division, includes the two controls below. A strategy must beat the relevant control to be ranked at all. CTL-FAV needs a market line, so it becomes runnable at the same time as stage 2 (Q-PRICE-01). CTL-RAND is runnable now but is not informative without prices to score against.</p>
+<div class="table-wrap"><table id="ctl"><thead><tr><th>#</th><th>Control</th><th>What it is</th><th>Purpose</th></tr></thead><tbody><tr><td>CTL-RAND</td><td>Random picks</td><td>A coin-flip selection over the same markets in the same window, run with the same number of bets.</td><td>Establishes what pure chance looks like in this specific window and sample size.</td></tr><tr><td>CTL-FAV</td><td>Favourites only</td><td>Always take the market favourite, using the market line as the favourite&#x27;s identity, run over the same markets.</td><td>Beating &#x27;always back the favourite&#x27; is a much higher bar than beating zero, and it is the bar that actually matters.</td></tr></tbody></table></div>
+
+<h2>Demotion gate</h2>
+<p>A live strategy is sent back to paper automatically when either trigger fires. Neither requires a human to notice.</p>
+<div class="table-wrap"><table id="dem"><thead><tr><th>#</th><th>Trigger</th><th>Test</th><th>Threshold</th></tr></thead><tbody><tr><td>DEM-1</td><td>Closing-line value decay</td><td>Trailing CLV over the agreed window falls below the demotion floor, with the game-cluster upper bound also below the floor.</td><td><span class="blank" title="must be set before the first live run (Q-GOV-02)"></span></td></tr><tr><td>DEM-2</td><td>Calibration break</td><td>The forecast probabilities and the observed outcomes diverge beyond the calibration tolerance on the trailing window, judged by a proper score rather than by win rate.</td><td><span class="blank" title="must be set before the first live run (Q-GOV-02)"></span></td></tr></tbody></table></div>
+<p>The strategy returns to paper, the demotion is logged with the window and the test that fired, and it may only return after a new pre-registration. A demoted strategy is never silently re-promoted when the number recovers.</p>
+
+<h2>Pre-registration</h2>
+<p>The registration is the commit. Rule text, sample window and gates are committed before the evaluation window opens; the commit hash is the registration. Required fields: strategy_id, rule_text, sample_window, gates, commit_hash, registered_at_utc, what_would_change_our_mind_for, what_would_change_our_mind_against</p>
+<div class="table-wrap"><table id="reg"><thead><tr><th>#</th><th>Strategy</th><th>Rule</th><th>Window</th><th>Gates</th><th>Status</th><th>Note</th></tr></thead><tbody><tr><td>B0</td><td>Singles-only shadow baseline (team strength)</td><td>A simple team-strength model on singles only, no stake, run in shadow. It exists to prove the leaderboard plumbing works and to provide the first benchmark.</td><td>2026 weeks 11-14</td><td>no-lookahead timestamp rule, chronological evaluation, sample floor</td><td>registered (shadow)</td><td>Registration recorded in the commit that introduced this file. It has not run, because its inputs require a rating that is deliberately unfitted (Q-MODEL-03). It is a shadow baseline for this section only; the 16 strategies registered in prereg/ belong to the signals section and are not duplicated here.</td></tr></tbody></table></div>
+<p>Backtest numbers can never appear on the leaderboard. The leaderboard scores only bets registered before the settlement they are scored against, and the builder rejects any row that violates this.</p>
+<div class="callout info"><strong>Deference:</strong> The repository&#x27;s canonical pre-registration is prereg/REGISTRATION.md on main (registration 2026-11-16), which freezes data/signals/{strategies,gates,leaderboard,correlations}.json with file hashes checked on every build. This page is the lab&#x27;s decision-first view of the same rules and does not supersede it. Where the two disagree, the frozen registration wins until a new dated registration is committed. Flagged as <a href="flagged.html">L-F-19</a>.</div>
+
+<h2>Anti-gaming</h2>
+<div class="table-wrap"><table id="ag"><thead><tr><th>#</th><th>Rule</th><th>Enforced by</th></tr></thead><tbody><tr><td>AG-1</td><td>Registration timestamp must be strictly earlier than the first bet timestamp it scores.</td><td>builder</td></tr><tr><td>AG-2</td><td>A strategy may not be edited inside its own evaluation window. The edit creates a new strategy with a new registration.</td><td>review</td></tr><tr><td>AG-3</td><td>Failed variants are recorded in the multiplicity journal. Deleting a failed variant is a reporting violation, not a tidy-up.</td><td>review</td></tr><tr><td>AG-4</td><td>Rewards are non-cash. A cash reward converts a research leaderboard into a staking competition and selects for variance.</td><td>policy</td></tr><tr><td>AG-5</td><td>No capital is exposed at any stage until stage 1 and stage 2 both pass prospectively.</td><td>policy</td></tr><tr><td>AG-6</td><td>Staking is displayed, never ranked.</td><td>builder</td></tr></tbody></table></div>
+
+<h2>Rewards</h2>
+<div class="callout info">No monetary value is attached to any tier. Nothing here is a prize, and nothing here is betting advice.</div>
+<div class="table-wrap"><table id="tiers"><thead><tr><th>Tier</th><th>Name</th><th>Test</th><th>Reward</th></tr></thead><tbody><tr><td>1</td><td>Qualified</td><td>Stage 1 passed</td><td>Published with the result and interval</td></tr><tr><td>2</td><td>Ranked</td><td>Beats the relevant control baseline on the rank key</td><td>Ranked in its division</td></tr><tr><td>3</td><td>Promoted</td><td>Stage 2 passed prospectively</td><td>Eligible for live tracking, still non-cash</td></tr><tr><td>4</td><td>Reserved</td><td>Sustains tier 3 across two windows without a demotion trigger</td><td>Named owner credit in the register</td></tr><tr><td>5</td><td>Benchmark</td><td>Becomes the new benchmark other strategies are measured against</td><td>Benchmark status; replaces CTL-FAV for future windows</td></tr></tbody></table></div>
+
+</main>
+<footer>
+<p>Informational research only. Nothing here is betting advice. No market price exists in this
+environment, so this section publishes no odds, no edge, no closing-line value and no return number.
+Every row links to a source; values that could not be confirmed are left blank and listed on the
+<a href="flagged.html">Flagged for Review</a> page.</p>
+<p>Other sections of this repository: <a href="../index.html">Dashboard</a> &middot;
+<a href="../decision-lab.html">Decision Lab blueprint</a> &middot;
+<a href="../signals/index.html">Signals &amp; origination</a>.</p>
+<p>Source repository: <a href="https://github.com/sassnarep3-star/FL4">https://github.com/sassnarep3-star/FL4</a>. Commit hashes cited are those present in
+this checkout at review time.</p>
+</footer>
+<script src="assets/app.js"></script>
+</body></html>

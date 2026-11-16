@@ -1,0 +1,38 @@
+{
+  "as_of": "2026-11-16",
+  "status": "Protocol published, zero values measured. Every measured_value below is null because there is no set of settled bets to measure on (Q-PRICE-01, Q-PRICE-03).",
+  "policy": {
+    "rule": "Correlations are computed only from officially sourced numbers, and n is published with every value.",
+    "what_counts_as_official_input": "Settlement outcomes and market prices taken from a licensed or permitted source. Model probabilities are not an official number and are never used to estimate a correlation.",
+    "why_n_is_published": "A correlation without n is unfalsifiable. At n=30 nearly any value is consistent with zero, and publishing it invites exactly the parlay pricing it should forbid.",
+    "minimum_n": 300,
+    "minimum_n_status": "Proposed default. The owner may raise it; the builder refuses to render a value below whatever floor is set (Q-PRICE-03).",
+    "clustering": "Bets on the same game are not independent. Intervals come from a bootstrap clustered by game, not from an i.i.d. formula.",
+    "what_a_correlation_is_not": "A correlation coefficient is not a joint probability, not a conditional probability and not a causal effect. It does not license multiplying marginals."
+  },
+  "estimators": [
+    {"id": "PHI", "name": "Phi coefficient", "use": "Two binary outcomes, e.g. two sides both covering", "formula_note": "Phi on the 2x2 table of settlement outcomes", "value": null},
+    {"id": "EXCESS", "name": "Excess joint probability", "use": "The quantity that actually matters for pricing a combo", "formula_note": "P(A and B) observed minus P(A) x P(B). This is the dependence premium, and it is the number a combo price must reflect.", "value": null},
+    {"id": "BOOT", "name": "Game-clustered bootstrap interval", "use": "Uncertainty on both of the above", "formula_note": "Resample games, not bets, so correlated legs inside one game do not fake extra information.", "value": null}
+  ],
+  "pairs": [
+    {"id": "C-01", "leg_a": "Home side covers", "leg_b": "Game total goes over", "same_game": true, "why_it_matters": "The classic same-game parlay pair. If the favourite covers, the total is often carried by the same scoring, so the pair is not independent.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-02", "leg_a": "Favourite covers", "leg_b": "Favourite moneyline wins", "same_game": true, "why_it_matters": "Near-duplicate legs sold as a two-leg parlay. The joint probability is bounded by the moneyline probability, which is the check that a product of marginals fails.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-03", "leg_a": "Game total over", "leg_b": "Leading rusher over his rushing prop", "same_game": true, "why_it_matters": "Prop combo. Game script couples the two, and the operator's void rules for an injury scratch decide what 'settled' even means.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-04", "leg_a": "Team A covers", "leg_b": "Team B covers in a different game", "same_game": false, "why_it_matters": "The cross-game parlay. Dependence here should be near zero; if it is not, something shared (weather, a late news event) is moving both and the pricing assumption is wrong.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-05", "leg_a": "Quarterback passing yards over", "leg_b": "Team total over", "same_game": true, "why_it_matters": "Two views of the same offensive output sold as independent legs.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-06", "leg_a": "Two sides in the same 1pm window", "leg_b": "", "same_game": false, "why_it_matters": "Window-level correlation. If a shared late injury or weather event moves several games at once, a same-window parlay is not the independent product it is priced as.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-07", "leg_a": "Underdog covers", "leg_b": "Game total under", "same_game": true, "why_it_matters": "The mirror of C-01. Measuring both is the check that the estimator is symmetric and not fitting one direction.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-08", "leg_a": "A key starter ruled Out before kickoff", "leg_b": "That team fails to cover", "same_game": true, "why_it_matters": "The personnel-availability pair. Without it, any claim that injuries move a line is an assertion. It also requires a verified replacement to interpret (Q-DEPTH-01).", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-09", "leg_a": "Designation changes Out -> Questionable", "leg_b": "Line moves toward that team", "same_game": true, "why_it_matters": "The surprise pair. It requires multi-day snapshots (Q-SNAPSHOT-01) and a price series (Q-PRICE-01), so it is the last of the set to become measurable.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-10", "leg_a": "Two games in the same stadium on consecutive days", "leg_b": "", "same_game": false, "why_it_matters": "Surface and venue wear. Included so a venue effect, if any, is measured rather than asserted.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"},
+    {"id": "C-11", "leg_a": "Wind above threshold at kickoff", "leg_b": "Game total under", "same_game": true, "why_it_matters": "The weather pair. Blocked until the roof designation and NWS capture exist (Q-WX-01), because a closed roof removes the effect entirely.", "n": 0, "measured_value": null, "interval_low": null, "interval_high": null, "status": "not measured"}
+  ],
+  "measurement_plan": [
+    "1. Answer Q-PRICE-01 and Q-PRICE-03 so there is a price series and an agreed n floor.",
+    "2. Build the settlement ledger: every bet, its market, its price at forecast time, its closing price, and its outcome, keyed by game_id.",
+    "3. Estimate phi and the excess joint probability for each pair, with a game-clustered bootstrap interval.",
+    "4. Publish n alongside every value. A pair below the floor is published as 'not measured at this n', never as a number.",
+    "5. Only then may the joint-evidence gate open for that specific pair, and only for that pair."
+  ]
+}

@@ -1,0 +1,90 @@
+{
+  "as_of": "2026-11-16",
+  "status": "Specification only. No model has been fitted, no coefficient exists, and no probability is published. Every numeric field below that would be an estimate is null by design.",
+  "origination_order": {
+    "rule": "Originate the side first, then the total, then the moneyline.",
+    "why": "The side and the total are the primitives; a moneyline is a function of the same distribution. Deriving the moneyline last keeps one distribution behind all three markets so they cannot disagree with each other.",
+    "frozen": true,
+    "consequence_if_violated": "Three independently fitted markets can imply three different games, and the disagreement is invisible until a parlay prices it."
+  },
+  "output_contract": {
+    "rule": "Every model output is stored as a probability plus its inputs, never as a pick alone.",
+    "required_fields": ["game_id", "market_type", "model_version", "probability", "probability_interval_low", "probability_interval_high", "input_vector", "input_snapshot_times", "forecast_timestamp_utc", "what_would_change_our_mind_for", "what_would_change_our_mind_against"],
+    "why_the_inputs_are_stored": "A pick without its inputs cannot be audited, cannot be re-run after a data correction, and cannot be asked what it would have said under a different availability state.",
+    "two_sided_field": "The brief asks for a two-sided 'what would change our mind' entry. Both directions are required: evidence that would strengthen the strategy and evidence that would kill it. A one-sided entry is a sales pitch, and the builder rejects it.",
+    "rows_published": 0
+  },
+  "publication_columns": {
+    "rule": "Publish the model's fair line, the market line and the difference as three separate columns.",
+    "columns": ["originated_fair_line", "market_line", "difference (originated - market)"],
+    "why_separate": "A single 'edge' column hides which of the two inputs moved. A widening difference caused by the market moving is a different decision from one caused by our model moving.",
+    "rows_published": 0
+  },
+  "total_estimators": {
+    "rule": "Publish every model total twice until one wins.",
+    "estimators": [
+      {"id": "TOT-A", "name": "Team-total additive", "description": "Model each team's scoring distribution separately from its own inputs, then add them, so the total inherits both teams' availability and pace context.", "status": "specified, not fitted"},
+      {"id": "TOT-B", "name": "Direct game-total", "description": "Model the combined game total directly from game-level features, so it can learn interaction effects that two independent team models cannot see.", "status": "specified, not fitted"}
+    ],
+    "gap_column": "Both totals are published with a gap column (TOT-A minus TOT-B) on every row.",
+    "collapse_rule": "Collapse to one estimator only after a pre-registered walk-forward comparison on the validation window, with the comparison and its interval published. Collapsing because one estimator looks better this month is fitting to noise.",
+    "rows_published": 0
+  },
+  "ablations": {
+    "rule": "Injury and personnel effects are measured by ablation, never by subtracting a fixed number of points for a missing starter.",
+    "design": [
+      "1. Fit the identical model twice on the identical training window: once with the availability/personnel feature set, once without it.",
+      "2. Evaluate both on chronological holdouts, never on a random split, so no fold trains on the future.",
+      "3. Report the difference in the proper score, with an interval from a game-clustered bootstrap.",
+      "4. If the interval contains zero, the correct published statement is 'no measured effect at this sample size', not a point estimate."
+    ],
+    "why_not_fixed_penalties": "A fixed penalty is a guess wearing a number. It cannot be falsified, it does not vary by position or by the quality of the replacement, and it silently becomes a permanent prior once it is in the code.",
+    "status": "Protocol published. 0 ablations run, because verified availability features do not exist yet (Q-DEPTH-01)."
+  },
+  "injury_signal_form": {
+    "rule": "The injury signal is a surprise, never a level.",
+    "definition": "surprise = designation observed at time t minus the expected designation for that player in that game week, where the expectation is built only from observations made strictly before t.",
+    "why_a_level_fails": "A level says 'this player is Questionable'. A surprise says 'this player is Questionable when we expected him to be a full participant'. Only the second is new information, and only the second is not already priced by anyone reading the same report.",
+    "status": "Definition published. 0 surprise values are computable from a single capture (Q-SNAPSHOT-01)."
+  },
+  "fixture_context_features": {
+    "rule": "Built only from published schedule facts - nothing inferred about form, motivation or travel fatigue.",
+    "fields": [
+      {"field": "rest_days", "source": "official schedule dates (L-S02)", "status": "computable for weeks 1-10"},
+      {"field": "venue_stadium", "source": "official game centre Game Info (L-S03)", "status": "captured for 14 of 14 week 10 fixtures; 0 prior weeks"},
+      {"field": "is_international_game", "source": "official schedule international-game markers (L-S02)", "status": "captured for 8 games across weeks 1-10"},
+      {"field": "kickoff_local_slot", "source": "official schedule (L-S02)", "status": "computable"},
+      {"field": "short_week_flag", "source": "derived from official schedule dates", "status": "computable, published as derived and labelled as such"}
+    ],
+    "excluded": "Anything not printed on the official schedule or game centre: no inferred travel fatigue, no timezone-adjustment model, no altitude or turf claim beyond the transcribed stadium name."
+  },
+  "regime_priors": {
+    "rule": "2026 kickoff and declared onside-kick regime priors must be estimated from 2026 results only.",
+    "confirmed_official_basis": [
+      {"rule": "6-1-3", "text": "Modifies alignment requirements for receiving team players in the setup zone on a kickoff or safety kick.", "source": "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook", "source_id": "L-S05"},
+      {"rule": "6-1-5", "text": "Modifies the dead ball spot after a touchback when the kickoff is from the 50-yard line.", "source": "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook", "source_id": "L-S05"},
+      {"rule": "6-1-6", "text": "Permits the kicking team to declare an onside kick at any time during the game.", "source": "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook", "source_id": "L-S05"},
+      {"rule": "19-2", "text": "Permits League personnel to consult with on-field officials when considering the potential disqualification of a player for both flagrant football and non-football acts, even if not called on the field.", "source": "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook", "source_id": "L-S05"}
+    ],
+    "prior_values": null,
+    "why_null": "The regime is confirmed; the rates under it are not measured. No pre-2026 rate is carried into a 2026 model, because rule 6-1-6 changes the onside-kick decision itself and mixing regimes biases totals and fourth-quarter comeback curves in one direction.",
+    "measurement_plan": "Measure from official 2026 results only, publish n with each rate, and use wider intervals until n is large enough to narrow them."
+  },
+  "weather_features": {
+    "rule": "Stadium roof/surface plus NWS hourly wind and precipitation, per kickoff.",
+    "roof_status": "not captured",
+    "why_blank": "The official per-game roof designation source was not located this session, so the field is blank and flagged (L-F-07) rather than assumed. Assuming 'outdoor' is the mispricing this requirement exists to prevent.",
+    "weather_source": "https://www.weather.gov/",
+    "values_published": 0
+  },
+  "data_split": {
+    "train_weeks": [1, 2, 3, 4, 5],
+    "validation_weeks": [6, 7, 8],
+    "holdout_weeks": [9, 10],
+    "train_games": 79,
+    "validation_games": 42,
+    "holdout_games": 29,
+    "limitation": "This is a within-season split because only the 2026 season has been captured. Roster context and the 2026 kickoff regime leak across folds. The season-level split the requirement asks for needs prior seasons (Q-MODEL-05).",
+    "holdout_discipline": "The holdout is used once. Any use of holdout results to choose a model converts it into a validation set."
+  }
+}

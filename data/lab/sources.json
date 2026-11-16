@@ -1,0 +1,126 @@
+{
+  "as_of": "2026-11-16",
+  "note": "Every source below was opened and read in this session. 'read' means the page was fetched and the value attributed to it was taken from that page. 'not-read' sources are registered as the designated authority for a future capture but nothing on this site is attributed to them.",
+  "sources": [
+    {
+      "id": "L-S01",
+      "name": "Official NFL Injury Report - Week 10, 2026",
+      "url": "https://www.nfl.com/injuries/league/2026/reg10",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "8 of 8",
+      "verifies": "data/lab/injuries_week10_2026.json - 347 rows across 28 clubs, transcribed verbatim",
+      "caveat": "A live document. It reflects the league's filings as published at the capture time; a capture on a different day of the same game week will legitimately differ."
+    },
+    {
+      "id": "L-S02",
+      "name": "Official NFL 2026 schedule, by week (weeks 1-10)",
+      "url": "https://www.nfl.com/schedules/2026/by-week/week-10",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "20 of 20 (2 chunks per week x 10 weeks)",
+      "verifies": "data/lab/results_2026.json - every game the official page marks FINAL, with date, clubs and final score",
+      "caveat": "Two Week 10 games were not FINAL at capture time and are stored with null scores."
+    },
+    {
+      "id": "L-S03",
+      "name": "Official NFL game centre, Week 10 (14 fixtures)",
+      "url": "https://www.nfl.com/games/patriots-at-lions-2026-reg-10",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "1 of 2-3 per game; the 'Game Info' panel is in chunk 0",
+      "verifies": "data/lab/fixtures_week10_2026.json - Location, Stadium and the official Game Book PDF link per fixture",
+      "caveat": "The game centre's pre-game injury cards use coarser practice wording than the injury report; the injury report wins."
+    },
+    {
+      "id": "L-S04",
+      "name": "NFL.com Terms and Conditions",
+      "url": "https://www.nfl.com/legal/terms/",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "1 of 9 (section 1 read in full; section 1.3 is the binding clause quoted on this site)",
+      "verifies": "The legal constraint on the price-data policy and on the public/private data split: section 1.3 permits use 'solely for your own individual non-commercial and informational purposes' and prohibits 'systematic retrieval of data or other content ... whether to create or compile, directly or indirectly, a collection, compilation, database, or directory ... absent our express prior written consent'. Page header reads 'Updated: May 16, 2024'.",
+      "caveat": "Not legal advice. Sections 15-18 (warranties, liability, arbitration) were not read in this session and are not characterised here."
+    },
+    {
+      "id": "L-S05",
+      "name": "2026 NFL Rulebook (NFL Football Operations)",
+      "url": "https://operations.nfl.com/rules-officiating/2026-nfl-rulebook",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "1 of 3 (the '2026 Rule Changes' table read in full)",
+      "verifies": "The four 2026 rule changes, quoted verbatim, including rule 6-1-6 which 'Permits the kicking team to declare an onside kick at any time during the game' - the official basis for the kickoff/onside-kick regime prior.",
+      "caveat": "No rule-derived numeric model value is inferred from this page."
+    },
+    {
+      "id": "L-S06",
+      "name": "Official NFL Game Books (PDF, published per game in the game centre)",
+      "url": "https://static.www.nfl.com/image/upload/v1794777676/gamecenter/ab582f5b-4feb-11f1-abca-2c54536568a9.pdf",
+      "type": "official",
+      "status": "link-verified-only",
+      "chunks_read": "0 - the PDF links were read off the official game centre pages; no PDF was parsed in this session",
+      "verifies": "That an official Game Book exists for 12 of the 14 Week 10 fixtures. The links are published on the Fixtures page so actual starters and game-day status can be transcribed from the authoritative source rather than inferred.",
+      "caveat": "No starter, snap count or inactive list has been transcribed yet. Those columns are blank and flagged."
+    },
+    {
+      "id": "L-S07",
+      "name": "NFL Next Gen Stats (NFL Football Operations)",
+      "url": "https://operations.nfl.com/game-operations-logistics/technology/performance-tracking-data-next-gen-stats",
+      "type": "official",
+      "status": "not-read",
+      "chunks_read": "0",
+      "verifies": "nothing on this site",
+      "caveat": "Registered as the candidate official source for tracking-derived context features. No statement is made about whether raw tracking data is public or licensed."
+    },
+    {
+      "id": "L-S08",
+      "name": "National Weather Service (NOAA) - official US government weather source",
+      "url": "https://www.weather.gov/",
+      "type": "official",
+      "status": "not-read",
+      "chunks_read": "0",
+      "verifies": "nothing on this site",
+      "caveat": "Designated as the official source for the stadium roof/surface and hourly wind/precipitation overlay. No forecast, wind speed or precipitation value appears anywhere on this site."
+    },
+    {
+      "id": "L-S09",
+      "name": "NFL flexible scheduling procedures (published with the schedule)",
+      "url": "https://www.nfl.com/legal/flexible-scheduling-procedures",
+      "type": "official",
+      "status": "not-read",
+      "chunks_read": "0",
+      "verifies": "nothing on this site",
+      "caveat": "Linked from the official schedule page as the authority for late-season date/time changes. Relevant to the fixture-context feature set; unread, so no claim is made."
+    },
+    {
+      "id": "L-S10",
+      "name": "scikit-learn - Brier score loss",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.metrics.brier_score_loss.html",
+      "type": "secondary",
+      "status": "not-read-this-session",
+      "chunks_read": "0",
+      "verifies": "nothing on this site",
+      "caveat": "Method reference only. Registered by an earlier session; this session does not restate any formula detail from it."
+    },
+    {
+      "id": "L-S11",
+      "name": "scikit-learn - TimeSeriesSplit",
+      "url": "https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.TimeSeriesSplit.html",
+      "type": "secondary",
+      "status": "not-read-this-session",
+      "chunks_read": "0",
+      "verifies": "nothing on this site",
+      "caveat": "Method reference only, for the chronological train/validation/holdout design. No numeric claim."
+    },
+    {
+      "id": "L-S12",
+      "name": "This repository on GitHub (commit history used for the repo review)",
+      "url": "https://github.com/sassnarep3-star/FL4",
+      "type": "official",
+      "status": "read",
+      "chunks_read": "git log / ls-tree / REST API, not page chunks",
+      "verifies": "data/lab/repo_review.json - commit hashes, file inventory and Pages configuration",
+      "caveat": "Commit hashes cited are those present in this checkout at review time."
+    }
+  ]
+}

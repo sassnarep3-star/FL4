@@ -1,0 +1,782 @@
+{
+ "as_of": "2026-11-16",
+ "method": "Every file in the working tree was listed and opened, including this session's new lab/ and data/lab/ files. Findings below come from reading the files, not from a summary. Each row links to the GitHub blob for that file: files that exist on main link to main, files that exist only on this branch link to the branch.",
+ "branch_base_commit": "62afd1b (merge of PR #7)",
+ "origin_main_head_at_review": "4d76668 Merge pull request #17 from sassnarep3-star/arena/c75aedbd-fl4",
+ "files_reviewed": 115,
+ "files": [
+  {
+   "path": ".github/workflows/pages.yml",
+   "bytes": 761,
+   "lines": 39,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.github/workflows/pages.yml"
+  },
+  {
+   "path": ".github/workflows/verify.yml",
+   "bytes": 2370,
+   "lines": 64,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.github/workflows/verify.yml"
+  },
+  {
+   "path": ".gitignore",
+   "bytes": 51,
+   "lines": 6,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.gitignore"
+  },
+  {
+   "path": ".nojekyll",
+   "bytes": 0,
+   "lines": 1,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.nojekyll"
+  },
+  {
+   "path": "COORDINATION.md",
+   "bytes": 37670,
+   "lines": 315,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/COORDINATION.md"
+  },
+  {
+   "path": "README.md",
+   "bytes": 5614,
+   "lines": 85,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/README.md"
+  },
+  {
+   "path": "REQUIREMENTS.md",
+   "bytes": 9212,
+   "lines": 57,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/REQUIREMENTS.md"
+  },
+  {
+   "path": "app.js",
+   "bytes": 596,
+   "lines": 13,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/app.js"
+  },
+  {
+   "path": "assets/app.js",
+   "bytes": 3115,
+   "lines": 76,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/assets/app.js"
+  },
+  {
+   "path": "assets/style.css",
+   "bytes": 5193,
+   "lines": 63,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/assets/style.css"
+  },
+  {
+   "path": "data/correlations.json",
+   "bytes": 7150,
+   "lines": 37,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/correlations.json"
+  },
+  {
+   "path": "data/depth_news.json",
+   "bytes": 4715,
+   "lines": 18,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/depth_news.json"
+  },
+  {
+   "path": "data/flagged.json",
+   "bytes": 14951,
+   "lines": 173,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/flagged.json"
+  },
+  {
+   "path": "data/flags.json",
+   "bytes": 9005,
+   "lines": 159,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/flags.json"
+  },
+  {
+   "path": "data/gates.json",
+   "bytes": 12230,
+   "lines": 171,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/gates.json"
+  },
+  {
+   "path": "data/injuries_w10_2026.json",
+   "bytes": 48505,
+   "lines": 199,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/injuries_w10_2026.json"
+  },
+  {
+   "path": "data/injuries_week10_2026.json",
+   "bytes": 21796,
+   "lines": 155,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/injuries_week10_2026.json"
+  },
+  {
+   "path": "data/inventory.json",
+   "bytes": 8468,
+   "lines": 31,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/inventory.json"
+  },
+  {
+   "path": "data/lab/correlations.json",
+   "bytes": 6659,
+   "lines": 39,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/correlations.json"
+  },
+  {
+   "path": "data/lab/depth.json",
+   "bytes": 7299,
+   "lines": 152,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/depth.json"
+  },
+  {
+   "path": "data/lab/fixtures_week10_2026.json",
+   "bytes": 3833,
+   "lines": 81,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/fixtures_week10_2026.json"
+  },
+  {
+   "path": "data/lab/flagged.json",
+   "bytes": 12374,
+   "lines": 187,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/flagged.json"
+  },
+  {
+   "path": "data/lab/injuries_week10_2026.json",
+   "bytes": 117285,
+   "lines": 3914,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/injuries_week10_2026.json"
+  },
+  {
+   "path": "data/lab/leaderboard.json",
+   "bytes": 10751,
+   "lines": 227,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/leaderboard.json"
+  },
+  {
+   "path": "data/lab/models.json",
+   "bytes": 8558,
+   "lines": 91,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/models.json"
+  },
+  {
+   "path": "data/lab/price_policy.json",
+   "bytes": 7399,
+   "lines": 73,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/price_policy.json"
+  },
+  {
+   "path": "data/lab/questions.json",
+   "bytes": 16926,
+   "lines": 271,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/questions.json"
+  },
+  {
+   "path": "data/lab/repo_review.json",
+   "bytes": 19965,
+   "lines": 594,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/repo_review.json"
+  },
+  {
+   "path": "data/lab/requirements.json",
+   "bytes": 28110,
+   "lines": 797,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/requirements.json"
+  },
+  {
+   "path": "data/lab/results_2026.json",
+   "bytes": 58442,
+   "lines": 2311,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/results_2026.json"
+  },
+  {
+   "path": "data/lab/sources.json",
+   "bytes": 7118,
+   "lines": 127,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/sources.json"
+  },
+  {
+   "path": "data/lab/suggestions.json",
+   "bytes": 17276,
+   "lines": 311,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/data/lab/suggestions.json"
+  },
+  {
+   "path": "data/leaderboard.json",
+   "bytes": 6631,
+   "lines": 68,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/leaderboard.json"
+  },
+  {
+   "path": "data/league_state.json",
+   "bytes": 6308,
+   "lines": 48,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/league_state.json"
+  },
+  {
+   "path": "data/questions.json",
+   "bytes": 10150,
+   "lines": 23,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/questions.json"
+  },
+  {
+   "path": "data/replacement_tiers.json",
+   "bytes": 4166,
+   "lines": 110,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/replacement_tiers.json"
+  },
+  {
+   "path": "data/repo_review.json",
+   "bytes": 3230,
+   "lines": 14,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/repo_review.json"
+  },
+  {
+   "path": "data/requirements.json",
+   "bytes": 6576,
+   "lines": 27,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/requirements.json"
+  },
+  {
+   "path": "data/signals/correlations.json",
+   "bytes": 7150,
+   "lines": 37,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/correlations.json"
+  },
+  {
+   "path": "data/signals/flagged.json",
+   "bytes": 14975,
+   "lines": 173,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/flagged.json"
+  },
+  {
+   "path": "data/signals/gates.json",
+   "bytes": 12230,
+   "lines": 171,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/gates.json"
+  },
+  {
+   "path": "data/signals/injuries_week10_2026.json",
+   "bytes": 28944,
+   "lines": 1083,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/injuries_week10_2026.json"
+  },
+  {
+   "path": "data/signals/inventory.json",
+   "bytes": 8468,
+   "lines": 31,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/inventory.json"
+  },
+  {
+   "path": "data/signals/leaderboard.json",
+   "bytes": 6631,
+   "lines": 68,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/leaderboard.json"
+  },
+  {
+   "path": "data/signals/league_state.json",
+   "bytes": 6308,
+   "lines": 48,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/league_state.json"
+  },
+  {
+   "path": "data/signals/questions.json",
+   "bytes": 27787,
+   "lines": 341,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/questions.json"
+  },
+  {
+   "path": "data/signals/sources.json",
+   "bytes": 10811,
+   "lines": 77,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/sources.json"
+  },
+  {
+   "path": "data/signals/strategies.json",
+   "bytes": 31470,
+   "lines": 341,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/strategies.json"
+  },
+  {
+   "path": "data/signals/suggestions.json",
+   "bytes": 20880,
+   "lines": 339,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/suggestions.json"
+  },
+  {
+   "path": "data/sources.json",
+   "bytes": 11935,
+   "lines": 38,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/sources.json"
+  },
+  {
+   "path": "data/strategies.json",
+   "bytes": 10095,
+   "lines": 180,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/strategies.json"
+  },
+  {
+   "path": "data/suggestions.json",
+   "bytes": 5298,
+   "lines": 16,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/suggestions.json"
+  },
+  {
+   "path": "decision-lab.html",
+   "bytes": 19260,
+   "lines": 33,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/decision-lab.html"
+  },
+  {
+   "path": "index.html",
+   "bytes": 4126,
+   "lines": 40,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/index.html"
+  },
+  {
+   "path": "lab/assets/app.js",
+   "bytes": 4761,
+   "lines": 130,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/assets/app.js"
+  },
+  {
+   "path": "lab/assets/style.css",
+   "bytes": 4340,
+   "lines": 66,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/assets/style.css"
+  },
+  {
+   "path": "lab/availability.html",
+   "bytes": 127953,
+   "lines": 59,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/availability.html"
+  },
+  {
+   "path": "lab/correlations.html",
+   "bytes": 10662,
+   "lines": 49,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/correlations.html"
+  },
+  {
+   "path": "lab/depth.html",
+   "bytes": 11704,
+   "lines": 72,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/depth.html"
+  },
+  {
+   "path": "lab/fixtures.html",
+   "bytes": 10494,
+   "lines": 40,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/fixtures.html"
+  },
+  {
+   "path": "lab/flagged.html",
+   "bytes": 18043,
+   "lines": 37,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/flagged.html"
+  },
+  {
+   "path": "lab/index.html",
+   "bytes": 49423,
+   "lines": 93,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/index.html"
+  },
+  {
+   "path": "lab/leaderboard.html",
+   "bytes": 14370,
+   "lines": 90,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/leaderboard.html"
+  },
+  {
+   "path": "lab/models.html",
+   "bytes": 13543,
+   "lines": 83,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/models.html"
+  },
+  {
+   "path": "lab/price-policy.html",
+   "bytes": 10818,
+   "lines": 66,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/price-policy.html"
+  },
+  {
+   "path": "lab/questions.html",
+   "bytes": 22777,
+   "lines": 37,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/questions.html"
+  },
+  {
+   "path": "lab/repo-review.html",
+   "bytes": 29569,
+   "lines": 43,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/repo-review.html"
+  },
+  {
+   "path": "lab/results.html",
+   "bytes": 57525,
+   "lines": 54,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/results.html"
+  },
+  {
+   "path": "lab/sources.html",
+   "bytes": 12949,
+   "lines": 38,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/sources.html"
+  },
+  {
+   "path": "lab/suggestions.html",
+   "bytes": 29432,
+   "lines": 46,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/arena/61ebd543-fl4/lab/suggestions.html"
+  },
+  {
+   "path": "pages/executive-summary.html",
+   "bytes": 5873,
+   "lines": 48,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/executive-summary.html"
+  },
+  {
+   "path": "pages/flagged.html",
+   "bytes": 17320,
+   "lines": 26,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/flagged.html"
+  },
+  {
+   "path": "pages/injuries.html",
+   "bytes": 126984,
+   "lines": 50,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/injuries.html"
+  },
+  {
+   "path": "pages/questions.html",
+   "bytes": 15777,
+   "lines": 22,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/questions.html"
+  },
+  {
+   "path": "pages/repo-review.html",
+   "bytes": 5872,
+   "lines": 21,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/repo-review.html"
+  },
+  {
+   "path": "pages/requirements.html",
+   "bytes": 9322,
+   "lines": 21,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/requirements.html"
+  },
+  {
+   "path": "pages/sources.html",
+   "bytes": 18435,
+   "lines": 21,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/sources.html"
+  },
+  {
+   "path": "pages/strategies.html",
+   "bytes": 23378,
+   "lines": 41,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/strategies.html"
+  },
+  {
+   "path": "pages/suggestions.html",
+   "bytes": 13575,
+   "lines": 23,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/pages/suggestions.html"
+  },
+  {
+   "path": "signals/assets/app.css",
+   "bytes": 6038,
+   "lines": 106,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/assets/app.css"
+  },
+  {
+   "path": "signals/assets/app.js",
+   "bytes": 2720,
+   "lines": 66,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/assets/app.js"
+  },
+  {
+   "path": "signals/correlation.html",
+   "bytes": 18405,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/correlation.html"
+  },
+  {
+   "path": "signals/data/correlations.json",
+   "bytes": 7150,
+   "lines": 37,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/correlations.json"
+  },
+  {
+   "path": "signals/data/flagged.json",
+   "bytes": 14975,
+   "lines": 173,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/flagged.json"
+  },
+  {
+   "path": "signals/data/gates.json",
+   "bytes": 12230,
+   "lines": 171,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/gates.json"
+  },
+  {
+   "path": "signals/data/injuries_week10_2026.json",
+   "bytes": 28944,
+   "lines": 1083,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/injuries_week10_2026.json"
+  },
+  {
+   "path": "signals/data/inventory.json",
+   "bytes": 8468,
+   "lines": 31,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/inventory.json"
+  },
+  {
+   "path": "signals/data/leaderboard.json",
+   "bytes": 6631,
+   "lines": 68,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/leaderboard.json"
+  },
+  {
+   "path": "signals/data/league_state.json",
+   "bytes": 6308,
+   "lines": 48,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/league_state.json"
+  },
+  {
+   "path": "signals/data/questions.json",
+   "bytes": 27787,
+   "lines": 341,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/questions.json"
+  },
+  {
+   "path": "signals/data/sources.json",
+   "bytes": 10811,
+   "lines": 77,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/sources.json"
+  },
+  {
+   "path": "signals/data/strategies.json",
+   "bytes": 31470,
+   "lines": 341,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/strategies.json"
+  },
+  {
+   "path": "signals/data/suggestions.json",
+   "bytes": 20880,
+   "lines": 339,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/data/suggestions.json"
+  },
+  {
+   "path": "signals/depth.html",
+   "bytes": 23510,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/depth.html"
+  },
+  {
+   "path": "signals/flagged.html",
+   "bytes": 25474,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/flagged.html"
+  },
+  {
+   "path": "signals/index.html",
+   "bytes": 20784,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/index.html"
+  },
+  {
+   "path": "signals/injuries.html",
+   "bytes": 62167,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/injuries.html"
+  },
+  {
+   "path": "signals/inventory.html",
+   "bytes": 19924,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/inventory.html"
+  },
+  {
+   "path": "signals/leaderboard.html",
+   "bytes": 14513,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/leaderboard.html"
+  },
+  {
+   "path": "signals/methodology.html",
+   "bytes": 12005,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/methodology.html"
+  },
+  {
+   "path": "signals/questions.html",
+   "bytes": 38744,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/questions.html"
+  },
+  {
+   "path": "signals/requirements.html",
+   "bytes": 19764,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/requirements.html"
+  },
+  {
+   "path": "signals/sources.html",
+   "bytes": 23649,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/sources.html"
+  },
+  {
+   "path": "signals/strategies.html",
+   "bytes": 48358,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/strategies.html"
+  },
+  {
+   "path": "signals/suggestions.html",
+   "bytes": 29599,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/suggestions.html"
+  },
+  {
+   "path": "signals/validation.html",
+   "bytes": 24187,
+   "lines": 35,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals/validation.html"
+  },
+  {
+   "path": "signals_assets/app.css",
+   "bytes": 6038,
+   "lines": 106,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals_assets/app.css"
+  },
+  {
+   "path": "signals_assets/app.js",
+   "bytes": 2720,
+   "lines": 66,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/signals_assets/app.js"
+  },
+  {
+   "path": "styles.css",
+   "bytes": 7054,
+   "lines": 3,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/styles.css"
+  },
+  {
+   "path": "tools/build_signals.py",
+   "bytes": 89039,
+   "lines": 1290,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/build_signals.py"
+  },
+  {
+   "path": "tools/build_site.py",
+   "bytes": 31509,
+   "lines": 481,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/build_site.py"
+  },
+  {
+   "path": "tools/check_signals.py",
+   "bytes": 3998,
+   "lines": 99,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/check_signals.py"
+  },
+  {
+   "path": "tools/fetch_injuries.py",
+   "bytes": 10640,
+   "lines": 220,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/fetch_injuries.py"
+  },
+  {
+   "path": "tools/testdata/report_sample.md",
+   "bytes": 3683,
+   "lines": 76,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/testdata/report_sample.md"
+  },
+  {
+   "path": "tools/validate.py",
+   "bytes": 12736,
+   "lines": 295,
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/validate.py"
+  }
+ ],
+ "findings": [
+  {
+   "id": "RV-1",
+   "area": "structure",
+   "finding": "Three overlapping site sections now exist in one repository: the root dashboard (index.html + pages/), the signals/ section (14 pages), and this lab/ section (16 pages). All three are published from the repository root by one Pages workflow.",
+   "evidence": "index.html, signals/index.html, lab/index.html",
+   "assessment": "Not an error, but it is a duplication risk: three sections now carry their own questions, suggestions, flagged and sources pages with different ID namespaces.",
+   "recommended": "Keep the namespaces distinct (root F-*, signals F-*, lab L-F-*) and cross-link, which this section does. A future integration pass should merge the three question registers into one.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/index.html"
+  },
+  {
+   "id": "RV-2",
+   "area": "data",
+   "finding": "Two prior independent captures of the same official Week 10 injury report exist: data/injuries_w10_2026.json and data/signals/injuries_week10_2026.json. This session adds a third, data/lab/injuries_week10_2026.json, with 347 rows, 28 clubs, 171 rows carrying a game status and 81 Out or Doubtful.",
+   "evidence": "data/injuries_w10_2026.json, data/signals/injuries_week10_2026.json, data/lab/injuries_week10_2026.json",
+   "assessment": "The counts differ because the official page is a live document and the captures were taken on different days, and because the three captures apply different inclusion rules. None of the three is wrong; they are not comparable without stating the rule.",
+   "recommended": "Do not merge the row sets. Pick one inclusion rule, record it as code, and re-run it over every retained snapshot. Flagged as L-F-01 and L-F-16.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/injuries_w10_2026.json"
+  },
+  {
+   "id": "RV-3",
+   "area": "publication",
+   "finding": "GitHub Pages publishes the repository root, so raw capture data sits in the published tree.",
+   "evidence": ".github/workflows/pages.yml",
+   "assessment": "This is a real boundary problem, not a theoretical one: any raw row committed to the repository is publicly served.",
+   "recommended": "Move raw captures out of the published tree (SG-06). Flagged as L-F-04.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.github/workflows/pages.yml"
+  },
+  {
+   "id": "RV-4",
+   "area": "verification",
+   "finding": "The existing root builder enforces a source link per verified row and fails on a column key no row carries.",
+   "evidence": "tools/build_site.py, tools/validate.py",
+   "assessment": "Good practice that this section copies deliberately.",
+   "recommended": "Reuse the pattern, not the file - this section ships its own builder so the two sections cannot break each other.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/tools/build_site.py"
+  },
+  {
+   "id": "RV-5",
+   "area": "governance",
+   "finding": "COORDINATION.md now carries three generations of task board, including boards from merged branches.",
+   "evidence": "COORDINATION.md",
+   "assessment": "Correct behaviour per the session rules - history is preserved rather than rewritten - but the file is now large enough that the active board needs to be at the top.",
+   "recommended": "This session placed its board at the top and pushed the previous boards below a divider.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/COORDINATION.md"
+  },
+  {
+   "id": "RV-6",
+   "area": "legal",
+   "finding": "No automated league capture is configured anywhere in the repository, and NFL.com Terms section 1.3 prohibits systematic retrieval absent express prior written consent.",
+   "evidence": ".github/workflows/, NFL.com Terms 1.3",
+   "assessment": "Consistent. Several requirements on the brief ask for daily or weekly scheduled capture of league pages; none can be implemented lawfully until the terms question is answered.",
+   "recommended": "Answer Q-PRICE-02 and Q-SNAPSHOT-01 before building any runner. Flagged as L-F-17.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/.github/workflows/verify.yml"
+  },
+  {
+   "id": "RV-7",
+   "area": "data",
+   "finding": "No price, odds, line or closing number exists anywhere in the repository across all three sections.",
+   "evidence": "data/, data/signals/, data/lab/",
+   "assessment": "Correct and consistent. Three independent sessions have now reached the same conclusion, which is the strongest evidence that the gap is environmental rather than a missed file.",
+   "recommended": "Treat Q-PRICE-01 as the single gate behind most of the brief.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/data/"
+  },
+  {
+   "id": "RV-9",
+   "area": "governance",
+   "finding": "main now carries prereg/REGISTRATION.md (registration 2026-11-16), which freezes the signals section's strategies, gates, leaderboard and correlation protocol with SHA-256 checks on every build, plus data/readiness.json (31 rows) as a readiness register.",
+   "evidence": "prereg/REGISTRATION.md, prereg/registration.json, data/readiness.json",
+   "assessment": "The repository now holds two versions of the same governance text: the frozen registration on main and this section's restatement. Both are internally consistent, but a reader cannot tell which one binds.",
+   "recommended": "This section defers to the frozen registration in its leaderboard page and flags the duplication (L-F-19). An integration pass should point the lab pages at prereg/ rather than restating it.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/prereg/REGISTRATION.md"
+  },
+  {
+   "id": "RV-10",
+   "area": "publication",
+   "finding": "The lab section is published but is not linked from the root landing page, because root index.html and tools/build_site.py are owned by other sessions and main moved through PRs #13-#17 during this session.",
+   "evidence": "index.html, lab/index.html",
+   "assessment": "The section is reachable only by URL. That is a discoverability defect, not a build defect.",
+   "recommended": "Add one nav entry and one tile on the root landing page in the integration pass. Recorded as L-F-18.",
+   "link": "https://github.com/sassnarep3-star/FL4/blob/main/index.html"
+  }
+ ]
+}

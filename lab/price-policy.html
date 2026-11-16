@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Price policy | NFL Decision Lab</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top">
+  <div class="brand"><a href="index.html">NFL Decision Lab</a><span>Data as of 2026-11-16</span></div>
+  <nav><a href="index.html" class="">Lab home</a><a href="index.html#readiness" class="">Decision readiness</a><a href="results.html" class="">Results feed</a><a href="availability.html" class="">Availability</a><a href="depth.html" class="">Depth &amp; deficiency</a><a href="models.html" class="">Models</a><a href="leaderboard.html" class="">Leaderboard</a><a href="correlations.html" class="">Correlations</a><a href="price-policy.html" class="active">Price policy</a><a href="fixtures.html" class="">Fixtures</a><a href="questions.html" class="">Questions</a><a href="suggestions.html" class="">Suggestions</a><a href="repo-review.html" class="">Repo review</a><a href="sources.html" class="">Sources</a><a href="flagged.html" class="">Flagged for Review</a></nav>
+</header>
+<main>
+<h1>Price policy</h1>
+<p class="lead">The legal basis, the policy options and the store specification &mdash; published before any price exists.</p>
+
+<div class="callout info">This page exists because most of the brief is blocked behind one question. It states the legal basis verbatim, the policy options, the store specification and the publication schedule &mdash; all of which can be published before a single price exists, and none of which are useful if they are written after one arrives.</div>
+
+<h2>Legal basis, quoted verbatim</h2>
+<p>Source: <a href="https://www.nfl.com/legal/terms/">https://www.nfl.com/legal/terms/</a> (page states &ldquo;Updated: May 16, 2024&rdquo;), registered as L-S04.</p>
+<blockquote>1.3 Permitted Uses. You may use the Services solely for your own individual non-commercial and informational purposes only. Any other use, including for any commercial purposes, is strictly prohibited without our express prior written consent. Systematic retrieval of data or other content from the Services, whether to create or compile, directly or indirectly, a collection, compilation, database, or directory, is prohibited absent our express prior written consent.</blockquote>
+<div class="callout warn"><strong>Not legal advice.</strong> This is not legal advice. Sections 15-18 of the terms were not read in this session and are not characterised.</div>
+<h3>What this site does because of it</h3>
+<ul><li>No automated league capture is configured or scheduled anywhere in this repository.</li><li>The captures on this site were read page by page during a review session and are published as a dated snapshot with links, not as a maintained feed.</li><li>No market price, odds, line or closing number is stored or published, because none was obtained from a source with a licence to redistribute it.</li><li>Raw row-level capture data remains in the published repository tree, which is a violation risk under the public/private split requirement. It is flagged (L-F-04) rather than presented as compliant.</li></ul>
+
+<h2>Policy options</h2>
+<div class="table-wrap"><table id="polopts"><thead><tr><th>#</th><th>Option</th><th>Effect</th><th>Unblocks</th><th>Blocks</th><th>Cost</th><th>Risk</th></tr></thead><tbody><tr><td>POL-A</td><td>Derived analysis only, no raw retention</td><td>The public site publishes derived tables, aggregates and links. Raw capture rows are not retained after derivation.</td><td>The safest publication posture; lets the analysis layer stay live.</td><td>Nothing can be replayed or re-verified later, so the cross-capture audit that found a transcription error in an earlier session would no longer be possible.</td><td>low</td><td>low but irreversible</td></tr><tr><td>POL-B</td><td>Raw retained in a private store</td><td>Captures move outside the published tree into a private store with freshness and schema-change alerts; the public site keeps only derived output and links.</td><td>Snapshots, diffs, replays, and the point-in-time ledger, without publishing raw league content.</td><td>Nothing; this is the target posture.</td><td>medium</td><td>medium - it is a compliance boundary implemented by configuration, so it needs the alerts to be real</td></tr><tr><td>POL-C</td><td>Raw retained under a written licence</td><td>Capture and retention proceed only with express written consent from the rights holder.</td><td>Everything, including redistribution if the licence permits it.</td><td>Nothing, once granted.</td><td>high</td><td>low if granted; the current default is POL-A until it is</td></tr></tbody></table></div>
+<p><strong>Current policy: POL-A (default until the owner sets the field). Chosen by default, not by the owner - it is the strictest option, so the default cannot publish anything the owner would have withheld.</strong></p>
+<div class="callout warn">Set &#x27;current_policy&#x27; to POL-A, POL-B or POL-C and name the approver. Until then, no backtest, ROI, closing-line value or originated residual may be published anywhere on this site.</div>
+
+<h2>Price-snapshot store specification</h2>
+<p>Purpose: Record the opening and closing numbers for every market we originate, so closing-line value and backtests are computable.</p>
+<div class="table-wrap"><table id="store"><thead><tr><th>Field</th><th>Specification</th></tr></thead><tbody><tr><td>purpose</td><td>Record the opening and closing numbers for every market we originate, so closing-line value and backtests are computable.</td></tr><tr><td>rows_are_keyed_by</td><td>market_id, game_id, market_type (side | total | moneyline), book, observed_at_utc, open_or_close</td></tr><tr><td>required_fields</td><td>american_price, point (for side and total), book, observed_at_utc, source_url, capture_hash</td></tr><tr><td>immutability</td><td>Append-only. A correction is a new row with a later observed_at_utc, never an edit of an existing row.</td></tr><tr><td>opening_definition</td><td>The first price observed for that market at that book, after a named freeze offset. The offset must be set before the first capture, otherwise &#x27;opening&#x27; is whatever time the job happened to run.</td></tr><tr><td>closing_definition</td><td>The last price observed before kickoff, with the kickoff time taken from the official schedule, not from the book.</td></tr><tr><td>status</td><td>Spec published. 0 rows, because no price source is licensed (Q-PRICE-01).</td></tr></tbody></table></div>
+<p><strong>Why the definitions are frozen first:</strong> If opening and closing are defined after seeing which definition produces better CLV, the metric is fitted to the noise it is supposed to measure.</p>
+<p>Status: Spec published. 0 rows, because no price source is licensed (Q-PRICE-01).</p>
+
+<h2>Vig-free decomposition</h2>
+<p>Separate genuine pricing divergence from operator margin before any bet structure is considered.</p>
+<div class="table-wrap"><table id="vig"><thead><tr><th>Step</th></tr></thead><tbody><tr><td>1. Convert each book&#x27;s prices to implied probabilities using that book&#x27;s own price format; do not average prices, average probabilities.</td></tr><tr><td>2. Normalise the implied probabilities within a market so they sum to 1. The excess is the book&#x27;s overround, i.e. the vig.</td></tr><tr><td>3. The vig-free consensus is the mean of the normalised probabilities across books, weighted by a rule set before the first capture (equal weighting is the default and the safest).</td></tr><tr><td>4. The originated fair line is produced by our own model, independently of the books.</td></tr><tr><td>5. Residual = originated fair probability minus vig-free consensus probability, per market.</td></tr><tr><td>6. Publish the residual, the vig removed, and the number of books behind the consensus, as three separate columns.</td></tr></tbody></table></div>
+<p><strong>What is not done:</strong> No book count, no vig estimate and no consensus value is published, because no book price exists in this environment.</p>
+<div class="callout info"><strong>Failure mode guarded:</strong> Comparing an originated price to a single book&#x27;s raw price measures the book&#x27;s margin, not our skill. The decomposition exists so that mistake cannot be made silently.</div>
+
+<h2>Residual publication schedule</h2>
+<p>Price a line ourselves and publish the residual against the market, on a schedule, from day one.</p>
+<p>One residual row per originated market per fixture, published before kickoff, and stored immutably. Two rows per market minimum: the forecast-time price and the closing price.</p>
+<p>Status: Schedule and schema published. 0 rows, blocked on Q-PRICE-01.</p>
+<div class="callout warn"><strong>Day-one rule:</strong> The residual must be published for the first originated week, including the weeks where the residual is unfavourable. A residual series that starts after a good week is a selection artefact.</div>
+
+<h2>Drift alarm</h2>
+<p>Every parser is pinned to an expected row count range and a set of required fields. A missing field or an out-of-range count fails the build loudly; it does not publish a blank.</p>
+<div class="table-wrap"><table id="drift"><thead><tr><th>Parser</th><th>Pin</th><th>Status</th></tr></thead><tbody><tr><td>injury report (data/lab/injuries_week10_2026.json)</td><td>28 clubs and 14 fixtures; every row must carry player, club, position, practice status and a report_url</td><td>enforced in the builder</td></tr><tr><td>schedule results (data/lab/results_2026.json)</td><td>one row per game_id; every FINAL row must carry both scores and a source_url; a game the official page does not mark FINAL must carry nulls and a note</td><td>enforced in the builder</td></tr></tbody></table></div>
+<p>Every parser that does not exist yet. The rule is that each new capture ships with its pin, not that pins are added later.</p>
+
+</main>
+<footer>
+<p>Informational research only. Nothing here is betting advice. No market price exists in this
+environment, so this section publishes no odds, no edge, no closing-line value and no return number.
+Every row links to a source; values that could not be confirmed are left blank and listed on the
+<a href="flagged.html">Flagged for Review</a> page.</p>
+<p>Other sections of this repository: <a href="../index.html">Dashboard</a> &middot;
+<a href="../decision-lab.html">Decision Lab blueprint</a> &middot;
+<a href="../signals/index.html">Signals &amp; origination</a>.</p>
+<p>Source repository: <a href="https://github.com/sassnarep3-star/FL4">https://github.com/sassnarep3-star/FL4</a>. Commit hashes cited are those present in
+this checkout at review time.</p>
+</footer>
+<script src="assets/app.js"></script>
+</body></html>

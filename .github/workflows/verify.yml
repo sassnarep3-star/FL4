@@ -57,6 +57,18 @@ jobs:
           git diff --exit-code -- index.html pages/ assets/ || {
             echo "::error::root dashboard output is out of date with tools/build_site.py"; exit 1; }
 
+      - name: Decision Lab section - build with verification checks (fail closed)
+        run: python tools/build_lab.py --fail-on-warn
+
+      - name: Decision Lab section - committed output must match the generator
+        run: |
+          git diff --exit-code -- lab/ || {
+            echo "::error::lab/ is not the output of tools/build_lab.py. Run it and commit.";
+            git --no-pager diff --stat -- lab/; exit 1; }
+
+      - name: Decision Lab section - integrity (per-row source links, ids, no price values)
+        run: python tools/check_lab.py
+
       - name: Week 10 capture - validator (skips cleanly when the git-ignored private file is absent)
         run: python tools/capture_w10.py --check
 

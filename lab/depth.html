@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Depth &amp;amp; deficiency | NFL Decision Lab</title>
+<link rel="stylesheet" href="assets/style.css">
+</head><body>
+<header class="top">
+  <div class="brand"><a href="index.html">NFL Decision Lab</a><span>Data as of 2026-11-16</span></div>
+  <nav><a href="index.html" class="">Lab home</a><a href="index.html#readiness" class="">Decision readiness</a><a href="results.html" class="">Results feed</a><a href="availability.html" class="">Availability</a><a href="depth.html" class="active">Depth &amp; deficiency</a><a href="models.html" class="">Models</a><a href="leaderboard.html" class="">Leaderboard</a><a href="correlations.html" class="">Correlations</a><a href="price-policy.html" class="">Price policy</a><a href="fixtures.html" class="">Fixtures</a><a href="questions.html" class="">Questions</a><a href="suggestions.html" class="">Suggestions</a><a href="repo-review.html" class="">Repo review</a><a href="sources.html" class="">Sources</a><a href="flagged.html" class="">Flagged for Review</a></nav>
+</header>
+<main>
+<h1>Depth &amp;amp; deficiency</h1>
+<p class="lead">Who is officially unavailable, and why this site refuses to name who replaces them.</p>
+
+<div class="callout warn">This site publishes who is officially unavailable. It does not publish who replaces them, because no official source read in this session names a replacement. Inventing one would corrupt the very signals the deficiency feature is meant to produce.</div>
+<h2>Coverage</h2>
+<div class="kpis">
+<div class="kpi"><div class="kpi-v">0/32</div><div class="kpi-l">clubs with a verified depth source</div><div class="kpi-n">the gate behind most of this section</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">replacements named</div><div class="kpi-n">deliberately zero</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">snap counts captured</div><div class="kpi-n">the starter proxy is specified but unused</div></div>
+<div class="kpi"><div class="kpi-v">0</div><div class="kpi-l">Game Books parsed</div><div class="kpi-n">12 of 14 week 10 PDFs are linked and unparsed (L-F-11)</div></div>
+</div>
+<div class="table-wrap"><table id="coverage"><thead><tr><th>Field</th><th>Value</th></tr></thead><tbody><tr><td>Clubs with a verified depth source</td><td>0 of 32</td></tr><tr><td>Depth register rows</td><td>0</td></tr><tr><td>Replacements named on this site</td><td>0</td></tr><tr><td>Snap counts captured</td><td>0</td></tr><tr><td>Games with Game Books parsed</td><td>0</td></tr></tbody></table></div>
+
+<h2>Offense vs Defense Matchup Deficiency Matrix</h2>
+<div class="callout warn">The grid below is <strong>empty on purpose</strong>. It is published in its final shape so the cost of the depth gap is visible. Filling it from inferred depth would hide the single largest open risk in this project. Blocked by <a class="badge gate" href="questions.html">Q-DEPTH-01</a>. See <a href="suggestions.html">SG-03</a> and <a href="flagged.html">L-F-10</a>.</div>
+<div class="table-wrap"><table id="matrix"><thead><tr><th>Offense / Defense</th><th>1st string</th><th>2nd string</th><th>3rd string</th><th>4th string</th></tr></thead><tbody><tr><td>1st string</td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td></tr><tr><td>2nd string</td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td></tr><tr><td>3rd string</td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td></tr><tr><td>4th string</td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td><td><span class="blank" title="no verified depth source (Q-DEPTH-01)"></span></td></tr></tbody></table></div>
+
+<h2>Per-team decision view</h2>
+<div class="table-wrap"><table id="team"><thead><tr><th>Column</th><th>Status</th><th>Note</th></tr></thead><tbody><tr><td>club</td><td><span class="badge met">populated</span></td><td>populated from the official report (L-S01)</td></tr><tr><td>players_officially_out</td><td><span class="badge met">populated</span></td><td>Count of rows with game status Out. Doubtful is counted separately, not folded in.</td></tr><tr><td>players_doubtful</td><td><span class="badge met">populated</span></td><td>populated from the official report (L-S01)</td></tr><tr><td>players_questionable</td><td><span class="badge met">populated</span></td><td>populated from the official report (L-S01)</td></tr><tr><td>starters_out</td><td><span class="badge blocked">blank</span></td><td>Requires a verified depth source to know who is a starter (Q-DEPTH-01)</td></tr><tr><td>replacement_named</td><td><span class="badge blocked">blank</span></td><td>The official report has no replacement field</td></tr><tr><td>net_injury_count</td><td><span class="badge blocked">blank</span></td><td>Net against what baseline? Without a reserve list and a depth source the denominator is unknown, so publishing a net number would invent one</td></tr></tbody></table></div>
+
+<h2>Standing rejections</h2>
+<div class="callout info">These are recorded so the shortcut cannot be re-proposed during a schedule crunch. Depth order is never derived from jersey number, experience or salary &mdash; each is a proxy for something other than the club's current intent, and each is wrong in the direction that matters most.</div>
+<div class="table-wrap"><table id="rej"><thead><tr><th>#</th><th>Rejected</th><th>Why</th><th>Status</th></tr></thead><tbody><tr><td>REJ-1</td><td>Deriving depth order from jersey number</td><td>Jersey number correlates with nothing that determines who plays. It would produce a confident, wrong ordering on every club that renumbered a free-agent signing.</td><td>standing rejection</td></tr><tr><td>REJ-2</td><td>Deriving depth order from experience</td><td>Experience is a proxy for past availability, not for the club&#x27;s current intent. Rookies start; veterans sit.</td><td>standing rejection</td></tr><tr><td>REJ-3</td><td>Deriving depth order from salary</td><td>Salary is a proxy for past negotiation, not for this week&#x27;s game plan, and it is wrong in the direction that matters most when a cheap replacement has already taken the job.</td><td>standing rejection</td></tr><tr><td>REJ-4</td><td>Inferring a replacement from the injury report</td><td>The official report has no replacement field. Any name attached to an absence would be a guess presented as a fact.</td><td>standing rejection</td></tr><tr><td>REJ-5</td><td>Transcribing a depth chart published as an image by eye</td><td>It is unverifiable and unreplayable. The requirement names the correct fix: an authorised structured source, not transcription.</td><td>standing rejection</td></tr></tbody></table></div>
+
+<h2>Slot model</h2>
+<p>A depth slot is a group of players at one rank, not a single starter. A slot may hold several players and may be empty. Several position slots across the league list more than one player at rank 1 - three receivers, three inside linebackers. Treating column 1 as &#x27;the starter&#x27; fabricates a starter the club never named.</p>
+<ul>
+<li><strong>Shared slot</strong> &mdash; Two or more players listed at the same rank for the same slot. Stored as a list; the render shows both and flags the slot as shared. It must never be silently reduced to one name.</li>
+<li><strong>Empty slot</strong> &mdash; A slot the club publishes with no player in it. Stored with an explicit flag, so an empty slot is distinguishable from a slot we failed to capture.</li>
+<li><strong>Raw string</strong> &mdash; The published string is stored verbatim next to the parsed fields, so a parser change can be replayed against the original text. This is what recovers clubs whose pages prepend jersey numbers.</li>
+</ul>
+
+<h2>Known parse failures</h2>
+<div class="table-wrap"><table id="fails"><thead><tr><th>Club</th><th>Failure</th><th>Proposed fix</th><th>Status</th></tr></thead><tbody><tr><td>Houston Texans</td><td>Depth published as an image</td><td>Number stripping does not help. Requires an authorised structured source.</td><td>unresolved, blocks that club only</td></tr><tr><td>Green Bay Packers</td><td>Jersey numbers prepended to player names</td><td>Number stripping plus storing the raw string recovers the rows.</td><td>fix specified, not applied - no parser exists yet</td></tr></tbody></table></div>
+
+<h2>Snap-count proxy</h2>
+<p>Where a club&#x27;s depth chart is unavailable, snap counts are the starter proxy - playing time, not jersey order. Source: <a href="https://www.nfl.com/games/49ers-at-cowboys-2026-reg-10">https://www.nfl.com/games/49ers-at-cowboys-2026-reg-10</a>
+(L-S06). Official Game Book PDFs are published per game on the official game centre; 12 of the 14 week 10 fixtures publish one. None has been parsed.</p>
+<p>Threshold: <span class="blank" title="must be set before the first transcription (Q-DEPTH-02)"></span> &mdash; The threshold defines the label. Setting it after seeing who it labels is fitting the definition to the answer. It must be set before the first transcription (Q-DEPTH-02).</p>
+
+<h2>Staleness check</h2>
+<p>Flag any depth row that is older than the last official roster event affecting that club&#x27;s unit. Status: Not running. 0 checks performed. Roster turnover redefines depth for weeks. A depth row that predates a trade or an injured-reserve move is worse than no row, because it looks current.</p>
+
+<h2>Announced-starter field</h2>
+<p>An announced-starter field records a link to an official dated announcement of a starter change. It is never filled by inference and never used to imply a replacement. This is deliberately a different field from &#x27;replacement&#x27;. A club announcing a new starting quarterback is an official fact; who that pushes to second string is not published and is not inferred. Rows populated: 0</p>
+
+</main>
+<footer>
+<p>Informational research only. Nothing here is betting advice. No market price exists in this
+environment, so this section publishes no odds, no edge, no closing-line value and no return number.
+Every row links to a source; values that could not be confirmed are left blank and listed on the
+<a href="flagged.html">Flagged for Review</a> page.</p>
+<p>Other sections of this repository: <a href="../index.html">Dashboard</a> &middot;
+<a href="../decision-lab.html">Decision Lab blueprint</a> &middot;
+<a href="../signals/index.html">Signals &amp; origination</a>.</p>
+<p>Source repository: <a href="https://github.com/sassnarep3-star/FL4">https://github.com/sassnarep3-star/FL4</a>. Commit hashes cited are those present in
+this checkout at review time.</p>
+</footer>
+<script src="assets/app.js"></script>
+</body></html>
