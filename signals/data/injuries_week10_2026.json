@@ -10,9 +10,10 @@
     "scope_rule": "The player-level table is filtered by a fixed rule, not by hand: every listed player whose Game Status is 'Out' or 'Doubtful'. Players whose Game Status is 'Questionable' are counted per team, not listed individually. Players listed with a practice status but no game status are omitted (no availability claim is made for them).",
     "blank_policy": "A blank field means the official page showed a blank cell (e.g. no injury text disclosed). It does not mean 'no injury'.",
     "ttl_hours": 48,
-    "notes": "NFL Friday game-status report (4:00 PM deadline for Sunday games) is the last mandatory filing; Monday-night games refiling on Saturday. Snapshot taken from the most recent published report, so Monday LAC@BAL rows reflect a pre-Saturday filing.",
-    "row_count": 76,
-    "cross_validation": "Independent cross-check against the other session's capture of the same official page (data/injuries_w10_2026.json, session ce31a137, 160 rows incl. Questionable). Restricting both to Out/Doubtful: 72 of 75 rows agreed exactly and 0 status conflicts. The remaining differences were an abbreviation convention (this file uses AZ, they use ARI) for 3 Arizona rows, and ONE genuine omission by this session: Micah Parsons (GB, LB, Knee/Illness, Limited, Out) was read in the Week 10 chunk but dropped during transcription. It is restored here, verified against the source text captured in this session rather than accepted on the other file's authority. Their set contains no other Out/Doubtful row that this file lacks. Result: 76 rows."
+    "notes": "Game-status filing timing is NOT verified from an official source in this build; earlier wording about a Friday deadline and a Saturday refiling for Monday games was removed as unsourced. The report is a dated capture; the page itself is the authority.",
+    "row_count": 81,
+    "cross_validation": "Re-verified 2026-11-16 against https://www.nfl.com/injuries/league/2026/reg10: LAC and BAL Out/Doubtful rows added (5), and IND Questionable count corrected from 2 to 1 (Arden Key shows no game status on the page). Row-level Out/Doubtful set compared with data/injuries_w10_2026.json after the same corrections.",
+    "as_of_utc_reverified": "2026-11-16T00:00:00Z"
   },
   "games": [
     {
@@ -871,6 +872,51 @@
       "injury": "Knee",
       "practice": "Full Participation in Practice",
       "status": "Doubtful"
+    },
+    {
+      "team": "LAC",
+      "opp": "BAL",
+      "player": "Branson Taylor",
+      "pos": "G",
+      "injury": "Ankle",
+      "practice": "Did Not Participate In Practice",
+      "status": "Out"
+    },
+    {
+      "team": "LAC",
+      "opp": "BAL",
+      "player": "Brenen Thompson",
+      "pos": "WR",
+      "injury": "Hamstring",
+      "practice": "Did Not Participate In Practice",
+      "status": "Doubtful"
+    },
+    {
+      "team": "LAC",
+      "opp": "BAL",
+      "player": "Isas Waxter",
+      "pos": "CB",
+      "injury": "Ankle",
+      "practice": "Did Not Participate In Practice",
+      "status": "Out"
+    },
+    {
+      "team": "LAC",
+      "opp": "BAL",
+      "player": "Kendall Williamson",
+      "pos": "S",
+      "injury": "Calf",
+      "practice": "Did Not Participate In Practice",
+      "status": "Out"
+    },
+    {
+      "team": "BAL",
+      "opp": "LAC",
+      "player": "Jaylinn Hawkins",
+      "pos": "S",
+      "injury": "Knee",
+      "practice": "Limited Participation in Practice",
+      "status": "Out"
     }
   ],
   "team_availability_counts": {
@@ -942,7 +988,7 @@
     "IND": {
       "out": 6,
       "doubtful": 0,
-      "questionable": 2
+      "questionable": 1
     },
     "CAR": {
       "out": 1,
@@ -1005,14 +1051,14 @@
       "questionable": 0
     },
     "LAC": {
-      "out": 0,
-      "doubtful": 0,
-      "questionable": 0
+      "out": 3,
+      "doubtful": 1,
+      "questionable": 6
     },
     "BAL": {
-      "out": 0,
+      "out": 1,
       "doubtful": 0,
-      "questionable": 0
+      "questionable": 1
     }
   },
   "news_items_verified": [
@@ -1065,7 +1111,7 @@
     },
     {
       "id": "A-2",
-      "detail": "Quenton Nelson listed on the Seahawks report and Peter Skoronski/Avery-adjacent offensive linemen on the Titans report; Justin Fields listed on the Chiefs report with full participation.",
+      "detail": "Quenton Nelson listed on the Seahawks report and Peter Skoronski (G, Titans) on the Titans report; Justin Fields listed on the Chiefs report with full participation.",
       "action": "Transcribed as published; flagged so a human can confirm against team-alumni assumptions."
     },
     {
@@ -1077,6 +1123,16 @@
       "id": "A-4",
       "detail": "Transcription omission found by cross-validation and corrected: Micah Parsons (GB) appears on the official report as Limited participation / Out and was initially left out of this dataset. Root cause: manual transcription of a long chunk without a machine pass. The fix is structural, not editorial - tools/fetch_injuries.py encodes the inclusion rule and is covered by a CI fixture test, so future captures are parsed rather than retyped (see their F-18 note).",
       "action": "row restored; GB out count 3 -> 4; totals recomputed by the builder"
+    },
+    {
+      "id": "A-5",
+      "detail": "Monday LAC @ BAL was missing from the Out/Doubtful set and its club counts were zero (0/0/0) in the earlier capture, although the official page lists flagged players for both clubs. Corrected 2026-11-16 (see meta.cross_validation).",
+      "action": "5 rows added; LAC and BAL counts set; IND Questionable 2 -> 1."
+    },
+    {
+      "id": "A-6",
+      "detail": "Arden Key (IND) appeared as Questionable in the earlier root capture; the official page shows no injury and no game status for him.",
+      "action": "Row removed from the root capture; IND Questionable count corrected in this file."
     }
   ]
 }

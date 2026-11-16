@@ -241,6 +241,13 @@ def validate_tables(page: pathlib.Path, text: str) -> None:
                 if not official_links:
                     add_error(f"{page.relative_to(ROOT)}#{table_id} row {row_number}: factual row lacks an official HTTPS source link")
             for link in links:
+                parsed_link = urlparse(link)
+                if not parsed_link.scheme and not parsed_link.hostname:
+                    # In-site relative link: must resolve to a file in the repository.
+                    target = (page.parent / parsed_link.path).resolve()
+                    if not parsed_link.path or not target.exists():
+                        add_error(f"{page.relative_to(ROOT)}#{table_id} row {row_number}: local link does not resolve: {link}")
+                    continue
                 approved_external_url(link, f"{page.relative_to(ROOT)}#{table_id} row {row_number}")
 
 

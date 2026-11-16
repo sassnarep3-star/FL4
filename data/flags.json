@@ -141,7 +141,7 @@
     {
       "id": "F-18",
       "area": "Injuries - method",
-      "item": "The 160 injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser). Totals (66 Out, 10 Doubtful, 84 Questionable) are computed from the file, not typed.",
+      "item": "The injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser): 160 rows at that time. On 2026-11-16 they were re-read against the official page: 12 rows added (LAC, BAL) and one unsupported row removed (IND), now 171 rows. Totals (70 Out, 11 Doubtful, 90 Questionable) are computed from the file, not typed.",
       "why": "Manual transcription can contain typos. Each row links to its player page so it can be checked one by one.",
       "source": "https://www.nfl.com/injuries/",
       "status": "Unverified - second check recommended"
@@ -153,6 +153,30 @@
       "why": "Both pages are official but may describe different widgets, partners, or periods. Do not treat the lists as interchangeable or as an odds API, price history, or data licence.",
       "source": "S27 ; S28",
       "status": "Unverified for a specific widget/provider; no market feed used"
+    },
+    {
+      "id": "F-20",
+      "area": "Week 10 injury capture",
+      "item": "Monday LAC @ BAL rows added; unsupported Colts row removed (2026-11-16)",
+      "why": "The previous root capture omitted 12 official rows for LAC and BAL, and kept one row (Arden Key) that the official page does not support. Corrected from the page. The count claims of 254 and 279 rows could not be reproduced.",
+      "source": "S31 ; https://www.nfl.com/injuries/league/2026/reg10",
+      "status": "Corrected 2026-11-16; reviewer spot-check requested"
+    },
+    {
+      "id": "F-21",
+      "area": "Automated snapshots",
+      "item": "Daily or multi-day official captures are not built",
+      "why": "NFL.com Terms Section 1.3 prohibits systematic retrieval without express prior written consent. Hand transcription of the full report repeats an error class already found. A decision is needed before any capture job.",
+      "source": "S29 ; https://www.nfl.com/legal/terms/",
+      "status": "Unverified: decision pending"
+    },
+    {
+      "id": "F-22",
+      "area": "Depth source",
+      "item": "Depth-chart route (a) URL returns a 404 page",
+      "why": "https://www.nfl.com/teams/seattle-seahawks/depth-chart returned \"404 - Flag on the Play.\" on 2026-11-16. No verified per-club depth page exists; snap-count route has no verified source.",
+      "source": "https://www.nfl.com/teams/seattle-seahawks/depth-chart",
+      "status": "Unverified: no depth source for any club"
     }
   ]
 }

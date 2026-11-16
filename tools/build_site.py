@@ -433,6 +433,63 @@ fl_body = f"""
 """
 OUTPUTS["pages/flagged.html"] = ("Flagged for Review", fl_body, "../", "pages/flagged.html")
 
+# ---------- Decision readiness and removal-of-luck panel (landing page) ----------
+READY_ROWS = json.loads((DATA / "readiness.json").read_text(encoding="utf-8"))["rows"]
+N_OD = N_OUT + N_DOUBT
+_LBS = json.loads((DATA / "signals" / "leaderboard.json").read_text(encoding="utf-8"))
+_GATES = json.loads((DATA / "signals" / "gates.json").read_text(encoding="utf-8"))
+_STRATS = json.loads((DATA / "signals" / "strategies.json").read_text(encoding="utf-8"))["strategies"]
+_G1 = next(g for g in _GATES["gates"] if g["id"] == "G-1")["threshold"]
+
+
+def _fill(text):
+    return (str(text).replace("{N_REQ}", str(len(READY_ROWS))).replace("{N_ROWS}", str(N_ROWS))
+            .replace("{N_OD}", str(N_OD)))
+
+
+def _ev(evs):
+    parts = []
+    for e in evs:
+        url = e["url"]
+        parts.append('<a href="%s">%s</a>' % (esc(url), esc(e["label"])))
+    return " · ".join(parts)
+
+
+def _status_cell(s):
+    tone = {"met": "done", "partial": "secondary", "blocked": "unverified"}.get(s, "pending")
+    return '<span class="badge %s">%s</span>' % (tone, esc(s))
+
+
+ready_rows = [{
+    "id": r["id"], "req": r["requirement"], "_st": _status_cell(r["status"]), "gate": r["blocking_gate"],
+    "clear": _fill(r["clearing_number"]), "now": _fill(r["current_value"]),
+    "_src": "User brief" + (" · " + _ev(r["evidence"]) if r.get("evidence") else ""),
+} for r in READY_ROWS]
+n_met = sum(1 for r in READY_ROWS if r["status"] == "met")
+n_part = sum(1 for r in READY_ROWS if r["status"] == "partial")
+n_block = sum(1 for r in READY_ROWS if r["status"] == "blocked")
+READY_HTML = f"""
+<h2 id="readiness">Decision readiness: one row per requirement</h2>
+<p class="lead">For each requirement from the brief: the gate that blocks it, the number that would clear it, and where things stand today. <b>{n_met} met</b> (as a rule or a definition), <b>{n_part} partial</b>, <b>{n_block} blocked</b>. A row marked blocked means no decision can be made from this repository yet.</p>
+<p class="note">Clearing numbers come from <code>data/signals/gates.json</code> where a gate exists (e.g. G-1: 500 bets, 250 games, 12 weeks). Otherwise they are proposals for reviewer approval, not facts. Every row is a requirement record (labelled "User brief") and links to the page or official source that shows its current value.</p>
+{table([("ID", "id"), ("Requirement", "req"), ("Status", "_st"), ("Blocking gate", "gate"),
+        ("Number that would clear it", "clear"), ("Current value", "now"), ("Source / evidence", "_src")],
+       ready_rows, "tbl-readiness", filterable=True)}
+"""
+
+LUCK_HTML = f"""
+<h2 id="luck">Removal-of-luck panel</h2>
+<p class="lead">Nothing on this panel is a result. It shows how far the evidence is from the minimum needed before any skill claim is possible.</p>
+<div class="kpis">
+{kpi("Settled prospective bets", "%d of %d" % (_LBS["removal_of_luck_panel"]["current_n"], _G1["min_bets"]), "minimum for any claim (G-1)")}
+{kpi("Distinct games", "0 of %d" % _G1["min_distinct_games"], "G-1 minimum")}
+{kpi("Strategies qualifying at stage 1", "0 of %d" % len(_STRATS), "proper-score lower bound not computed")}
+{kpi("Control-baseline runs", 0, "random, favourites-only, shopping")}
+{kpi("Backtest figures on the leaderboard", 0, "excluded by rule and by the build")}
+</div>
+<p class="note">Registered: <code>prereg/REGISTRATION.md</code> (commit recorded in COORDINATION.md). Leaderboard rules and demotion gate: <a href="signals/leaderboard.html">signals/leaderboard.html</a>.</p>
+"""
+
 # ---------- Index / dashboard ----------
 idx_body = f"""
 <p class="lead">A simple dashboard for the NFL research project: official injury data, questions to answer, suggestions to choose from, and a strategy leaderboard that stays empty until a strategy passes every gate.</p>
@@ -456,6 +513,8 @@ idx_body = f"""
 <a class="tile" href="signals/index.html"><b>Signals &amp; origination</b><span>Line-origination strategy catalogue, validation gates, correlation protocol and a second verified Week 10 availability capture (session 94107c0d)</span></a>
 <a class="tile warn" href="pages/flagged.html"><b>Flagged for Review</b><span>__FLAGCOUNT__ items to check</span></a>
 </div>
+{LUCK_HTML}
+{READY_HTML}
 """
 OUTPUTS["index.html"] = ("Dashboard", idx_body, "", "index.html")
 
