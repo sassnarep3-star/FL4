@@ -434,6 +434,10 @@ fl_body = f"""
 OUTPUTS["pages/flagged.html"] = ("Flagged for Review", fl_body, "../", "pages/flagged.html")
 
 # ---------- Index / dashboard ----------
+READINESS = load("readiness.json")["rows"]
+READY_COUNTS = Counter(r["status"] for r in READINESS)
+ready_rows = [dict(r, _where=f'{esc(r["where"])} (User brief status; not an external fact)') for r in READINESS]
+ready_html = table([("Area", "area"), ("Status", "status"), ("Blocking gate", "gate"), ("Number that clears it", "clears"), ("Current number", "current"), ("Evidence (where)", "_where")], ready_rows, "tbl-readiness", filterable=True)
 idx_body = f"""
 <p class="lead">A simple dashboard for the NFL research project: official injury data, questions to answer, suggestions to choose from, and a strategy leaderboard that stays empty until a strategy passes every gate.</p>
 <div class="kpis">
@@ -443,6 +447,9 @@ idx_body = f"""
 {kpi("Suggestions awaiting you", PENDING_SG)}
 {kpi("Validated strategies", 0)}
 </div>
+<h2>Decision readiness</h2>
+<p class="note">One row per requirement area from the 2026-11-16 brief. Status counts: {", ".join(f"{k} {v}" for k, v in READY_COUNTS.most_common())}. A row is Met only when its deliverable exists on this site. Project status, not an official NFL value, so no source link applies; the gate and the official evidence are on the linked page.</p>
+{ready_html}
 <div class="tiles">
 <a class="tile" href="pages/executive-summary.html"><b>Executive summary</b><span>Key findings and decisions needed</span></a>
 <a class="tile" href="pages/injuries.html"><b>Injuries &amp; depth</b><span>Official Week 10 report, absences, headline checks, and blank offense/defense replacement slots through fourth string</span></a>
