@@ -1,0 +1,50 @@
+{
+  "meta": {
+    "dataset": "depth_slot_model",
+    "owner_session": "f51d93e6",
+    "as_of_utc": "2026-11-16",
+    "status": "Rules and empty store only. Zero depth rows are published. No club's order is recorded, inferred or estimated.",
+    "origin": "Requirements taken from the brief (items: model depth slots as groups; represent shared and empty slots; do not model depth from jersey order; treat roster turnover as an event; use playing time, not order, for depth). No external value is in this file.",
+    "source_links_for_rules": [
+      "https://www.nfl.com/injuries/league/2026/reg10 (the report carries no depth field; checked 2026-11-16)",
+      "https://www.packers.com/team/depth-chart (observation of jersey-number prefixes; checked 2026-11-16)",
+      "https://www.seahawks.com/team/depth-chart/ (observation of a two-name WR1 cell; checked 2026-11-16)"
+    ]
+  },
+  "rules": [
+    {"id": "DS-1", "rule": "A depth record is a slot GROUP (club, unit, position, displayed rank label), not a single starter. A group may list zero, one or several players.", "why": "Three receivers at rank 1 and three inside linebackers at rank 1 are real displayed states. Taking column 1 as 'the starter' would name a starter the club never named."},
+    {"id": "DS-2", "rule": "A shared slot (two or more players in one displayed cell) is stored as one slot with a players list of length >1, flagged shared=true.", "why": "Seahawks' WR1 cell lists two names. Splitting or ranking them would invent an order."},
+    {"id": "DS-3", "rule": "An empty displayed slot is stored as a slot with players=[] and empty=true. It is never dropped.", "why": "A dropped empty slot is indistinguishable from a missing row, which the drift alarm must catch separately."},
+    {"id": "DS-4", "rule": "Depth order is taken only from the displayed rank position. Jersey number, experience, salary, roster position label or alphabetical order never sets rank.", "why": "Brief: reject deriving order from jersey number, experience or salary. Jersey numbers are stripped from names but kept in raw_cell."},
+    {"id": "DS-5", "rule": "Every player cell is stored twice: raw_cell (exact text as published) and name (raw_cell with a leading jersey number removed). Name normalisation is the only transformation allowed.", "why": "Packers prepend jersey numbers; stripping them recovers names without changing meaning."},
+    {"id": "DS-6", "rule": "Each slot records source_url, publisher_label (verbatim wording of any 'unofficial' or 'official' label), authority (see DS-7), capture_utc and page_sha256.", "why": "Every row must trace to a page the owner can open."},
+    {"id": "DS-7", "rule": "authority is one of: official_club_labelled (publisher calls it official), publisher_labels_unofficial, club_news_says_unofficial, no_label_seen, unverified. Only official_club_labelled may be used to open the route gate DEPTH-ROUTE-A.", "why": "Patriots and Packers label their depth charts unofficial on the page. Opening the gate on such charts is an owner decision (see flag)."},
+    {"id": "DS-8", "rule": "Each slot is versioned against the most recent official roster or transaction event that touches any listed player (roster_event_ref). A slot whose versioning event is newer than its capture is stale and must be re-captured before use.", "why": "Brief: depth, availability and lineup evidence must be versioned against the last official roster event, not trusted as durable."},
+    {"id": "DS-9", "rule": "A listed player who is injured per the official report is shown as listed. The record does not reassign the slot. Any replacement claim requires the club's own displayed order at capture, not inference from the injury row.", "why": "Injury status is not an active or participation status, and a depth row alone does not name a replacement."},
+    {"id": "DS-10", "rule": "Route (b), depth derived from official snap counts, is not implemented here. It is owned by session e9d38f97 (task U8).", "why": "Avoids two sessions building the same source."},
+    {"id": "DS-11", "rule": "Starter, backup and depth-tier labels are NOT assigned by this model. A tier label can be attached only when a source explicitly states a rank for that slot.", "why": "The brief rejects depth inferred from roster attributes."}
+  ],
+  "record_schema": {
+    "slot_id": "string, club-unit-position-rank_label-capture_date",
+    "club": "NFL abbreviation (32 values, see route_census.json)",
+    "unit": "offense | defense | special_teams",
+    "position": "string as displayed (e.g. WR, LT, DE)",
+    "rank_label": "string as displayed on the page, or null when the page shows no rank",
+    "shared": "boolean (DS-2)",
+    "empty": "boolean (DS-3)",
+    "players": "list of {raw_cell, name, jersey_number_stripped (nullable)}",
+    "source_url": "string, https",
+    "publisher_label": "string or null (DS-6)",
+    "authority": "enum (DS-7)",
+    "capture_utc": "ISO-8601 UTC",
+    "page_sha256": "hex, of the exact bytes captured (not of rendered text)",
+    "roster_event_ref": "id of the latest official roster event considered (DS-8), or null",
+    "stale": "boolean, computed by tools/check_depth.py"
+  },
+  "gates": [
+    {"id": "DEPTH-ROUTE-A", "name": "Route (a) verified for all 32 clubs", "status": "closed", "clears_when": "32 of 32 clubs have an official_club_labelled depth page, read with its full chunk count, with a recorded page_sha256", "current": "0 of 32 clubs"},
+    {"id": "DEPTH-SLOT-VALID", "name": "Slot records pass schema, shared/empty and no-jersey-order rules", "status": "vacuously true (0 rows)", "clears_when": "Checker passes on the first real slot file", "current": "0 rows"},
+    {"id": "DEPTH-STALE-CLEAR", "name": "No depth record stale against the official transaction log", "status": "not evaluable", "clears_when": "An official transaction log is captured with a source and date", "current": "no transaction log captured by this session"}
+  ],
+  "store": {"slots": [], "note": "Intentionally empty. Rows are added only by a session that has read the official page in full and recorded its hash."}
+}

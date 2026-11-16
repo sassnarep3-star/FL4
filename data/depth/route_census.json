@@ -1,0 +1,59 @@
+{
+  "meta": {
+    "dataset": "depth_route_census",
+    "owner_session": "f51d93e6",
+    "as_of_utc": "2026-11-16",
+    "purpose": "Brief item: resolve the depth-order source before building the backup-deficiency feature. Route (a) = per-club official depth-chart pages, verified club by club. Route (b) = depth derived from official snap counts (owned by session e9d38f97, task U8; not evaluated here).",
+    "method": "fetch_page tool, chunk 0 of each page read on 2026-11-16. Only the URLs listed were requested; URLs were not guessed beyond the /team/depth-chart path used by the clubs checked. Club domains outside the six checked are NOT entered, because they have not been verified.",
+    "gate_rule": "Route (a) passes only when all 32 clubs have a depth page that (1) returns the page on fetch, (2) is HTML text, not an image, (3) orders players by a displayed rank, and (4) is not labelled unofficial by its publisher. Failing any one club closes the gate.",
+    "limits": [
+      "Only chunk 0 of multi-chunk pages was read. Where a page has more chunks, row content beyond chunk 0 is not verified.",
+      "Authority is judged on the publisher's own wording. A club site can be official while its depth chart is labelled unofficial.",
+      "Depth content is not republished here. Only layout and labelling observations are recorded."
+    ]
+  },
+  "gate": {
+    "id": "DEPTH-ROUTE-A",
+    "clubs_required": 32,
+    "clubs_checked": 6,
+    "clubs_html_text": 4,
+    "clubs_publisher_labels_unofficial": 2,
+    "clubs_verified_official": 0,
+    "status": "closed",
+    "consequence": "No backup-deficiency or replacement feature may be built from route (a) until this gate is open. Route (b) is not yet verified either."
+  },
+  "rows": [
+    {"abbr": "ARI", "club": "Arizona Cardinals", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked. Alias AZ appears in another repo dataset."},
+    {"abbr": "ATL", "club": "Atlanta Falcons", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "BAL", "club": "Baltimore Ravens", "depth_url": "https://www.ravens.com/team/depth-chart", "check": "checked", "http_result": "HTTP 500 (fetch error, 2026-11-16)", "format": "unknown (no content returned)", "publisher_label": null, "authority": "unverified", "source_url": "https://www.ravens.com/team/depth-chart", "note": "Retry needed. The brief's Ravens depth-row claim is therefore unverified here."},
+    {"abbr": "BUF", "club": "Buffalo Bills", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "CAR", "club": "Carolina Panthers", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "CHI", "club": "Chicago Bears", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "CIN", "club": "Cincinnati Bengals", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "CLE", "club": "Cleveland Browns", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "DAL", "club": "Dallas Cowboys", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "DEN", "club": "Denver Broncos", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "DET", "club": "Detroit Lions", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "GB", "club": "Green Bay Packers", "depth_url": "https://www.packers.com/team/depth-chart", "check": "checked", "http_result": "HTTP 200 (page read, 1 of 1 chunk)", "format": "HTML table; player cells carry a jersey number before the name (e.g. '9 Christian Watson'); columns are depth order with no explicit rank number", "publisher_label": "Footer: 'Unofficial, Nov. 10, 2026'", "authority": "publisher_labels_unofficial", "source_url": "https://www.packers.com/team/depth-chart", "note": "Brief's Packers defect confirmed as an observation: jersey numbers prefix the names. Also shows the same player (27 Kitan Oladapo) in two separate S rows."},
+    {"abbr": "HOU", "club": "Houston Texans", "depth_url": "https://www.houstontexans.com/depth-chart", "check": "checked", "http_result": "Page not found (404 page content, 1 of 1 chunk)", "format": "not located", "publisher_label": null, "authority": "unverified", "source_url": "https://www.houstontexans.com/depth-chart", "note": "The brief says the Texans publish depth as an image. The image is not located at this path; the actual depth location is still unknown. Structured source needed; no transcription by eye."},
+    {"abbr": "IND", "club": "Indianapolis Colts", "depth_url": "https://www.colts.com/team/depth-chart", "check": "checked", "http_result": "HTTP 200 (page read, chunk 1 of 2)", "format": "HTML table, linked player names, depth order by column", "publisher_label": "No label on the depth page itself. Club news items: 'Colts release unofficial depth chart for Week 10' (and Weeks 5–9)", "authority": "club_news_says_unofficial", "source_url": "https://www.colts.com/team/depth-chart", "note": "The depth table is the club's own weekly chart. Its publisher describes each weekly release as unofficial."},
+    {"abbr": "JAX", "club": "Jacksonville Jaguars", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "KC", "club": "Kansas City Chiefs", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "LV", "club": "Las Vegas Raiders", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "LAC", "club": "Los Angeles Chargers", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "LAR", "club": "Los Angeles Rams", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "MIA", "club": "Miami Dolphins", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "MIN", "club": "Minnesota Vikings", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "NE", "club": "New England Patriots", "depth_url": "https://www.patriots.com/team/depth-chart", "check": "checked", "http_result": "HTTP 200 (page read, chunk 1 of 3)", "format": "HTML table, linked player names; sections Offense / Defense / Special Teams", "publisher_label": "Page title 'New England Patriots Unofficial Depth Chart'. Text: 'The 2026 depth chart is unofficial and is published by the writers of Patriots.com. The depth chart reflects the opinions of the Patriots.com writers and don't necessarily reflect those of the organization.'", "authority": "publisher_labels_unofficial", "source_url": "https://www.patriots.com/team/depth-chart", "note": "Explicit self-label: opinion of the writers, not the organization."},
+    {"abbr": "NO", "club": "New Orleans Saints", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "NYG", "club": "New York Giants", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "NYJ", "club": "New York Jets", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "PHI", "club": "Philadelphia Eagles", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "PIT", "club": "Pittsburgh Steelers", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "SF", "club": "San Francisco 49ers", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "SEA", "club": "Seattle Seahawks", "depth_url": "https://www.seahawks.com/team/depth-chart/", "check": "checked", "http_result": "HTTP 200 (page read, chunk 1 of 2)", "format": "HTML table, linked player names; the WR1 cell contains two linked names (Cooper Kupp, Rashid Shaheed) in one cell, which is a shared slot", "publisher_label": "None seen in chunk 0", "authority": "no_label_seen_chunk0", "source_url": "https://www.seahawks.com/team/depth-chart/", "note": "Observation: the same player (Josh Jones, Anthony Bradford) appears in more than one slot. Brief's Seattle shared-slot claim is consistent with this page but was not checked against chunk 1."},
+    {"abbr": "TB", "club": "Tampa Bay Buccaneers", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "TEN", "club": "Tennessee Titans", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked."},
+    {"abbr": "WAS", "club": "Washington Commanders", "depth_url": null, "check": "not_checked", "http_result": null, "format": null, "publisher_label": null, "authority": "unverified", "source_url": null, "note": "Not yet checked. Brief claims an empty slot on this club's page; unverified here."}
+  ]
+}
