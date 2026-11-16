@@ -57,9 +57,6 @@ jobs:
           git diff --exit-code -- index.html pages/ assets/ || {
             echo "::error::root dashboard output is out of date with tools/build_site.py"; exit 1; }
 
-      - name: Pre-registration ledger and guards (strategies, gates, leaderboard, results, prices, public privacy)
-        run: python tools/check_prereg.py
-
       - name: Week 10 capture - validator (skips cleanly when the git-ignored private file is absent)
         run: python tools/capture_w10.py --check
 

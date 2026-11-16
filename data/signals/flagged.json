@@ -3,8 +3,20 @@
     "dataset": "flagged_for_review",
     "generated_utc": "2026-11-14T03:48:00Z",
     "definition": "Anything this build could not confirm, could not obtain, or found inconsistent with itself. Published rather than hidden, and non-blocking by policy: none of these items stop the site, and none of them were closed by guessing.",
-    "types": {"value-conflict": "two sources disagree", "not-obtainable": "the input does not exist in this environment", "semantic-ambiguity": "the data exists but its meaning is not pinned down", "source-changed": "the source moved or expired", "reviewer-decision": "a number only the reviewer may set", "informational": "recorded so nobody re-discovers it the hard way"},
-    "disposition_actions": ["resolve with a value + link", "accept the blank permanently", "suppress with a written reason"]
+    "types": {
+      "value-conflict": "two sources disagree",
+      "not-obtainable": "the input does not exist in this environment",
+      "semantic-ambiguity": "the data exists but its meaning is not pinned down",
+      "source-changed": "the source moved or expired",
+      "reviewer-decision": "a number only the reviewer may set",
+      "informational": "recorded so nobody re-discovers it the hard way"
+    },
+    "disposition_actions": [
+      "resolve with a value + link",
+      "accept the blank permanently",
+      "suppress with a written reason"
+    ],
+    "updated_utc": "2026-11-16"
   },
   "flags": [
     {
@@ -13,9 +25,20 @@
       "severity": "blocking-for-quantitative-work",
       "title": "There is no market-price data anywhere in this project",
       "detail": "The brief's central ask - originate NFL lines - requires prices. This workspace can reach the league's public pages (injuries, standings, schedule, news) but has no odds or line feed of any kind, and programmatic fetches to third-party hosts were refused at the network layer. Consequence: no CLV, no backtest, no edge, no originated number can be published truthfully. Every edge_claim field in the strategy catalogue is null for this reason and only this reason.",
-      "affected": ["strategies", "validation", "correlation", "leaderboard", "summary"],
+      "affected": [
+        "strategies",
+        "validation",
+        "correlation",
+        "leaderboard",
+        "summary"
+      ],
       "action_needed": "Answer Q-MKT-01. Then the ingest (SG-01) and the first CLV numbers can exist.",
-      "links": [{"label": "what IS reachable: official report page", "url": "https://www.nfl.com/injuries/"}],
+      "links": [
+        {
+          "label": "what IS reachable: official report page",
+          "url": "https://www.nfl.com/injuries/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -23,9 +46,17 @@
       "type": "not-obtainable",
       "title": "Depth charts are not available from an official source in this environment",
       "detail": "The user's requirement is to know when 2nd/3rd/4th-string backups replace starters. Verified by inspection: the official Week 10 report page carries Player, Position, Injuries, Practice Status and Game Status - and no replacement field. Whether each club publishes an authoritative, timestamped depth chart was not established in this session, so no row on the depth page names a replacement.",
-      "affected": ["depth", "strategies S-03/S-08/S-16"],
+      "affected": [
+        "depth",
+        "strategies S-03/S-08/S-16"
+      ],
       "action_needed": "Answer Q-ROSTER-01. Interim policy: publish only who is unavailable, never who fills in.",
-      "links": [{"label": "official report (schema confirmed)", "url": "https://www.nfl.com/injuries/"}],
+      "links": [
+        {
+          "label": "official report (schema confirmed)",
+          "url": "https://www.nfl.com/injuries/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -33,9 +64,22 @@
       "type": "semantic-ambiguity",
       "title": "The meaning of Out / Doubtful / Questionable is not verified against the league's own policy text",
       "detail": "Two independent secondary pages state that the three designations are 'will not play', 'unlikely to play' and 'uncertain', that 'Probable' was retired in 2016, and that the league publishes no probabilities with them. The league policy document itself was not retrieved in this session, so this build deliberately attaches no probability to any designation and no percentage anywhere. This matters a lot: S-15 (turning Questionable into a probability) is the intended fix, and it cannot be built on an unverified definition.",
-      "affected": ["injuries", "strategies S-15", "gates G-7"],
+      "affected": [
+        "injuries",
+        "strategies S-15",
+        "gates G-7"
+      ],
       "action_needed": "Obtain the league's injury-report policy text and store it in the repo as a versioned file with its own source link.",
-      "links": [{"label": "secondary page 1 (not relied upon)", "url": "https://sports24.us/article/nfl-injury-report-rules-explained"}, {"label": "secondary page 2 (independent of page 1)", "url": "https://fourthwire.com/news/what-questionable-means-nfl-injury-report"}],
+      "links": [
+        {
+          "label": "secondary page 1 (not relied upon)",
+          "url": "https://sports24.us/article/nfl-injury-report-rules-explained"
+        },
+        {
+          "label": "secondary page 2 (independent of page 1)",
+          "url": "https://fourthwire.com/news/what-questionable-means-nfl-injury-report"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -43,9 +87,16 @@
       "type": "semantic-ambiguity",
       "title": "Standings split-record columns omitted rather than guessed",
       "detail": "The published standings rows contain W, L, T, PCT, PF, PA, net points, streak and four further split blocks whose labels were not resolvable from the rendered page order. Publishing home/road/division splits by guessing which block is which would be exactly the inference error this project prohibits, so those columns are absent from data/signals/league_state.json and the omission is documented in that file's meta.",
-      "affected": ["league_state"],
+      "affected": [
+        "league_state"
+      ],
       "action_needed": "Re-read the standings table with an explicit header row, or use the division/conference views, and add the columns verified.",
-      "links": [{"label": "standings page", "url": "https://www.nfl.com/standings/"}],
+      "links": [
+        {
+          "label": "standings page",
+          "url": "https://www.nfl.com/standings/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -53,7 +104,10 @@
       "type": "reviewer-decision",
       "title": "Five numeric thresholds are blank by policy and block gate execution",
       "detail": "G-3 min_mean_clv_cents; G-6 acceptable probability of ruin; G-8 max exposure per game and per shared driver; G-10 max fill latency; G-15 max drawdown before kill. These are values the reviewer must set because they encode risk appetite and account reality, not modelling results. gates.py will refuse to run rather than substitute a default, so the blanks are visible and load-bearing.",
-      "affected": ["validation", "leaderboard tier 3"],
+      "affected": [
+        "validation",
+        "leaderboard tier 3"
+      ],
       "action_needed": "Answer Q-RISK-01, Q-RISK-02, Q-MKT-02, Q-RISK-03.",
       "links": [],
       "blocking_merge": false
@@ -63,9 +117,17 @@
       "type": "value-conflict",
       "title": "Headline and report disagree for one Rams receiver",
       "detail": "The Week 10 report page lists a Los Angeles wide receiver with a Did-Not-Participate practice line and no game status, while a headline on the same page says he is 'likely to be placed on injured reserve'. 'Likely' is not a designation. A naive pipeline reads either 'he is out' or 'no constraint'; both are wrong. Recorded as published, priced as nothing.",
-      "affected": ["injuries", "strategies S-01 confidence labels"],
+      "affected": [
+        "injuries",
+        "strategies S-01 confidence labels"
+      ],
       "action_needed": "Adopt the confidence-label rule in Q-ROSTER-05 (never price 'report:'/'likely' items).",
-      "links": [{"label": "headline wording", "url": "https://www.nfl.com/news/rams-wr-puka-nacua-likely-to-be-placed-on-injured-reserve-with-turf-toe-sprained-mcl-and-pcl"}],
+      "links": [
+        {
+          "label": "headline wording",
+          "url": "https://www.nfl.com/news/rams-wr-puka-nacua-likely-to-be-placed-on-injured-reserve-with-turf-toe-sprained-mcl-and-pcl"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -73,9 +135,17 @@
       "type": "not-obtainable",
       "title": "No snap, target or usage data - prop strategies are descoped, not guessed",
       "detail": "Player-prop combos depend on usage reallocation. The league's tracking product is the plausible source, but its availability and licensing for automated use were not verified in this session, and no aggregate substitute captures target share. Rather than project prop numbers from priors, the prop entries remain at research tier with the blocker named.",
-      "affected": ["strategies S-08/S-10", "correlation C-05/C-06"],
+      "affected": [
+        "strategies S-08/S-10",
+        "correlation C-05/C-06"
+      ],
       "action_needed": "Answer Q-ROSTER-03.",
-      "links": [{"label": "candidate source, not yet verified", "url": "https://www.nfl.com/next-gen-stats/"}],
+      "links": [
+        {
+          "label": "candidate source, not yet verified",
+          "url": "https://www.nfl.com/next-gen-stats/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -83,9 +153,21 @@
       "type": "value-conflict",
       "title": "A Ravens quarterback absence window appears twice with different numbers",
       "detail": "Two headlines on the same official page give a 6-9 week window in one item and a 6-10 week confirmation in another. Any model that needs 'weeks out' as an input cannot take either as settled; the correct representation is an interval with an as-of date, which is how it is recorded here.",
-      "affected": ["depth", "strategies S-03"],
+      "affected": [
+        "depth",
+        "strategies S-03"
+      ],
       "action_needed": "Store absence windows as intervals with a per-claim date; never as a point estimate.",
-      "links": [{"label": "6-10 weeks roundup item", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-nov-13"}, {"label": "6-9 weeks item", "url": "https://www.nfl.com/news/ravens-lamar-jackson-right-thumb-out-6-9-weeks-expects-to-return-this-season"}],
+      "links": [
+        {
+          "label": "6-10 weeks roundup item",
+          "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-friday-nov-13"
+        },
+        {
+          "label": "6-9 weeks item",
+          "url": "https://www.nfl.com/news/ravens-lamar-jackson-right-thumb-out-6-9-weeks-expects-to-return-this-season"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -93,9 +175,17 @@
       "type": "semantic-ambiguity",
       "title": "Roster and practice-squad elevation rules are unverified",
       "detail": "How far a team can back-fill an injury (53-man roster size, practice-squad elevations per game, emergency designations) directly bounds what 'backup replaces starter' means in practice. Search surfaced secondary pages describing the 2026 rules, but the governing documents were not retrieved, so no gate, cap or depth assumption in this build depends on them.",
-      "affected": ["depth", "gates G-8"],
+      "affected": [
+        "depth",
+        "gates G-8"
+      ],
       "action_needed": "Retrieve the league/union rule text and store it in /data/rules/ with links; until then treat every 'roster can absorb this' assumption as false.",
-      "links": [{"label": "secondary source (not relied upon)", "url": "https://legionreport.com/nfl-practice-squad-tracker/"}],
+      "links": [
+        {
+          "label": "secondary source (not relied upon)",
+          "url": "https://legionreport.com/nfl-practice-squad-tracker/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -103,9 +193,17 @@
       "type": "source-changed",
       "title": "Monday-night rows in the snapshot may predate the final filing",
       "detail": "The captured snapshot is the most recent published report. Monday games refile after Sunday, so the two Monday clubs show unusually light availability (no Out and no Doubtful rows for either) which is more likely a filing-cadence artefact than a genuinely healthy roster. Reading those zeros as 'no injuries' would inject a real error into any availability delta.",
-      "affected": ["injuries", "strategies S-01"],
+      "affected": [
+        "injuries",
+        "strategies S-01"
+      ],
       "action_needed": "Snapshot on a per-game schedule tied to each game's own deadline, and mark each row with which filing it came from.",
-      "links": [{"label": "report page (Week 10 view)", "url": "https://www.nfl.com/injuries/"}],
+      "links": [
+        {
+          "label": "report page (Week 10 view)",
+          "url": "https://www.nfl.com/injuries/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -113,7 +211,11 @@
       "type": "not-obtainable",
       "title": "The correlation table is entirely unmeasured",
       "detail": "Every pair in data/signals/correlations.json has measured_value null and n_obs 0. There is no bet or settlement ledger to measure joint outcomes from, and no archive of settled same-game legs was located in an official source. Sign expectations are stated as priors only, explicitly marked as not usable for pricing.",
-      "affected": ["correlation", "strategies S-09/S-10", "gate G-8"],
+      "affected": [
+        "correlation",
+        "strategies S-09/S-10",
+        "gate G-8"
+      ],
       "action_needed": "Run SG-11 after SG-01; refuse to price parlays before it.",
       "links": [],
       "blocking_merge": false
@@ -123,7 +225,9 @@
       "type": "reviewer-decision",
       "title": "Jurisdiction, operator licensing and data redistribution are unresolved",
       "detail": "Nothing in this project confirms that wagering is lawful for the reviewer where they are, that any chosen operator is licensed there, or that a future price vendor's terms permit storing and republishing what we derive. This build takes no position and offers no legal advice; it publishes the questions and keeps the system in research-only mode.",
-      "affected": ["everything that touches money"],
+      "affected": [
+        "everything that touches money"
+      ],
       "action_needed": "Answer Q-LEGAL-01/02/03 before Tier 3 promotion exists in practice.",
       "links": [],
       "blocking_merge": false
@@ -133,9 +237,16 @@
       "type": "informational",
       "title": "Four clubs are absent from the Week 10 report - cross-checked and resolved",
       "detail": "The report page shows 14 games and 28 clubs. The four missing clubs (CHI, DEN, PHI, TB) each show 9 games played in the standings while the clubs playing in Week 10 show 8 or 9, which is consistent with a Week 10 bye for all four. The gap is therefore explained by the schedule, not by a capture error. Recorded so a future session does not 'fix' it by inventing rows.",
-      "affected": ["injuries"],
+      "affected": [
+        "injuries"
+      ],
       "action_needed": "None. Verify on the next snapshot that the bye pattern holds.",
-      "links": [{"label": "standings used for the cross-check", "url": "https://www.nfl.com/standings/"}],
+      "links": [
+        {
+          "label": "standings used for the cross-check",
+          "url": "https://www.nfl.com/standings/"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -143,9 +254,22 @@
       "type": "informational",
       "title": "Several listed player-club pairings are inconsistent with common priors",
       "detail": "The official page places some well-known players on clubs a model with stale roster knowledge would not expect (defensive linemen on the Rams report, a Buccaneers receiver on the 49ers report, a Vikings quarterback row, a Giants quarterback row, a Chiefs quarterback row, a Packers guard on the Seahawks report, a Browns linebacker on the Panthers report, and so on). Every row in data/signals/injuries_week10_2026.json is transcribed exactly as published, with no correction, because the source is the league's own filing and the same page also confirms mid-season trades happened in this window. A human should confirm whether anything here reflects a source-side labelling issue rather than real movement - the answer changes how much to trust player-level joins.",
-      "affected": ["injuries", "depth", "any player-level model"],
+      "affected": [
+        "injuries",
+        "depth",
+        "any player-level model"
+      ],
       "action_needed": "Spot-check a handful of these rows against the clubs' own official rosters before player-level data is used for pricing.",
-      "links": [{"label": "the report page as published", "url": "https://www.nfl.com/injuries/"}, {"label": "trade evidence on the same page", "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-nov-10"}],
+      "links": [
+        {
+          "label": "the report page as published",
+          "url": "https://www.nfl.com/injuries/"
+        },
+        {
+          "label": "trade evidence on the same page",
+          "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-tuesday-nov-10"
+        }
+      ],
       "blocking_merge": false
     },
     {
@@ -153,7 +277,9 @@
       "type": "not-obtainable",
       "title": "Weather and officiating feeds are identified but not wired",
       "detail": "Both are candidate signals with official sources (a national meteorological service for forecasts; the league for weekly officiating assignments). Neither was read in this session, so strategies S-05 and S-06 carry no data and no claim.",
-      "affected": ["strategies S-05/S-06"],
+      "affected": [
+        "strategies S-05/S-06"
+      ],
       "action_needed": "Add both as dated snapshot jobs once SG-02 is approved.",
       "links": [],
       "blocking_merge": false
@@ -163,9 +289,200 @@
       "type": "not-obtainable",
       "title": "Injured-reserve moves are invisible to a report-only pipeline",
       "detail": "Demonstrated twice in the Week 10 capture: a Dolphins quarterback placed on IR (with a first-time starter 'in line'), and the Rams receiver 'likely' to be placed on IR. An IR move removes a player for weeks and reshapes depth, but produces no weekly game-status row, so a pipeline built only on the report never learns it.",
-      "affected": ["depth", "injuries"],
+      "affected": [
+        "depth",
+        "injuries"
+      ],
       "action_needed": "Approve SG-03 (transactions snapshot).",
-      "links": [{"label": "IR move item", "url": "https://www.nfl.com/news/dolphins-place-qb-malik-willis-groin-on-injured-reserve-kyle-mccord-in-line-for-first-start"}],
+      "links": [
+        {
+          "label": "IR move item",
+          "url": "https://www.nfl.com/news/dolphins-place-qb-malik-willis-groin-on-injured-reserve-kyle-mccord-in-line-for-first-start"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-17",
+      "type": "value-conflict",
+      "severity": "high",
+      "title": "Week 10 capture omitted the Monday LAC @ BAL game (corrected 2026-11-16)",
+      "detail": "The earlier root capture had no rows for LAC or BAL, and its game row said \"no flagged players in report\". The official Week 10 page lists 10 Chargers and 2 Ravens rows with an injury, practice or game status. Corrected: 12 rows added to data/injuries_w10_2026.json and 5 Out/Doubtful rows added here. Also removed an unsourced note on NFL filing deadlines, and corrected \"Avery-adjacent\" in note A-2 to the Titans report wording on the page.",
+      "affected": [
+        "injuries",
+        "depth",
+        "team view",
+        "dashboard"
+      ],
+      "action_needed": "Reviewer spot-check of the five Out/Doubtful Monday rows against the official page.",
+      "links": [
+        {
+          "label": "Official Week 10 injury report",
+          "url": "https://www.nfl.com/injuries/league/2026/reg10"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-18",
+      "type": "value-conflict",
+      "severity": "high",
+      "title": "Unsupported Colts row removed (Arden Key)",
+      "detail": "The earlier root capture listed Arden Key (IND, DE) as Hamstring / Questionable. On 2026-11-16 the official page shows no injury and no game status for him. The row is removed, and the Colts Questionable count here is corrected from 2 to 1 (Will Mallory only).",
+      "affected": [
+        "injuries",
+        "team view"
+      ],
+      "action_needed": "Reviewer confirms the removal against the page. The source of the original row is unknown.",
+      "links": [
+        {
+          "label": "Official Week 10 injury report",
+          "url": "https://www.nfl.com/injuries/league/2026/reg10"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-19",
+      "type": "not-obtainable",
+      "severity": "high",
+      "title": "Automated multi-day snapshots are blocked by NFL terms until a decision is made",
+      "detail": "The fetch tool can read the official report, but this sandbox cannot store its raw bytes, and hand transcription of every listed player on the report repeats the error class already found twice (F-18, A-4). NFL.com Terms Section 1.3 (updated May 16, 2024) prohibits systematic retrieval of data without express prior written consent. A daily capture job therefore needs a written decision first.",
+      "affected": [
+        "injuries",
+        "availability graph",
+        "snapshot ledger"
+      ],
+      "action_needed": "Decide one route: written NFL permission, a licensed data feed, or a manual weekly capture with recorded hashes.",
+      "links": [
+        {
+          "label": "NFL.com Terms, Section 1.3",
+          "url": "https://www.nfl.com/legal/terms/"
+        },
+        {
+          "label": "Official Week 10 injury report",
+          "url": "https://www.nfl.com/injuries/league/2026/reg10"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-20",
+      "type": "not-obtainable",
+      "severity": "high",
+      "title": "Depth-chart route (a) failed the URL test; no verified depth source exists",
+      "detail": "Fetching https://www.nfl.com/teams/seattle-seahawks/depth-chart on 2026-11-16 returned \"404 - Flag on the Play.\" No per-club depth page has been verified for any club. Route (b), snap counts, has no verified official source. The backup-deficiency feature therefore stays unbuilt, as the brief requires.",
+      "affected": [
+        "depth",
+        "strategies S-07, S-16",
+        "availability graph"
+      ],
+      "action_needed": "Find an official per-club depth-chart URL and verify all 32 clubs, or find an official snap-count source.",
+      "links": [
+        {
+          "label": "Tested URL (404 on 2026-11-16)",
+          "url": "https://www.nfl.com/teams/seattle-seahawks/depth-chart"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-21",
+      "type": "informational",
+      "severity": "medium",
+      "title": "An absence from the report is not availability: reserve (IR) players are not listed",
+      "detail": "The Ravens table on the Week 10 report does not list Lamar Jackson. nfl.com news says the Ravens \"officially place Lamar Jackson on injured reserve\". The Dolphins table does not list Malik Willis, and nfl.com news says the Dolphins placed him on injured reserve. Reserve status must be captured separately and never inferred from absence.",
+      "affected": [
+        "injuries",
+        "depth",
+        "strategies S-03"
+      ],
+      "action_needed": "Approve a reserve-list capture (see the decision-readiness table).",
+      "links": [
+        {
+          "label": "nfl.com: Ravens place Lamar Jackson on IR",
+          "url": "https://www.nfl.com/news/nfl-news-roundup-latest-league-updates-from-thursday-nov-5"
+        },
+        {
+          "label": "nfl.com: Dolphins place Malik Willis on IR",
+          "url": "https://www.nfl.com/news/dolphins-place-qb-malik-willis-groin-on-injured-reserve-kyle-mccord-in-line-for-first-start"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-22",
+      "type": "reviewer-decision",
+      "severity": "medium",
+      "title": "Demotion triggers and random-control draws are reviewer-set (null)",
+      "detail": "Demotion D-1 (rolling window and minimum games) and D-2 (minimum bets) are null, and the number of random control draws is null. A check with a null threshold does not run, so demotion cannot fire until a reviewer sets the values.",
+      "affected": [
+        "leaderboard",
+        "validation"
+      ],
+      "action_needed": "Reviewer sets D-1, D-2 and the draw count. Each setting is logged as a new dated registration.",
+      "links": [
+        {
+          "label": "leaderboard.json (demotion_gate, controls)",
+          "url": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/leaderboard.json"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-23",
+      "type": "value-conflict",
+      "severity": "medium",
+      "title": "Count claims for Seattle, Cincinnati and the total row count could not be reproduced",
+      "detail": "Official page: Seattle lists 15 players, 4 with a status (Darnold, Cross, Nelson, Williams, all Out). Cincinnati lists 9, 4 with a status (Dugger Out; Davis, Iosivas, Parker Doubtful). The current captures match these counts. The \"injury-free\" display and the 254 and 279 row counts from the brief describe an earlier state that is not in this repository, so they cannot be reproduced. A total count of all listed players was not taken from the page.",
+      "affected": [
+        "injuries"
+      ],
+      "action_needed": "Reviewer confirms whether a copy of the earlier published state exists to compare against.",
+      "links": [
+        {
+          "label": "Official Week 10 injury report",
+          "url": "https://www.nfl.com/injuries/league/2026/reg10"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-24",
+      "type": "informational",
+      "severity": "medium",
+      "title": "Synthetic arithmetic example appears on the leaderboard page",
+      "detail": "The leaderboard worked example uses invented inputs (mean CLV 3.0 cents, n = 520, 8 variants). It is labelled \"SYNTHETIC ... NOT A RESULT\", but it sits on a page that people screenshot. The backtest-exclusion rule covers backtests, not this example.",
+      "affected": [
+        "leaderboard"
+      ],
+      "action_needed": "Reviewer decides whether to keep the worked example on the page or move it to the methodology page.",
+      "links": [
+        {
+          "label": "leaderboard.json (worked_example)",
+          "url": "https://github.com/sassnarep3-star/FL4/blob/main/data/signals/leaderboard.json"
+        }
+      ],
+      "blocking_merge": false
+    },
+    {
+      "id": "F-25",
+      "type": "not-obtainable",
+      "severity": "medium",
+      "title": "The 136-game log is not in this checkout",
+      "detail": "The brief refers to a 136-game log. It is not in the working tree of this checkout. The clone is shallow (one commit visible), so older history was not searched. No backtest corpus can be built from it.",
+      "affected": [
+        "backtests",
+        "validation",
+        "registration"
+      ],
+      "action_needed": "Provide the file (or its source) for review. Once provided, it can be registered as a corpus with official finals.",
+      "links": [
+        {
+          "label": "Registration (prereg/REGISTRATION.md)",
+          "url": "https://github.com/sassnarep3-star/FL4/blob/main/prereg/REGISTRATION.md"
+        }
+      ],
       "blocking_merge": false
     }
   ]

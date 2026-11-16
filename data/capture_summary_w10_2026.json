@@ -372,20 +372,14 @@
     }
   },
   "delta_vs_earlier_table_2026_11_14": {
-    "earlier_table_rows": 160,
-    "earlier_out": 66,
-    "earlier_doubtful": 10,
-    "earlier_questionable": 84,
-    "rows_designated_now_not_in_earlier_table": 12,
-    "clubs_with_no_section_in_earlier_table": [
-      "BAL",
-      "LAC"
-    ],
-    "rows_added_clubs": [
-      "BAL",
-      "LAC"
-    ],
-    "earlier_rows_no_longer_designated": 1,
+    "earlier_table_rows": 171,
+    "earlier_out": 70,
+    "earlier_doubtful": 11,
+    "earlier_questionable": 90,
+    "rows_designated_now_not_in_earlier_table": 0,
+    "clubs_with_no_section_in_earlier_table": [],
+    "rows_added_clubs": [],
+    "earlier_rows_no_longer_designated": 0,
     "earlier_rows_status_changed": 0,
     "reading": "Most of the difference is coverage, not change: the earlier table has no section for the clubs listed above (both play on Monday 16 Nov). One earlier designation no longer appears as designated on the 16 Nov page. Changes are counted, not named, on the public layer."
   },

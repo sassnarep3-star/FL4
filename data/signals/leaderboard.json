@@ -4,7 +4,8 @@
     "generated_utc": "2026-11-14T03:42:00Z",
     "purpose": "Turn strategy development into a competition whose winner is chosen by evidence rather than by narrative. The board is the governance device that decides which hypothesis gets compute, data spend and - last - capital.",
     "entries": [],
-    "entries_explanation": "The board is empty because it is honest. A leaderboard row requires a settled or priced bet record per strategy; no bet record and no price feed exist in this repo. Populating this table with plausible-looking numbers would be the single most damaging thing this project could do to itself, because the board's whole purpose is to be trusted."
+    "entries_explanation": "The board is empty because it is honest. A leaderboard row requires a settled or priced bet record per strategy; no bet record and no price feed exist in this repo. Populating this table with plausible-looking numbers would be the single most damaging thing this project could do to itself, because the board's whole purpose is to be trusted.",
+    "updated_utc": "2026-11-16"
   },
   "score": {
     "primary": {
@@ -25,11 +26,36 @@
     ]
   },
   "tiers": [
-    {"tier": 0, "name": "Registered", "requirement": "Pre-registered hypothesis, inputs named, missing inputs declared, gates listed.", "consequence": "compute time only"},
-    {"tier": 1, "name": "Backtest", "requirement": "G-1..G-5, G-9, G-11 pass on a frozen run with recorded config+data hashes.", "consequence": "data spend; still zero capital"},
-    {"tier": 2, "name": "Paper-live", "requirement": "Tier 1 plus a forward paper run of at least one full season-week block with real timestamps and real fill assumptions.", "consequence": "priority in the ingestion queue; small non-cash reward"},
-    {"tier": 3, "name": "Capital-eligible", "requirement": "Tier 2 plus G-4, G-6, G-8, G-10, G-12, G-13, G-14 pass and reviewer sign-off on budget.", "consequence": "may receive a capped allocation, one strategy at a time"},
-    {"tier": -1, "name": "Quarantine", "requirement": "any G-14 violation, any G-9 violation, or a kill-switch trigger in G-15.", "consequence": "suspended, evidence preserved, cannot be re-submitted under the same id"}
+    {
+      "tier": 0,
+      "name": "Registered",
+      "requirement": "Pre-registered hypothesis, inputs named, missing inputs declared, gates listed.",
+      "consequence": "compute time only"
+    },
+    {
+      "tier": 1,
+      "name": "Backtest",
+      "requirement": "G-1..G-5, G-9, G-11 pass on a frozen run with recorded config+data hashes.",
+      "consequence": "data spend; still zero capital"
+    },
+    {
+      "tier": 2,
+      "name": "Paper-live",
+      "requirement": "Tier 1 plus a forward paper run of at least one full season-week block with real timestamps and real fill assumptions.",
+      "consequence": "priority in the ingestion queue; small non-cash reward"
+    },
+    {
+      "tier": 3,
+      "name": "Capital-eligible",
+      "requirement": "Tier 2 plus G-4, G-6, G-8, G-10, G-12, G-13, G-14 pass and reviewer sign-off on budget.",
+      "consequence": "may receive a capped allocation, one strategy at a time"
+    },
+    {
+      "tier": -1,
+      "name": "Quarantine",
+      "requirement": "any G-14 violation, any G-9 violation, or a kill-switch trigger in G-15.",
+      "consequence": "suspended, evidence preserved, cannot be re-submitted under the same id"
+    }
   ],
   "promotion_rules": [
     "A strategy may not skip a tier and may not be promoted inside an in-progress week.",
@@ -40,28 +66,186 @@
   "rewards": {
     "design_rule": "Reward the behaviour that produces information, not the behaviour that produces action.",
     "grants": [
-      {"rank": "top of Tier 1", "reward": "Historical price-data spend for that family, and first claim on the next ingestion slot", "cash": false},
-      {"rank": "first to Tier 2", "reward": "A named allocation review with the reviewer, and a raised weekly cap in the paper book", "cash": false},
-      {"rank": "Tier 3 survivors", "reward": "Capped live allocation, subject to Q-RISK-01 and Q-LEGAL-01", "cash": true, "gate": "reviewer sign-off required; the board never moves money by itself (Q-GOV-03)"},
-      {"rank": "best falsification", "reward": "Award for the cleanest disproof of a popular idea (published in the journal, kills a bad strategy early)", "cash": false, "why": "Without this, the contest rewards only belief and the catalogue fills with unfalsifiable stories."}
+      {
+        "rank": "top of Tier 1",
+        "reward": "Historical price-data spend for that family, and first claim on the next ingestion slot",
+        "cash": false
+      },
+      {
+        "rank": "first to Tier 2",
+        "reward": "A named allocation review with the reviewer, and a raised weekly cap in the paper book",
+        "cash": false
+      },
+      {
+        "rank": "Tier 3 survivors",
+        "reward": "Capped live allocation, subject to Q-RISK-01 and Q-LEGAL-01",
+        "cash": true,
+        "gate": "reviewer sign-off required; the board never moves money by itself (Q-GOV-03)"
+      },
+      {
+        "rank": "best falsification",
+        "reward": "Award for the cleanest disproof of a popular idea (published in the journal, kills a bad strategy early)",
+        "cash": false,
+        "why": "Without this, the contest rewards only belief and the catalogue fills with unfalsifiable stories."
+      }
     ],
-    "explicitly_not_rewarded": ["bet count", "volume handle", "win rate on small samples", "biggest single win", "anything measured before the sample gate"]
+    "explicitly_not_rewarded": [
+      "bet count",
+      "volume handle",
+      "win rate on small samples",
+      "biggest single win",
+      "anything measured before the sample gate"
+    ]
   },
   "anti_gaming": [
-    {"rule": "Append-only, hash-chained bet ledger; a strategy that edits history is quarantined, not corrected.", "protects": "retroactive entry"},
-    {"rule": "Hypothesis must be timestamped before the first bet in that family (min_hours_between_hypothesis_and_first_bet, value pending).", "protects": "post-hoc narrative"},
-    {"rule": "Max 3 bets per game per strategy; duplicate bets on the same side/price by two strategies of the same owner collapse into one for scoring.", "protects": "sample farming"},
-    {"rule": "Every row must carry a re-readable price source; a row whose price cannot be re-verified is void and stays void.", "protects": "unfalsifiable results"},
-    {"rule": "Minimum stake floor equal to the target live stake; sub-threshold bets do not count toward n.", "protects": "free-option backtests at toy size"},
-    {"rule": "Promotion and demotion are logged with the gate output hash.", "protects": "quiet gate bending"}
+    {
+      "rule": "Append-only, hash-chained bet ledger; a strategy that edits history is quarantined, not corrected.",
+      "protects": "retroactive entry"
+    },
+    {
+      "rule": "Hypothesis must be timestamped before the first bet in that family (min_hours_between_hypothesis_and_first_bet, value pending).",
+      "protects": "post-hoc narrative"
+    },
+    {
+      "rule": "Max 3 bets per game per strategy; duplicate bets on the same side/price by two strategies of the same owner collapse into one for scoring.",
+      "protects": "sample farming"
+    },
+    {
+      "rule": "Every row must carry a re-readable price source; a row whose price cannot be re-verified is void and stays void.",
+      "protects": "unfalsifiable results"
+    },
+    {
+      "rule": "Minimum stake floor equal to the target live stake; sub-threshold bets do not count toward n.",
+      "protects": "free-option backtests at toy size"
+    },
+    {
+      "rule": "Promotion and demotion are logged with the gate output hash.",
+      "protects": "quiet gate bending"
+    }
   ],
   "worked_example": {
     "synthetic": true,
     "label": "SYNTHETIC ARITHMETIC DEMONSTRATION - NOT A RESULT. Numbers below are invented to show the formula is well-defined. They must never be quoted, screenshotted, or copied into any decision.",
-    "inputs": {"mean_clv_cents": 3.0, "n": 520, "variants_tried_in_family": 8},
+    "inputs": {
+      "mean_clv_cents": 3.0,
+      "n": 520,
+      "variants_tried_in_family": 8
+    },
     "computation": "score = 3.0 x sqrt(520) / (1 + log(1 + 8)) = 3.0 x 22.8 / 3.197 = 21.4",
     "read": "A second strategy at 6 cents CLV over 520 bets but with 1 variant tried scores 6 x 22.8 / 1.69 = 80.9 and outranks it by ~4x, which is the intended behaviour: a clean, cheap, un-tortured edge beats a bigger number found by trying eight things.",
     "why_included": "To make the scoring auditable before any real entry exists, so the reviewer can reject the *metric* while it is still free to change."
   },
-  "reviewer_decisions_required": ["Q-RISK-01", "Q-RISK-02", "Q-GOV-03", "Q-LEGAL-03"]
+  "reviewer_decisions_required": [
+    "Q-RISK-01",
+    "Q-RISK-02",
+    "Q-GOV-03",
+    "Q-LEGAL-03"
+  ],
+  "divisions": [
+    {
+      "division": "Singles",
+      "includes": "bet_type = single",
+      "eligibility": "Registered (Tier 0) hypothesis, frozen inputs, prospective settled bets.",
+      "ranked_on": "Benchmark-relative Brier skill with game-cluster lower bound (stage 1); CLV and ROI on escrow (stage 2).",
+      "eligible_strategies_now": 0
+    },
+    {
+      "division": "Game parlays",
+      "includes": "bet_type = parlay that is not a same-game parlay",
+      "eligibility": "Directly validated joint probability AND operator void/push rules on file (joint-evidence gate). Otherwise not rankable.",
+      "ranked_on": "As singles, against a joint-probability benchmark.",
+      "eligible_strategies_now": 0
+    },
+    {
+      "division": "Same-game parlays",
+      "includes": "two or more legs from one game",
+      "eligibility": "As game parlays, plus a measured within-game dependence estimate with its n.",
+      "ranked_on": "As singles, against a joint-probability benchmark.",
+      "eligible_strategies_now": 0
+    },
+    {
+      "division": "Prop combos",
+      "includes": "player-prop combinations",
+      "eligibility": "As game parlays. Marginal probabilities are never multiplied: that is invalid under dependence.",
+      "ranked_on": "As singles, against a joint-probability benchmark.",
+      "eligible_strategies_now": 0
+    }
+  ],
+  "ranking_metric": {
+    "stage_1_qualification": "Benchmark-relative Brier skill (BSS) against the control baseline, with a game-cluster bootstrap lower bound. A strategy must have a lower bound above zero to qualify.",
+    "stage_2_escrow": "Prospective CLV and ROI, reported only after stage 1 passes. Held in escrow until the registered window closes.",
+    "multiplicity": "Adjusted for the number of registered trials in the family (the count of registered hypotheses in the same family).",
+    "never_ranked_on": [
+      "raw win rate",
+      "short-run ROI",
+      "season-long realised ROI (SG-03 rejected)"
+    ],
+    "signal_vs_staking": "Signal metrics (BSS, CLV) are computed at flat stake. Staking results are reported separately and cannot qualify or rescue a strategy that fails stage 1, so a lucky staking run cannot mask a bad signal.",
+    "status": "No strategy has qualified. No values are computed."
+  },
+  "controls": {
+    "required_in_every_run": [
+      "Random picks on the same markets and dates, same stake.",
+      "Favourites-only on the same markets and dates.",
+      "Line-shopping baseline (S-12)."
+    ],
+    "random_draws": null,
+    "draws_note": "Number of random draws is reviewer-set (not set here).",
+    "status": "Not run: no settled prospective bets exist."
+  },
+  "demotion_gate": {
+    "applies_to": "A strategy at Tier 2 (paper-live) or Tier 3 (capital-eligible).",
+    "action": "Demoted to Tier 2 paper. Live allocation is switched off; the paper ledger continues with the same registered rules. A demotion is logged with the gate output hash.",
+    "triggers": [
+      {
+        "id": "D-1",
+        "condition": "Stage-1 BSS cluster lower bound falls to zero or below on the rolling registered window.",
+        "window_weeks": null,
+        "min_games": null,
+        "status": "threshold not set"
+      },
+      {
+        "id": "D-2",
+        "condition": "Mean executed CLV is negative with a 95% CI excluding zero.",
+        "min_bets": null,
+        "status": "threshold not set"
+      },
+      {
+        "id": "D-3",
+        "condition": "Any G-9 or G-14 violation (immediate quarantine, not demotion).",
+        "min_bets": 0,
+        "status": "set by existing rule"
+      },
+      {
+        "id": "D-4",
+        "condition": "Kill switch G-15 triggered.",
+        "status": "set by existing rule"
+      }
+    ],
+    "thresholds_note": "Null thresholds are reviewer-set and fail closed: a demotion check that lacks a threshold does not run.",
+    "status": "Defined. No threshold set, so the gate cannot run."
+  },
+  "removal_of_luck_panel": {
+    "components": [
+      "Settled prospective bets (n) and distinct games",
+      "Stage-1 BSS with cluster lower bound",
+      "CLV with CI",
+      "Control-baseline comparison (random, favourites-only)",
+      "Multiplicity: number of registered trials",
+      "Flat-stake vs staked results shown side by side"
+    ],
+    "current_n": 0,
+    "minimum_n_for_any_claim": {
+      "min_bets": 500,
+      "min_distinct_games": 250,
+      "min_weeks": 12,
+      "source": "data/signals/gates.json G-1"
+    },
+    "status": "Not computed: no settled prospective bets exist."
+  },
+  "backtest_exclusion": {
+    "rule": "Backtest figures never appear on this leaderboard. Only prospective, registered, settled results may appear here. Backtests appear on a strategy's own page, labelled \"backtest\", and are not ranked.",
+    "enforced_by": "tools/check_signals.py and tools/build_signals.py (fails the build if a leaderboard entry lacks basis = prospective).",
+    "current_entries": 0
+  }
 }

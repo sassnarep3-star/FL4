@@ -144,7 +144,7 @@
       "item": "The 160 injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser). Totals (66 Out, 10 Doubtful, 84 Questionable) are computed from the file, not typed.",
       "why": "Manual transcription can contain typos. Each row links to its player page so it can be checked one by one.",
       "source": "https://www.nfl.com/injuries/",
-      "status": "Unverified - second check recommended"
+      "status": "Unverified - second check recommended. Update 2026-11-16: the root capture now holds 171 rows (70 Out, 11 Doubtful, 90 Questionable) after the LAC/BAL correction in F-24; the 66/10/84 totals are superseded."
     },
     {
       "id": "F-19",
@@ -160,7 +160,7 @@
       "item": "tools/fetch_injuries.py documents a keep-only-Out/Doubtful rule, but data/injuries_w10_2026.json holds 160 rows that include 84 Questionable rows (66 Out, 10 Doubtful). REQUIREMENTS.md R-15 still says 75 Out/Doubtful rows.",
       "why": "The three documents describe three different populations. Questionable players are published on the official page (e.g. Malik Harrison, NYG, Questionable; Brenden Schooler, NE, Questionable) and are present in the data, so the parser's documented rule and the CI fixture expectation no longer describe the dataset. Any count on the site must name which population it counts.",
       "source": "S31",
-      "status": "Unverified as a rule decision; data matches the live page on 23 sampled rows (checked 2026-11-16). Reviewer to choose the population and align tools/fetch_injuries.py, the CI fixture and R-15."
+      "status": "Unverified as a rule decision; data matches the live page on 23 sampled rows (checked 2026-11-16). Reviewer to choose the population and align tools/fetch_injuries.py, the CI fixture and R-15.. Update 2026-11-16: the population question stands; the 160 rows cited here are now 171 (see F-24)."
     },
     {
       "id": "F-21",
@@ -188,75 +188,67 @@
     },
     {
       "id": "F-24",
-      "area": "Privacy / terms",
-      "item": "Three public files carry row-level player data for Week 10 injuries: data/injuries_w10_2026.json (160 rows), data/injuries_week10_2026.json (75 rows) and data/signals/injuries_week10_2026.json (76 rows, shown on the Signals page).",
-      "why": "NFL.com Terms s.1.3 prohibit systematic retrieval, and compiling a database from the Services, without express prior written consent. The public injuries page (pages/injuries.html, table tbl-players) still renders the player-level table built from data/injuries_w10_2026.json (160 rows). data/injuries_week10_2026.json (75 rows) and data/signals/injuries_week10_2026.json (76 rows, read by the Signals page) are also public. This session did NOT change those pages; it only added the private raw layer and counts-only summary. Git history keeps earlier copies.",
-      "source": "https://www.nfl.com/legal/terms/ (S29) ; https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Open - reviewer decision: remove the row-level tables and files, or confirm permission in writing. Not changed in this session (outside claim)."
+      "area": "Week 10 injury capture",
+      "item": "Monday LAC @ BAL rows added; unsupported Colts row removed (2026-11-16) (Renumbered from root F-20 on merge; the 160-row figure in F-18 is superseded by this entry.)",
+      "why": "The previous root capture omitted 12 official rows for LAC and BAL, and kept one row (Arden Key) that the official page does not support. Corrected from the page. The count claims of 254 and 279 rows could not be reproduced.",
+      "source": "S31 ; https://www.nfl.com/injuries/league/2026/reg10",
+      "status": "Corrected 2026-11-16; reviewer spot-check requested"
     },
     {
       "id": "F-25",
-      "area": "Injuries - earlier table",
-      "item": "The earlier public table (data/injuries_w10_2026.json, read 2026-11-14) has no section for LAC or BAL, so 12 designated players are missing, and it lists IND's Arden Key as Questionable. The 16 Nov page shows Arden Key with no game status.",
-      "why": "Coverage gap plus one status difference. Counts were corrected on the public page from the 16 Nov transcription (347 rows, 28 clubs). The earlier file is kept, marked superseded, because it is used for the delta.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Corrected in counts; earlier file superseded (see F-24)"
+      "area": "Automated snapshots",
+      "item": "Daily or multi-day official captures are not built",
+      "why": "NFL.com Terms Section 1.3 prohibits systematic retrieval without express prior written consent. Hand transcription of the full report repeats an error class already found. A decision is needed before any capture job.",
+      "source": "S29 ; https://www.nfl.com/legal/terms/",
+      "status": "Unverified: decision pending"
     },
     {
       "id": "F-26",
+      "area": "Depth source",
+      "item": "Depth-chart route (a) URL returns a 404 page",
+      "why": "https://www.nfl.com/teams/seattle-seahawks/depth-chart returned \"404 - Flag on the Play.\" on 2026-11-16. No verified per-club depth page exists; snap-count route has no verified source.",
+      "source": "https://www.nfl.com/teams/seattle-seahawks/depth-chart",
+      "status": "Unverified: no depth source for any club"
+    },
+    {
+      "id": "F-27",
+      "area": "Privacy / terms (row-level public data)",
+      "item": "Player-level Week 10 injury rows are still published: data/injuries_w10_2026.json (171 rows), data/signals/injuries_week10_2026.json (81 Out or Doubtful rows, Signals section) and signals/data/injuries_week10_2026.json. pages/injuries.html renders the player table.",
+      "why": "NFL.com Terms s.1.3 prohibit systematic retrieval, and compiling a database from the Services, without express prior written consent. The brief asks for row-level data in a private layer until terms are read. A git-ignored raw layer now exists (private/, not published). Public row-level files were NOT removed in this session; git history keeps earlier copies.",
+      "source": "https://www.nfl.com/legal/terms/ (S29) ; https://www.nfl.com/injuries/league/2026/reg10 (S31)",
+      "status": "Needs reviewer decision: remove row-level public tables and files, or confirm permission in writing"
+    },
+    {
+      "id": "F-28",
       "area": "Injuries - snapshot timing",
-      "item": "The 16 Nov capture was read after most Week 10 games had finished: the schedule page shows 12 Finals, PIT-CIN live in Q1, and LAC-BAL still to play.",
-      "why": "Game-status and practice fields on the page may reflect post-game state, not the pre-kickoff status a forecast needs. The 16 Nov capture cannot be used as a pre-kickoff snapshot.",
+      "item": "The 16 Nov capture of the official Week 10 report was read after most Week 10 games had finished: the schedule page shows 12 Finals, PIT at CIN live in Q1, and LAC at BAL still to play.",
+      "why": "Game-status and practice fields may reflect post-game or later state, not the pre-kickoff status a forecast needs. The 16 Nov capture cannot serve as a pre-kickoff snapshot.",
       "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31) ; https://www.nfl.com/schedules/2026/reg10 (S32)",
       "status": "Open - a pre-kickoff capture is needed for any forecast"
     },
     {
-      "id": "F-27",
-      "area": "Injuries - club codes",
-      "item": "The official page uses AZ for Arizona. The earlier root table used ARI.",
-      "why": "Normalised in the counts (ARI mapped to AZ for the delta). The Signals table also uses AZ.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31) ; https://www.nfl.com/schedules/2026/reg10 (S32)",
-      "status": "Resolved in counts"
-    },
-    {
-      "id": "F-28",
-      "area": "Reserve list",
-      "item": "The injury report does not list players on injured reserve. Headlines on the official page report IR moves for Ravens QB Lamar Jackson and Dolphins QB Malik Willis. Patriots RB TreVeyon Henderson is on the page as Out with Illness (row confirmed in the transcription).",
-      "why": "Absence from the report does not mean available. No reserve or transactions list has been captured, so IR status is headline-level only and the Willis headline was not re-read this session.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31, headlines)",
-      "status": "Open - capture the official reserve/transaction list"
-    },
-    {
       "id": "F-29",
-      "area": "Private raw layer - integrity",
-      "item": "private/captures/nfl_injuries_w10_2026_reg10.psv holds 347 rows transcribed by hand from the fetch tool output. The raw fetch bytes were not kept, so the stored SHA-256 is a hash of the transcription, not of the NFL page.",
-      "why": "A transcription hash proves the file has not changed since capture; it does not prove the rows match the page byte for byte. Two transcription faults were found and fixed during validation (an extra delimiter; the Cardinals code). The file is git-ignored and is not on the site.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Open - reviewer may re-read the page to confirm any row"
+      "area": "Injuries - club code",
+      "item": "The public Week 10 dataset uses ARI for Arizona on 9 rows. The official page, the Signals file and the private transcription use AZ.",
+      "why": "Reconciliation of the private 347-row transcription against the public 171 designated rows: player, status and injury text match on every row after the ARI/AZ code is normalised. 0 status mismatches, 0 injury-text mismatches, 0 rows missing on either side apart from the code.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31) ; https://www.nfl.com/schedules/2026/reg10 (S32)",
+      "status": "Open - normalise the code in the public dataset (not changed in this session)"
     },
     {
       "id": "F-30",
-      "area": "Signals section - injury table",
-      "item": "The Signals injury table (signals/injuries.html, 76 rows) omits three Arizona Out rows and all LAC and BAL rows that are designated on the 16 Nov page.",
-      "why": "Another section's data. Not edited in this session (coordination rule: log requests instead of editing another section's files). It also shows player names, which conflicts with the private-layer requirement (see F-24).",
+      "area": "Private raw layer - integrity",
+      "item": "private/captures/nfl_injuries_w10_2026_reg10.psv (347 rows) was transcribed by hand from the fetch tool output. The raw fetch bytes were not kept, so the stored SHA-256 is a hash of the transcription, not of the NFL page.",
+      "why": "A transcription hash shows the file has not changed since capture. It does not prove each row matches the page byte for byte. Two transcription faults were found and fixed during validation (an extra delimiter on 176 rows; the Arizona code on 15 rows). The file is git-ignored and is not published.",
       "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
-      "status": "Request logged in COORDINATION.md for the Signals owner"
+      "status": "Open - a reviewer may re-read the page to confirm any row"
     },
     {
       "id": "F-31",
-      "area": "Backtest corpus - '136-game log'",
-      "item": "The brief refers to a 136-game log. The repo has no game-level log. data/league_state.json holds a consistency check only (136 wins, 136 losses, one tied game).",
-      "why": "A consistency sum cannot be used as a corpus. A corpus needs every game's official result, and closing lines (none exist: PP-01). Season-long pulls would need terms consent (S29 s.1.3).",
-      "source": "https://www.nfl.com/schedules/2026/reg10 (S32) ; https://www.nfl.com/legal/terms/ (S29)",
-      "status": "Blocked - corpus not built"
-    },
-    {
-      "id": "F-32",
-      "area": "Depth and transaction claims",
-      "item": "Brief claims about starters and depth (Lock, McCord, Brissett VR-24/25 and VQ-05; Baltimore QB rows VR-17/26 and VQ-07; Colts receiver trades; Texans and Packers depth pages) are not verified here.",
-      "why": "Checked against the official page transcription: Drew Lock (SEA) is listed with Limited Participation and no game status; Brissett and Kyle McCord are not in the transcription. The headline text about who starts was not re-read this session and is not used. No depth chart or transaction log was captured, so no depth row is verified.",
-      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31, headlines)",
-      "status": "Open - depth and transaction sources not captured"
+      "area": "Injuries - Out/Doubtful list (data/injuries_week10_2026.json)",
+      "item": "The 75-row Out/Doubtful list in data/injuries_week10_2026.json omits 6 designated rows that the official page and the 81-row Signals file both carry: GB Micah Parsons (Out), LAC Branson Taylor (Out), LAC Brenen Thompson (Doubtful), LAC Isas Waxter (Out), LAC Kendall Williamson (Out), BAL Jaylinn Hawkins (Out).",
+      "why": "Five of the six are the Monday LAC @ BAL rows. Main's correction on 16 Nov added LAC/BAL rows to data/injuries_w10_2026.json but not to this 75-row list. The Parsons row matches the 16 Nov transcription and the Signals file; a fresh page read of that single row is not yet recorded. Counts: 81 Out or Doubtful expected (70 Out + 11 Doubtful), 75 present.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
+      "status": "Open - a dated correction to this file is needed; not changed in this session (outside claim)"
     }
   ]
 }

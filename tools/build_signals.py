@@ -409,6 +409,26 @@ def run_checks():
         res.append(("Cross-validation vs sibling capture", True, "sibling dataset absent; nothing to reconcile"))
     edges = [s["id"] for s in STRAT["strategies"] if s.get("edge_claim") is not None]
     res.append(("No strategy asserts an edge before a gate run", not edges, "no edge claims" if not edges else str(edges)))
+    # 11-13. pre-registration and leaderboard rules
+    import hashlib
+    reg_path = ROOT / "prereg" / "registration.json"
+    if reg_path.exists():
+        reg = json.loads(reg_path.read_text())
+        changed = [f for f, h in reg["frozen_files"].items()
+                   if hashlib.sha256((ROOT / f).read_bytes()).hexdigest() != h]
+        res.append(("Pre-registration: frozen files match the registered hashes", not changed,
+                    "all %d frozen files match %s" % (len(reg["frozen_files"]), reg["registration"]) if not changed
+                    else "changed since registration: " + ", ".join(changed) + " (needs a new dated registration)"))
+    else:
+        res.append(("Pre-registration: frozen files match the registered hashes", False, "prereg/registration.json missing"))
+    ents = BOARD["meta"]["entries"]
+    bad_basis = [e.get("strategy", "?") for e in ents if e.get("basis") != "prospective"]
+    res.append(("Leaderboard shows prospective results only (no backtest figures)", not bad_basis,
+                "%d entries, all prospective" % len(ents) if not bad_basis else "non-prospective entries: " + ", ".join(bad_basis)))
+    combo_unproven = [e.get("strategy", "?") for e in ents
+                      if e.get("bet_type") in ("parlay", "prop-combo") and not e.get("joint_evidence")]
+    res.append(("Combos rank only with directly validated joint evidence", not combo_unproven,
+                "no combo entries without joint evidence" if not combo_unproven else "unproven combos: " + ", ".join(combo_unproven)))
     return res
 
 
@@ -492,12 +512,12 @@ def p_index():
             "bytes of README. Everything here is net-new: a verification policy, 11 machine-readable datasets, a "
             "generator, 14 pages, a CI deploy, and the coordination board for other agent sessions.",
             "**What is verified and usable today.** The Week 10, 2026 availability report is captured from the "
-            "league's own page for 28 clubs - 75 players Out or Doubtful with position, disclosed injury, practice "
+            "league's own page for 28 clubs - 81 players Out or Doubtful with position, disclosed injury, practice "
             "participation and game status - plus all 32 club records, the Week 10 fixture list and the played "
             "Thursday result. Build-time checks re-reconcile the row-level data against the declared team totals, "
             "the standings against the matchup records, and the fixture list against the snapshot, and this capture against a second "
             "session's independent read of the same page - which is how one transcription omission (a Packers "
-            "linebacker listed Out) was found and corrected rather than left standing. All ten pass below.",
+            "linebacker listed Out) was found and corrected rather than left standing. Every check below runs on each build.",
             "**What the data already tells a decision-maker.** " + dist + " "
             "Two rows on the Jaguars' report are marked 'Not injury related - resting player' yet still carry an Out "
             "game status, which is a direct warning that counting designations confuses rest with loss of quality. "
@@ -876,6 +896,8 @@ def p_strategies():
             "markets": s["markets"], "hyp": s["hypothesis"], "sig": s["signal"], "inputs": s["inputs"],
             "entry": s["entry"], "nobet": s["no_bet"], "stake": s["stake_rule"], "targets": s["targets"],
             "why": s["why_real"], "lose": s["how_it_loses"],
+            "mind_up": (s.get("what_would_change_our_mind") or {}).get("if_observed_supports_it"),
+            "mind_down": (s.get("what_would_change_our_mind") or {}).get("if_observed_refutes_it"),
             "edge": s["edge_claim"], "gates": s["gates"], "status": s["status"], "blocked": s["blocked_on"],
             "example": s.get("week10_example"), "src": {"label": "dataset", "url": SRC_REPO + "/blob/main/data/signals/strategies.json"},
         })
@@ -917,6 +939,8 @@ def p_strategies():
                   {"key": "entry", "label": "Entry timing", "cls": "long"}, {"key": "nobet", "label": "No-bet / veto rules", "cls": "long"},
                   {"key": "stake", "label": "Stake rule", "cls": "long"}, {"key": "targets", "label": "What it is actually trying to learn", "cls": "long"},
                   {"key": "why", "label": "Why it might be real", "cls": "long"}, {"key": "lose", "label": "How it loses (red team)", "cls": "long"},
+                  {"key": "mind_up", "label": "Would make us believe it (supports)", "cls": "long"},
+                  {"key": "mind_down", "label": "Would make us drop it (refutes)", "cls": "long"},
                   {"key": "edge", "label": "Edge claim"}, {"key": "gates", "label": "Gates"},
                   {"key": "status", "label": "Status", "type": "badge"}, {"key": "blocked", "label": "Blocked on", "cls": "long"},
                   {"key": "example", "label": "Week 10 signal value (verified data, unpriced)", "cls": "long"},
@@ -1069,6 +1093,35 @@ def p_leaderboard():
          "rows": BOARD["anti_gaming"]},
         {"kind": "callout", "tone": "warn", "title": "%s" % we["label"], "body": we["why_included"] +
          " Inputs: %s. %s" % (json.dumps(we["inputs"]), we["computation"])},
+        {"kind": "table", "id": "lb-divisions", "title": "Divisions (never ranked against each other)",
+         "cols": [{"key": "division", "label": "Division"}, {"key": "includes", "label": "Includes", "cls": "long"},
+                  {"key": "eligibility", "label": "Eligibility", "cls": "long"}, {"key": "ranked_on", "label": "Ranked on", "cls": "long"},
+                  {"key": "n", "label": "Eligible now"}],
+         "rows": [{"division": d["division"], "includes": d["includes"], "eligibility": d["eligibility"],
+                   "ranked_on": d["ranked_on"], "n": d["eligible_strategies_now"]} for d in BOARD["divisions"]],
+         "note": "Combos are rankable only with a directly validated joint probability and the operator's void and push rules. Multiplying marginal probabilities is invalid under dependence, so it is not used anywhere on this board."},
+        {"kind": "prose", "title": "Ranking metric: proper scores with uncertainty, not win rate", "body": [
+            "**Stage 1 - qualification.** " + BOARD["ranking_metric"]["stage_1_qualification"],
+            "**Stage 2 - escrow.** " + BOARD["ranking_metric"]["stage_2_escrow"],
+            "**Multiplicity.** " + BOARD["ranking_metric"]["multiplicity"],
+            "**Never ranked on:** " + "; ".join(BOARD["ranking_metric"]["never_ranked_on"]) + ".",
+            "**Signal versus staking.** " + BOARD["ranking_metric"]["signal_vs_staking"],
+            "Status: " + BOARD["ranking_metric"]["status"]]},
+        {"kind": "table", "id": "lb-controls", "title": "Control baseline required in every run",
+         "cols": [{"key": "c", "label": "Control", "cls": "long"}],
+         "rows": [{"c": c} for c in BOARD["controls"]["required_in_every_run"]],
+         "note": "Random draws: " + ("not set (reviewer-set)" if BOARD["controls"]["random_draws"] is None else str(BOARD["controls"]["random_draws"])) + ". " + BOARD["controls"]["status"]},
+        {"kind": "table", "id": "lb-demotion", "title": "Demotion gate: live back to paper",
+         "cols": [{"key": "id", "label": "ID"}, {"key": "condition", "label": "Trigger", "cls": "long"}, {"key": "status", "label": "Status"}],
+         "rows": BOARD["demotion_gate"]["triggers"],
+         "note": BOARD["demotion_gate"]["action"] + " " + BOARD["demotion_gate"]["thresholds_note"]},
+        {"kind": "cards", "items": [
+            {"label": "Removal-of-luck panel: settled prospective bets", "value": "%d of %d" % (BOARD["removal_of_luck_panel"]["current_n"], BOARD["removal_of_luck_panel"]["minimum_n_for_any_claim"]["min_bets"]), "sub": "minimum for any claim (G-1)", "tone": "bad"},
+            {"label": "Strategies qualifying at stage 1", "value": "0 of %d" % len(STRAT["strategies"]), "sub": "no lower bound computed", "tone": "bad"},
+            {"label": "Control-baseline runs", "value": 0, "sub": "random, favourites-only, shopping", "tone": "bad"},
+            {"label": "Backtest figures on this board", "value": 0, "sub": "excluded by rule and by the build", "tone": "good"}]},
+        {"kind": "callout", "tone": "info", "title": "Backtests never appear on the board",
+         "body": BOARD["backtest_exclusion"]["rule"] + " Enforced by: " + BOARD["backtest_exclusion"]["enforced_by"]},
         {"kind": "table", "id": "lb-entries", "title": "The board",
          "source": {"label": "dataset", "url": SRC_REPO + "/blob/main/data/signals/leaderboard.json"},
          "cols": [{"key": "rank", "label": "#"}, {"key": "strategy", "label": "Strategy"}, {"key": "tier", "label": "Tier"},
@@ -1142,14 +1195,14 @@ def p_methodology():
     return [
         {"kind": "prose", "title": "How a value gets onto this site", "body": [
             "1. **Read the official page in full**, not a search snippet. The Week 10 availability capture is 8 of 8 chunks of one page; partial reads are what create silent gaps.",
-            "2. **Transcribe with a fixed rule, not with judgement.** The inclusion rule for the player table is 'listed by the club with a game status of Out or Doubtful'. Anyone can re-derive the same 75 rows from the same page; that reproducibility is the only real defence against cherry-picking.",
+            "2. **Transcribe with a fixed rule, not with judgement.** The inclusion rule for the player table is 'listed by the club with a game status of Out or Doubtful'. Anyone can re-derive the same 81 rows from the same page; that reproducibility is the only real defence against cherry-picking.",
             "3. **Record a source link per row** and an as-of timestamp per table. The builder raises an error if a row in a verified table has no source, so an unattributed number cannot ship even accidentally.",
             "4. **Re-verify at build time.** Nine checks run in CI: the row-level counts are re-tallied against the declared team aggregates; club records on the report are checked against the standings; the standings are checked for conservation of wins against losses across the league; duplicates, fixture coverage and bye patterns are checked; and the strategy/correlation files are checked for any non-null edge or correlation value.",
             "4b. **Reconcile against other captures of the same page.** `data/injuries_w10_2026.json` was written "
             "independently by another session from the same official source. Run 10 of the checks compares the two "
             "row sets after normalising club abbreviations. On 2026-11-14 that check found one genuine omission in "
             "this file (Micah Parsons, GB, Out) while all 72 shared rows agreed with zero status conflicts; the row "
-            "was restored from the source text and the check now passes at 76 of 76. This is why the check is in the "
+            "was restored from the source text and the check passed at 76 of 76 on 2026-11-14. After the 2026-11-16 correction (LAC and BAL rows added, one unsupported row removed) it passes at 81 of 81. This is why the check is in the "
             "builder and not in a README: a manual transcription error is a class of error, and the class is what "
             "needs a guard. `tools/fetch_injuries.py` now encodes the inclusion rule so future captures are parsed.",
             "5. **Publish the blanks.** Where the official page had an empty cell, this site shows a blank, not a guess. Where the whole field is missing (depth, prices), the gap is a row on the Flagged page with the action that closes it.",
@@ -1185,7 +1238,7 @@ def p_methodology():
             "To reproduce the injury table from scratch: open the official report, select the season and week, read "
             "every chunk, keep rows whose game-status cell is Out or Doubtful, and transcribe player, position, "
             "disclosed injury, practice status and game status verbatim. Any independent reviewer should land on the "
-            "same 75 rows - and if they do not, the difference is itself a data-quality finding worth flagging.",
+            "same 81 rows - and if they do not, the difference is itself a data-quality finding worth flagging.",
             "What cannot be reproduced from a page read: any historical series, any price, and anything about who "
             "replaced a starter. Those are stated as gaps rather than as results, which is the whole point of this "
             "section.",

@@ -33,9 +33,9 @@
       "area": "Pre-registration and freezing of rules",
       "requirements": "Pre-register each strategy; freeze a rule before data; train/validation/holdout split",
       "status": "Partial",
-      "gate": "Rule text not committed with a registration hash; no holdout seasons",
+      "gate": "Per-strategy commit hash not yet recorded; the four frozen files are hashed (prereg/registration.json, commit b5d9623); no holdout seasons",
       "clears": "Commit hash per strategy, recorded before the evaluation window opens",
-      "current": "0 registration hashes",
+      "current": "4 frozen files hashed; 0 per-strategy commit hashes",
       "where": "pages/strategies.html"
     },
     {
@@ -249,10 +249,10 @@
       "area": "Week 10 injury tables re-captured and republished",
       "requirements": "Re-capture and republish Week 10 counts",
       "status": "Partial",
-      "gate": "Full eight-chunk capture not completed; counts 254/279 not reproduced (F-21)",
+      "gate": "Eight chunks read 2026-11-16 and per-club counts re-derived for all 28 clubs; row-level reconciliation not complete; 254/279 counts not reproduced (F-21)",
       "clears": "Row-level reconciliation of all eight chunks against the published table",
-      "current": "160 local rows; 23 sampled rows verified",
-      "where": "pages/flagged.html"
+      "current": "171 root rows (70 Out, 11 Doubtful, 90 Questionable); 81 Out/Doubtful in Signals capture; LAC/BAL 12 rows added and 1 unsupported row removed (2026-11-16)",
+      "where": "pages/injuries.html"
     },
     {
       "area": "Lions Week 10 game-status cells",

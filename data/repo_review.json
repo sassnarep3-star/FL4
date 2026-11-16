@@ -1,5 +1,5 @@
 {
-  "as_of": "2026-11-14",
+  "as_of": "2026-11-16",
   "method": "Each item was checked by running git or gh in the sandbox on 2026-11-14 (commands listed in 'Evidence'). Links point to the GitHub object checked.",
   "rows": [
     {
@@ -68,11 +68,11 @@
     {
       "id": "R-08",
       "item": "Duplicate row-level Week 10 injury datasets",
-      "finding": "Three public files hold different Week 10 injury rows: data/injuries_w10_2026.json (160 rows), data/injuries_week10_2026.json (75 rows), data/signals/injuries_week10_2026.json (76 rows). They disagree on coverage (LAC and BAL missing from two of them) and on at least one status.",
-      "evidence": "python JSON count of each file; compare with the 16 Nov transcription (tools/capture_w10.py --check)",
+      "finding": "Three public Week 10 injury files differ. data/injuries_w10_2026.json has 171 designated rows and now matches the private transcription after the ARI/AZ code is normalised (0 status and 0 injury-text mismatches). data/signals/injuries_week10_2026.json has 81 Out/Doubtful rows and matches. data/injuries_week10_2026.json has 75 Out/Doubtful rows and omits 6 designated rows (GB Micah Parsons; LAC x4; BAL x1).",
+      "evidence": "JSON comparison of each file with the private 16 Nov transcription (python snippet in the T18 log entry; tools/capture_w10.py --check)",
       "source": "https://www.nfl.com/injuries/league/2026/reg10",
       "severity": "High",
-      "status": "Flagged (F-24, F-25, F-30)"
+      "status": "Flagged (F-27, F-29, F-31)"
     },
     {
       "id": "R-09",
@@ -108,16 +108,7 @@
       "evidence": "git log --oneline -- data/injuries_w10_2026.json",
       "source": "https://github.com/sassnarep3-star/FL4/commits/main/data/injuries_w10_2026.json",
       "severity": "Medium",
-      "status": "Flagged - reviewer decision (F-24)"
-    },
-    {
-      "id": "R-13",
-      "item": "Pre-registration commit",
-      "finding": "data/prereg.json hashes the 16 strategies and the gate file. The commit that first adds it is the registration (edc1ec5 on arena/c75aedbd-fl4, recorded in COORDINATION.md). tools/check_prereg.py fails if a registered definition changes.",
-      "evidence": "python3 tools/check_prereg.py",
-      "source": "https://github.com/sassnarep3-star/FL4/commit/edc1ec5",
-      "severity": "Info",
-      "status": "Verified (commit hash to be re-confirmed after merge)"
+      "status": "Flagged - reviewer decision (F-27)"
     }
   ]
 }
