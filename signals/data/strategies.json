@@ -3,9 +3,20 @@
     "dataset": "line_origination_strategy_catalogue",
     "generated_utc": "2026-11-14T03:35:00Z",
     "framing": "These are candidate signal generators for originating NFL prices. A strategy is a hypothesis plus a test, not a tip. No edge, win rate, ROI or confidence number is asserted anywhere in this catalogue, because no price data exists in this repo to compute them from; edge_claim is null on purpose and stays null until a gate run produces a number.",
-    "status_values": ["design-complete-blocked-on-data", "research-only", "monitor", "parked"],
-    "inputs_legend": {"verified-available": "read from an official source in this session", "available-not-yet-wired": "official source identified, ingestion not built", "not-available": "no source in this environment", "reviewer-decision": "depends on an unanswered question"},
-    "example_policy": "The Week 10 example on each strategy uses only the captured official availability snapshot. It reports the signal value. It never reports a price, a side to take, or an expected return, because the market side of the comparison does not exist here."
+    "status_values": [
+      "design-complete-blocked-on-data",
+      "research-only",
+      "monitor",
+      "parked"
+    ],
+    "inputs_legend": {
+      "verified-available": "read from an official source in this session",
+      "available-not-yet-wired": "official source identified, ingestion not built",
+      "not-available": "no source in this environment",
+      "reviewer-decision": "depends on an unanswered question"
+    },
+    "example_policy": "The Week 10 example on each strategy uses only the captured official availability snapshot. It reports the signal value. It never reports a price, a side to take, or an expected return, because the market side of the comparison does not exist here.",
+    "what_would_change_our_mind": "Every strategy carries a two-sided field: what observation would support it, and what observation would refute it. Written before data is seen."
   },
   "strategies": [
     {
@@ -13,11 +24,28 @@
       "name": "Availability delta vs price staleness",
       "family": "news-latency",
       "bet_type": "single",
-      "markets": ["side", "total", "team total"],
+      "markets": [
+        "side",
+        "total",
+        "team total"
+      ],
       "hypothesis": "When a club's availability changes after its price was set (late Out designation, IR move, confirmed backup QB), the market reprices unevenly: fast on the spread, slow on team totals and on the opposite side of the same stat family.",
       "signal": "delta_avail = availability_score(A) - availability_score(B) computed at T; compare against the *same* market's price at T-24h. Bet only where the score moved materially and the price did not, on a market type whose repricing lag is measured, not assumed.",
       "availability_score_definition": "Position-weighted replacement gap (SG-05). Until the ladder is estimated, the honest proxy is count of Out+Doubtful, reported with its known weakness.",
-      "inputs": [{"name": "weekly injury report snapshots", "status": "verified-available"}, {"name": "multi-day snapshot sequence", "status": "available-not-yet-wired"}, {"name": "timestamped line history", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "weekly injury report snapshots",
+          "status": "verified-available"
+        },
+        {
+          "name": "multi-day snapshot sequence",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "timestamped line history",
+          "status": "not-available"
+        }
+      ],
       "entry": "From the last mandatory filing to 20 minutes before lock; never before the Friday report on a Sunday game.",
       "no_bet": "If the market's own move already exceeds our estimated impact; if the news confidence label is 'report:'; if the bettor's book did not post the pre-news price (no stale line to beat).",
       "stake_rule": "0.25x Kelly capped at the config limit; one bet per game per market family.",
@@ -25,20 +53,50 @@
       "why_real": "Availability is public, unevenly attended, and mechanically tied to lineup construction; small and mid-market books have fewer staff to reprice every team-total derivative after a late Out.",
       "how_it_loses": "Everyone else sees the same headline; the stale line is stale because it is limit-capped and unreachable at size; and the count-based score mistakes a 4th-string long snapper for a starting cornerback.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-7", "G-9", "G-10", "G-12"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-7",
+        "G-9",
+        "G-10",
+        "G-12"
+      ],
       "status": "design-complete-blocked-on-data",
       "blocked_on": "Q-MKT-01 (price feed), Q-ROSTER-02 (value ladder)",
-      "week10_example": "SEA: 4 players Out (QB1 with ribs/quadricep, LT, two interior linemen...) vs LV: 0 Out / 0 Doubtful. Availability delta is large and one-directional, and the league's own report confirms the Seahawks' starting QB changed (no designation, will start - the named replacement). Signal fires on SEA-side team totals and on any market that priced SEA before Thursday. No price to compare against exists here, so the recorded output is 'directional flag, unpriced'."
+      "week10_example": "SEA: 4 players Out (QB1 with ribs/quadricep, LT, two interior linemen...) vs LV: 0 Out / 0 Doubtful. Availability delta is large and one-directional, and the league's own report confirms the Seahawks' starting QB changed (no designation, will start - the named replacement). Signal fires on SEA-side team totals and on any market that priced SEA before Thursday. No price to compare against exists here, so the recorded output is 'directional flag, unpriced'.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Post-news price moves on team totals or the opposite side lag the spread by a measured interval on prospective events, and CLV is positive with a CI excluding zero (G-3).",
+        "if_observed_refutes_it": "Team-total prices move at the same time as the spread after the news, or CLV is zero or negative over the registered window.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-02",
       "name": "Trench depletion -> rush-attempt suppression",
       "family": "unit-quality",
       "bet_type": "single",
-      "markets": ["team rush attempts", "team total", "side"],
+      "markets": [
+        "team rush attempts",
+        "team total",
+        "side"
+      ],
       "hypothesis": "Availability loss concentrated on the offensive line (centre/guards/tackles Out) suppresses called rushing volume and increases negative-down pass frequency more than the spread reflects.",
       "signal": "line_value_gap = weighted Out/Doubtful count among T/G/C positions; fire when >= 2 starters-or-next-up are unavailable and the team's called rush rate was already below league median.",
-      "inputs": [{"name": "injury report by position", "status": "verified-available"}, {"name": "play-by-play called rush rate", "status": "available-not-yet-wired"}, {"name": "prop/team-total prices", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "injury report by position",
+          "status": "verified-available"
+        },
+        {
+          "name": "play-by-play called rush rate",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "prop/team-total prices",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock, after the last report; skip if the team's backup centre is a previously starting player (replacement quality, not count).",
       "no_bet": "No-bet when line play is unlisted (a blank in the report is not a healthy O-line); no-bet in the first week after a coordinator change.",
       "stake_rule": "flat 1u in research; fractional Kelly once a lag estimate exists.",
@@ -46,20 +104,49 @@
       "why_real": "Offensive-line availability is the least glamorous coverage area and the most mechanically linked to a specific, separately-priced derivative.",
       "how_it_loses": "Coaches compensate with quick game and the called-rush number barely moves; a 2nd-string tackle season is already in the season-long number so there is nothing left to price.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-7", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-7",
+        "G-11"
+      ],
       "status": "design-complete-blocked-on-data",
       "blocked_on": "Q-MKT-03 (are team totals/rush props priced and archived?)",
-      "week10_example": "Teams with >= 2 OL/interior linemen Out in the verified snapshot: NE (C Out), DET (C Out), KC (T Out), GB (C Out), TEN (G Out), IND (T Out + 2 others), NO (T Out, C Out), HOU (G Out), LAR (G Out), AZ (C Out, G Out), SEA (T Out, G Out). This is the candidate set. No priced conclusion is claimed."
+      "week10_example": "Teams with >= 2 OL/interior linemen Out in the verified snapshot: NE (C Out), DET (C Out), KC (T Out), GB (C Out), TEN (G Out), IND (T Out + 2 others), NO (T Out, C Out), HOU (G Out), LAR (G Out), AZ (C Out, G Out), SEA (T Out, G Out). This is the candidate set. No priced conclusion is claimed.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Called-rush volume falls short of the spread-implied script after offensive-line losses on a walk-forward holdout, beyond what the unit model predicts (G-2).",
+        "if_observed_refutes_it": "Called-rush volume is unchanged after offensive-line losses on the holdout.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-03",
       "name": "Quarterback-chain collapse (QB2/QB3 starts)",
       "family": "positional-availability",
       "bet_type": "single",
-      "markets": ["side", "total", "team total", "opp QB alt"],
+      "markets": [
+        "side",
+        "total",
+        "team total",
+        "opp QB alt"
+      ],
       "hypothesis": "A confirmed non-first-string starting QB moves a game more than the spread shows, because the spread absorbs the plan change (shorter passes, more run) while the total and the opponent's pass-attack props absorb very little of it.",
       "signal": "confirmed_start(QB depth index > 1) from club-official or league confirmation only - never from a 'report:' item; then evaluate which markets did and did not reprice.",
-      "inputs": [{"name": "QB depth per club, current week", "status": "not-available"}, {"name": "confirmed-starter news with timestamp", "status": "verified-available"}, {"name": "line move history", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "QB depth per club, current week",
+          "status": "not-available"
+        },
+        {
+          "name": "confirmed-starter news with timestamp",
+          "status": "verified-available"
+        },
+        {
+          "name": "line move history",
+          "status": "not-available"
+        }
+      ],
       "entry": "Only after a confirmation, and only where the pre-confirmation price is still obtainable.",
       "no_bet": "Rest/no-designation ambiguity; a QB returning from IR with 1+ prior starts that season (not a true chain collapse); dome games where the effect compresses.",
       "stake_rule": "half the size of an equivalent S-01 bet: same news family, correlated exposure.",
@@ -67,20 +154,44 @@
       "why_real": "Two independent items in the Week 10 capture show confirmed backup starts in the same week (CLE and AZ), and a third where a QB1 was ruled out mid-week (SEA). The pattern is frequent enough to study.",
       "how_it_loses": "Books price backup QBs with a large, well-researched penalty already; the 'lag' is a rounding error and the vig eats it.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-7", "G-9", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-7",
+        "G-9",
+        "G-11"
+      ],
       "status": "design-complete-blocked-on-data",
       "blocked_on": "Q-ROSTER-01 (depth source)",
-      "week10_example": "Verified from the official report page's news list: SEA QB1 Out (ruled out) with the replacement confirmed to start; CLE named a non-first-string starter vs HOU; AZ named a different starter vs LAR. BAL's franchise QB was reported out 6-10 weeks with the backup QB also reported out for the season, i.e. a third-string situation in the same slate. Frequency: this is not a rare regime."
+      "week10_example": "Verified from the official report page's news list: SEA QB1 Out (ruled out) with the replacement confirmed to start; CLE named a non-first-string starter vs HOU; AZ named a different starter vs LAR. BAL's franchise QB was reported out 6-10 weeks with the backup QB also reported out for the season, i.e. a third-string situation in the same slate. Frequency: this is not a rare regime.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Confirmed QB2/QB3 starts move the total and opponent pass props by a smaller share than the spread on prospective settled games.",
+        "if_observed_refutes_it": "The spread and total react in the same proportion to the QB change, or the total reacts more than the spread.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-04",
       "name": "Late-inactive harvest (beat the stale close)",
       "family": "news-latency",
       "bet_type": "single",
-      "markets": ["side", "total"],
+      "markets": [
+        "side",
+        "total"
+      ],
       "hypothesis": "Some prices set before the last mandatory filing remain obtainable for minutes after the inactive list is known. The edge is defined by the difference to the close, and it is measurable on the very first weekend.",
       "signal": "price_taken vs price_at_close on the anchor, per bet; the *product* is a measurement of how many minutes of exploitable window exist per book.",
-      "inputs": [{"name": "book-by-book price timestamps", "status": "not-available"}, {"name": "inactive list capture time", "status": "available-not-yet-wired"}],
+      "inputs": [
+        {
+          "name": "book-by-book price timestamps",
+          "status": "not-available"
+        },
+        {
+          "name": "inactive list capture time",
+          "status": "available-not-yet-wired"
+        }
+      ],
       "entry": "Only within the post-inactive window; any bet placed earlier belongs to S-01, not here.",
       "no_bet": "No-bet where the book limits winners quickly (this strategy's real cost is account limits, not variance).",
       "stake_rule": "flat, deliberately small: this is a data-collection strategy that occasionally pays.",
@@ -88,19 +199,46 @@
       "why_real": "Widely accepted in principle; the disagreement is about size and durability, which is exactly what measurement settles.",
       "how_it_loses": "The window is seconds; the fill is rejected; the close we beat was at another book that never gives us that price at size.",
       "edge_claim": null,
-      "gates": ["G-3", "G-4", "G-9", "G-10", "G-14"],
+      "gates": [
+        "G-3",
+        "G-4",
+        "G-9",
+        "G-10",
+        "G-14"
+      ],
       "status": "design-complete-blocked-on-data",
-      "blocked_on": "Q-MKT-01, Q-RISK-03 (execution contract)"
+      "blocked_on": "Q-MKT-01, Q-RISK-03 (execution contract)",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Executed (not quoted) fills obtained after a filing and before a known inactive list show positive CLV.",
+        "if_observed_refutes_it": "Most attempted fills are rejected or limited at the quoted price (G-4 capacity).",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-05",
       "name": "Short week / rest asymmetry",
       "family": "schedule",
       "bet_type": "single",
-      "markets": ["total", "side"],
+      "markets": [
+        "total",
+        "side"
+      ],
       "hypothesis": "A team on three days' rest, or crossing time zones, or playing an early international kickoff, shows a late-game production pattern that totals and second-half markets underprice.",
       "signal": "rest_days < 4 OR international_venue OR kickoff_local_time in [06:00,11:00]; combine with availability delta so fatigue and depletion are not double counted.",
-      "inputs": [{"name": "schedule and kickoff times", "status": "verified-available"}, {"name": "venue/roof status", "status": "available-not-yet-wired"}, {"name": "prices", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "schedule and kickoff times",
+          "status": "verified-available"
+        },
+        {
+          "name": "venue/roof status",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "prices",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock.",
       "no_bet": "Where the rest asymmetry is already public knowledge two weeks ahead (Thursday games are priced for it) - test whether any residual exists before betting.",
       "stake_rule": "flat 1u research.",
@@ -108,20 +246,45 @@
       "why_real": "Week 10 contains a genuine instance: an international game at 9:30 AM ET with one club coming off a 5-4 season and the other resting a week longer than usual.",
       "how_it_loses": "Everyone has known since the schedule was announced; there is no new information at bet time, only a story.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-5", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-5",
+        "G-11"
+      ],
       "status": "research-only",
       "blocked_on": "Q-MKT-01",
-      "week10_example": "Verified from the official schedule page: NE at DET, Sunday 15 November, 9:30 AM ET, listed as 'International Game, Munich', on FOX. That single fixture legitimately triggers this strategy's condition; it also triggers its 'priced weeks in' veto. Both are recorded, and the veto is the default."
+      "week10_example": "Verified from the official schedule page: NE at DET, Sunday 15 November, 9:30 AM ET, listed as 'International Game, Munich', on FOX. That single fixture legitimately triggers this strategy's condition; it also triggers its 'priced weeks in' veto. Both are recorded, and the veto is the default.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "A short-week or travel subgroup shows a second-half total residual that persists in a holdout season.",
+        "if_observed_refutes_it": "The residual disappears on the holdout or sits inside the control-baseline range.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-06",
       "name": "Weather-conditioned totals (wind and roof)",
       "family": "environment",
       "bet_type": "single",
-      "markets": ["total"],
+      "markets": [
+        "total"
+      ],
       "hypothesis": "Wind at open-air venues moves scoring more than temperature does, and the market reacts to temperature headlines while under-reacting to the wind forecast that actually matters.",
       "signal": "sustained wind + gusts at kickoff window from an official meteorological source, joined to roof status; fire on the total only when the forecast moved materially within the last 24h.",
-      "inputs": [{"name": "official forecast snapshots per venue", "status": "available-not-yet-wired"}, {"name": "roof status per venue", "status": "available-not-yet-wired"}, {"name": "forecast archives", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "official forecast snapshots per venue",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "roof status per venue",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "forecast archives",
+          "status": "not-available"
+        }
+      ],
       "entry": "On forecast revision events, not on a schedule.",
       "no_bet": "Dome games; roofs that are decision-dependent on game-day operations rather than forecast; any model that reads a re-forecast instead of the archived forecast.",
       "stake_rule": "flat 1u; cap two weather bets per week (shared driver = G-8).",
@@ -129,19 +292,46 @@
       "why_real": "Forecast updates are public, timestamped, and mechanically predictive of deep-passing efficiency.",
       "how_it_loses": "Books use the same forecast feed at the same second; the trade is a race we lose.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-5", "G-9"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-5",
+        "G-9"
+      ],
       "status": "research-only",
-      "blocked_on": "Q-MKT-01"
+      "blocked_on": "Q-MKT-01",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Wind-conditioned total residuals exceed the control baseline on a holdout season and survive the multiplicity adjustment.",
+        "if_observed_refutes_it": "Residuals fall inside the random and favourites-only control range, or vanish after adjusting for trials.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-07",
       "name": "Defensive-back-seven depletion vs opponent pass volume",
       "family": "unit-quality",
       "bet_type": "single",
-      "markets": ["opp pass attempts", "opp QB completions", "side"],
+      "markets": [
+        "opp pass attempts",
+        "opp QB completions",
+        "side"
+      ],
       "hypothesis": "Losing multiple interior defensive linemen/linebackers raises opponent pass-attempt volume (more third-and-long converted to neutral, more negative game scripts) more reliably than it raises points, so it is better expressed in volume markets than on the spread.",
       "signal": "count Out/Doubtful among DT/DE/LB grouped by role; require >= 2 AND that the replacement is a rotation/next-up player rather than a starter.",
-      "inputs": [{"name": "report by position", "status": "verified-available"}, {"name": "role labels (starter/rotation)", "status": "not-available"}, {"name": "volume market prices", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "report by position",
+          "status": "verified-available"
+        },
+        {
+          "name": "role labels (starter/rotation)",
+          "status": "not-available"
+        },
+        {
+          "name": "volume market prices",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock.",
       "no_bet": "No-bet when game script dominates (heavy favourite at home), or when the depletion is 'rest' rather than injury - the Week 10 report literally contains 'Not injury related - resting player' rows that must not be counted as lost quality for next week.",
       "stake_rule": "flat 1u.",
@@ -149,20 +339,49 @@
       "why_real": "Availability rows are unambiguous about position; the market's pricing of 'who is missing' is where the effort goes, not 'what it changes next down'.",
       "how_it_loses": "Attempts are noise; completion rates collapse; the volume market is thin and vig-heavy so the edge is eaten.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-4", "G-7", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-4",
+        "G-7",
+        "G-11"
+      ],
       "status": "design-complete-blocked-on-data",
       "blocked_on": "Q-ROSTER-01",
-      "week10_example": "Two rows in the verified snapshot show 'Not injury related - resting player' with an Out designation on the same club's defensive front (JAX, both S and DT). Under a count-based model that is 2 units of defensive depletion. Under a correct model it is 0 for next week and a small positive for this week. This is the clearest available demonstration of why a rest flag must be separated from an injury flag before any counting is trusted."
+      "week10_example": "Two rows in the verified snapshot show 'Not injury related - resting player' with an Out designation on the same club's defensive front (JAX, both S and DT). Under a count-based model that is 2 units of defensive depletion. Under a correct model it is 0 for next week and a small positive for this week. This is the clearest available demonstration of why a rest flag must be separated from an injury flag before any counting is trusted.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Opponent pass-attempt residuals rise with the defensive-depletion count on a holdout, with the expected sign.",
+        "if_observed_refutes_it": "Attempt residuals show no relation to depletion count after controlling for game script.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-08",
       "name": "Usage-reallocation prop ladder",
       "family": "player-projection",
       "bet_type": "prop-combo",
-      "markets": ["player rushes", "player receptions", "player receiving yards", "player targets"],
+      "markets": [
+        "player rushes",
+        "player receptions",
+        "player receiving yards",
+        "player targets"
+      ],
       "hypothesis": "When a lead ball-carrier or WR1 is Out, the replacement's usage line moves later and less than the reallocation of touches/targets; the correct bet is usually the *second* option, not the headline replacement.",
       "signal": "for each unavailable skill player, compute expected snap/target/rush share reallocation to teammates by depth order; compare to the movement in teammates' lines; fire where a teammate's line did not move at all.",
-      "inputs": [{"name": "snap/target data", "status": "not-available"}, {"name": "depth order", "status": "not-available"}, {"name": "prop line history", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "snap/target data",
+          "status": "not-available"
+        },
+        {
+          "name": "depth order",
+          "status": "not-available"
+        },
+        {
+          "name": "prop line history",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock; props are void-prone so require a post-lock re-check of the inactive list.",
       "no_bet": "Any backfield with a committee already; any team whose game script is a >10-point favourite (rush attempts collapse); any prop whose line was never re-offered after news.",
       "stake_rule": "half size vs a main-market bet; max 2 legs from the same game.",
@@ -170,20 +389,45 @@
       "why_real": "Books reprice the famous name; the second name has less attention and a thinner limit, and the reallocation is nearly deterministic.",
       "how_it_loses": "Prop lines are repriced instantly by an algorithm on the same input; and the 'reallocation' is offset by a game script the market already priced.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-4", "G-8", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-4",
+        "G-8",
+        "G-11"
+      ],
       "status": "research-only",
       "blocked_on": "Q-ROSTER-03 (snap data licence), SG-17 descope decision",
-      "week10_example": "Verified snapshot contains a franchise RB Out (GB, finger) and a starting RB Out (NO, shoulder) with the same club losing a second RB to Doubtful. A reallocation model would look at the *next* back on each depth chart; the site cannot name them, because depth-chart data is not available here - that missing cell is the point."
+      "week10_example": "Verified snapshot contains a franchise RB Out (GB, finger) and a starting RB Out (NO, shoulder) with the same club losing a second RB to Doubtful. A reallocation model would look at the *next* back on each depth chart; the site cannot name them, because depth-chart data is not available here - that missing cell is the point.",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Second-option replacement props show positive CLV at the executed price on prospective settled legs.",
+        "if_observed_refutes_it": "Second-option props are repriced as fast as the headline option, with no executed-price advantage.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-09",
       "name": "Correlated same-game parlay, priced on measured dependence",
       "family": "portfolio",
       "bet_type": "parlay",
-      "markets": ["team total + side", "team total + QB attempts", "spread + total (middle)"],
+      "markets": [
+        "team total + side",
+        "team total + QB attempts",
+        "spread + total (middle)"
+      ],
       "hypothesis": "Same-game parlays are priced as if legs were independent; for legs that share a game script, the true joint probability is higher than the product, so a small number of well-chosen pairs are less vig-burdened than the singles.",
       "signal": "select leg pairs whose *measured* joint-settlement excess is positive and whose combined vig is below the singles' combined vig; only pairs above the sample minimum are priced.",
-      "inputs": [{"name": "leg-pair joint settlement rates", "status": "not-available"}, {"name": "parlay pricing per book", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "leg-pair joint settlement rates",
+          "status": "not-available"
+        },
+        {
+          "name": "parlay pricing per book",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock only; never live for this strategy (live correlation structure differs).",
       "no_bet": "Any pair with no measured correlation (hard refusal - this is the whole discipline of the strategy); any pair whose legs share a void rule that can kill both at once.",
       "stake_rule": "count as one unit of exposure against both legs' markets for G-8 caps.",
@@ -191,19 +435,38 @@
       "why_real": "Arithmetic: a parlay of two -110 legs implies roughly +240 while the true joint price with positive dependence can be shorter than that.",
       "how_it_loses": "The dependence is negative in the tail (a blowout kills both the 'over' legs), the pair never accumulates enough observations, or the book's parlay engine already models the dependence.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-8", "G-11", "G-12"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-8",
+        "G-11",
+        "G-12"
+      ],
       "status": "design-complete-blocked-on-data",
-      "blocked_on": "SG-11 (correlation estimator), Q-MODEL-05"
+      "blocked_on": "SG-11 (correlation estimator), Q-MODEL-05",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "A joint probability for the pair is directly validated (joint-evidence gate) and exceeds the implied joint price after the operator's void and push rules.",
+        "if_observed_refutes_it": "No directly validated joint probability exists, or the implied joint price is below the fair price after void and push rules.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-10",
       "name": "Anti-correlated prop pair (insurance structure)",
       "family": "portfolio",
       "bet_type": "prop-combo",
-      "markets": ["player over + player under on opposite-impact props"],
+      "markets": [
+        "player over + player under on opposite-impact props"
+      ],
       "hypothesis": "Some prop pairs are negatively correlated (a team's pass attempts over vs its rush attempts over). Pairs priced independently by the book create a structure whose cost is below the fair price of the pair, and can be used to keep an exposure alive through a game-script flip.",
       "signal": "find pairs whose measured joint loss probability is below the product of marginals by more than the combined vig.",
-      "inputs": [{"name": "measured negative correlations", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "measured negative correlations",
+          "status": "not-available"
+        }
+      ],
       "entry": "Pre-lock.",
       "no_bet": "Never use to rescue a losing position (the common degenerate use); no-bet if the pair's purpose is not stated in the pre-registered hypothesis.",
       "stake_rule": "max 1 pair per game.",
@@ -211,19 +474,37 @@
       "why_real": "Structural, not predictive: it relies on the book pricing legs independently in a thin market.",
       "how_it_loses": "The combined vig exceeds the dependence benefit - this is the base case, which is why the gate is 'measure first, price never without it'.",
       "edge_claim": null,
-      "gates": ["G-1", "G-4", "G-8", "G-11"],
+      "gates": [
+        "G-1",
+        "G-4",
+        "G-8",
+        "G-11"
+      ],
       "status": "parked",
-      "blocked_on": "SG-11"
+      "blocked_on": "SG-11",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Negative dependence measured on registered data gives a combined executed price below fair value.",
+        "if_observed_refutes_it": "The combined vig exceeds the dependence benefit at executed prices (the stated base case).",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-11",
       "name": "Cross-market internal consistency (the market's own line)",
       "family": "origination",
       "bet_type": "single",
-      "markets": ["side vs total vs moneyline", "first half vs full game"],
+      "markets": [
+        "side vs total vs moneyline",
+        "first half vs full game"
+      ],
       "hypothesis": "Side, total and moneyline jointly imply a score distribution; when they are mutually inconsistent, the inconsistency is either our parsing error or a real dislocation, and either answer is worth knowing.",
       "signal": "reconstruct implied win probability from (spread, total) and compare with the moneyline's implied probability, per book; flag disagreement beyond a tolerance calibrated to the book's own vig.",
-      "inputs": [{"name": "simultaneous multi-market prices", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "simultaneous multi-market prices",
+          "status": "not-available"
+        }
+      ],
       "entry": "Only on simultaneous snapshots - a 30-second-old spread against a fresh total produces false alarms.",
       "no_bet": "Every 'dislocation' that is explained by half-point asymmetry or by hold placed unevenly on purpose.",
       "stake_rule": "flat, capped; this is a data-quality tool first.",
@@ -231,19 +512,36 @@
       "why_real": "It requires no forecast at all, only simultaneous prices, so it is the cheapest genuine test of whether this environment can ever originate a line.",
       "how_it_loses": "Nothing wins here directly; it fails only by consuming engineering time that should have gone to SG-01.",
       "edge_claim": null,
-      "gates": ["G-9", "G-13"],
+      "gates": [
+        "G-9",
+        "G-13"
+      ],
       "status": "design-complete-blocked-on-data",
-      "blocked_on": "Q-MKT-01"
+      "blocked_on": "Q-MKT-01",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Inconsistencies in the market's own side, total and moneyline triangle persist after parsing audits and show up in executed quotes.",
+        "if_observed_refutes_it": "Every inconsistency traces to a parsing error or disappears at the same timestamp.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-12",
       "name": "Pure line-shopping baseline (the strategy to beat)",
       "family": "execution",
       "bet_type": "single",
-      "markets": ["side", "total", "moneyline"],
+      "markets": [
+        "side",
+        "total",
+        "moneyline"
+      ],
       "hypothesis": "Taking the best available price across N books, with no view at all, generates positive CLV. This is the null model the whole catalogue must out-perform.",
       "signal": "always take max(price) across books at bet time; no model.",
-      "inputs": [{"name": "N books' prices at the same second", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "N books' prices at the same second",
+          "status": "not-available"
+        }
+      ],
       "entry": "Any time before lock.",
       "no_bet": "n/a - nothing to get wrong; the risk is a false sense of edge that ignores limits.",
       "stake_rule": "flat.",
@@ -251,20 +549,49 @@
       "why_real": "Mechanical: better price is better.",
       "how_it_loses": "Winners get limited, so the shopping edge decays for the account that needs it most.",
       "edge_claim": null,
-      "gates": ["G-3", "G-4", "G-12"],
+      "gates": [
+        "G-3",
+        "G-4",
+        "G-12"
+      ],
       "status": "design-complete-blocked-on-data",
       "blocked_on": "Q-MKT-01",
-      "notes": "Kept on the leaderboard as a benchmark entry by policy (SG-13)."
+      "notes": "Kept on the leaderboard as a benchmark entry by policy (SG-13).",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Line-shopping CLV is positive on the registered window and is accepted as the benchmark other families must beat.",
+        "if_observed_refutes_it": "Shopping CLV is zero or negative on the registered window, so no modelled strategy can be judged against it.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-13",
       "name": "Two-sided fair-value origination engine",
       "family": "origination",
       "bet_type": "single",
-      "markets": ["side", "total"],
+      "markets": [
+        "side",
+        "total"
+      ],
       "hypothesis": "A genuine 'line we originate' requires a state-space team-strength model that updates on availability and play-calling inputs, then outputs a distribution of margins; the market comparison then tells us where our uncertainty is largest rather than where our opinion is loudest.",
       "signal": "fit margin and total distributions (schedule-adjusted, opponent-corrected, availability-conditioned); output (mu, sigma); quote spread = -mu with vig, and post our own price on a two-sided venue only where sigma is small.",
-      "inputs": [{"name": "box scores for every game", "status": "verified-available"}, {"name": "availability snapshots", "status": "verified-available"}, {"name": "an outlet that lets us post a price", "status": "not-available"}, {"name": "counterparty flow", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "box scores for every game",
+          "status": "verified-available"
+        },
+        {
+          "name": "availability snapshots",
+          "status": "verified-available"
+        },
+        {
+          "name": "an outlet that lets us post a price",
+          "status": "not-available"
+        },
+        {
+          "name": "counterparty flow",
+          "status": "not-available"
+        }
+      ],
       "entry": "Originating a price is a market-making activity, not a taker activity: it requires venue access, which is an unresolved reviewer decision.",
       "no_bet": "Do not originate where our sigma is large (injury-driven uncertainty) - quoting wide is not the same as quoting well.",
       "stake_rule": "maker-side exposure caps, not Kelly.",
@@ -272,19 +599,44 @@
       "why_real": "The modelling half is tractable with data we can already verify; the venue half is the gate.",
       "how_it_loses": "We become the slow book: sharps take only our bad prices. Adverse selection is the default outcome of quoting without an information advantage.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-4", "G-5", "G-9", "G-12", "G-13"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-4",
+        "G-5",
+        "G-9",
+        "G-12",
+        "G-13"
+      ],
       "status": "research-only",
-      "blocked_on": "Q-MKT-01, Q-LEGAL-01, Q-LEGAL-02"
+      "blocked_on": "Q-MKT-01, Q-LEGAL-01, Q-LEGAL-02",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "The fair line beats the closing line on Brier skill against the benchmark over a walk-forward window, with the game-cluster lower bound above zero.",
+        "if_observed_refutes_it": "The fair line fails the benchmark's Brier skill (cluster lower bound at or below zero), or CLV is negative.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-14",
       "name": "Reverse line movement / sharp-flow detection",
       "family": "market-microstructure",
       "bet_type": "single",
-      "markets": ["side", "total"],
+      "markets": [
+        "side",
+        "total"
+      ],
       "hypothesis": "Price moving against public ticket pressure indicates informed flow. Where the public side is also the soft book's side, following the move is +CLV.",
       "signal": "delta_price(anchor) vs delta_tickets(slow book), sign mismatch of magnitude >= threshold, within a fixed window before lock.",
-      "inputs": [{"name": "ticket % per book", "status": "not-available"}, {"name": "anchor price stream", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "ticket % per book",
+          "status": "not-available"
+        },
+        {
+          "name": "anchor price stream",
+          "status": "not-available"
+        }
+      ],
       "entry": "Only in the last window before lock, when there is no time left for the move to be retraced.",
       "no_bet": "No-bet where the 'public' number is unavailable (this rule depends on data most setups do not have); no-bet on obvious steam that is 45 minutes old.",
       "stake_rule": "flat 1u research.",
@@ -292,19 +644,41 @@
       "why_real": "Widely used; contested; cheap to test once price streams exist.",
       "how_it_loses": "The move was the soft book following us, and we then pay for a price we caused.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-3", "G-5", "G-11"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-3",
+        "G-5",
+        "G-11"
+      ],
       "status": "blocked-on-data",
-      "blocked_on": "Q-MKT-01"
+      "blocked_on": "Q-MKT-01",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Sharp-flow moves show positive CLV that is not explained by the soft book following our own bets.",
+        "if_observed_refutes_it": "The move is explained by our own action or by public ticket pressure.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-15",
       "name": "Report-trajectory classifier (practice-to-status transition)",
       "family": "availability-prediction",
       "bet_type": "single",
-      "markets": ["availability forecast feeding S-01/S-02/S-08"],
+      "markets": [
+        "availability forecast feeding S-01/S-02/S-08"
+      ],
       "hypothesis": "The weekly pattern of a designation (DNP -> Limited -> Full, or the reverse) carries information about game participation that the final Friday label alone discards. Predicting participation well is upstream of every availability strategy.",
       "signal": "transition features over the Mon-Wed-Thu-Fri reports for the same player and week; output P(plays), calibrated; use it to convert Questionable rows into probabilities instead of dropping them.",
-      "inputs": [{"name": "multiple snapshots per week", "status": "available-not-yet-wired"}, {"name": "actual inactives/snap outcome labels", "status": "available-not-yet-wired"}],
+      "inputs": [
+        {
+          "name": "multiple snapshots per week",
+          "status": "available-not-yet-wired"
+        },
+        {
+          "name": "actual inactives/snap outcome labels",
+          "status": "available-not-yet-wired"
+        }
+      ],
       "entry": "Not a betting strategy; a component. Scored on calibration, never on PnL.",
       "no_bet": "n/a.",
       "stake_rule": "n/a.",
@@ -312,19 +686,44 @@
       "why_real": "The label is a club's expectation filed under a league policy; expectation has structure, and the same club files every week.",
       "how_it_loses": "Designations are gameable by the filer; a classifier learns a team's communication style, not football truth - which still predicts, but only until the team changes its habits.",
       "edge_claim": null,
-      "gates": ["G-1", "G-2", "G-7", "G-9"],
+      "gates": [
+        "G-1",
+        "G-2",
+        "G-7",
+        "G-9"
+      ],
       "status": "design-complete-blocked-on-data",
-      "blocked_on": "SG-02 (second snapshot), SG-04 (labels)"
+      "blocked_on": "SG-02 (second snapshot), SG-04 (labels)",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "A designation-transition model beats the final-label baseline on held-out weeks by a Brier margin with cluster lower bound above zero.",
+        "if_observed_refutes_it": "No improvement over the final-label baseline on held-out weeks, or the gain disappears when a team changes its reporting style.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     },
     {
       "id": "S-16",
       "name": "Depth-chain quality monitor (the brief's 'backups replacing starters' ask)",
       "family": "availability-prediction",
       "bet_type": "single",
-      "markets": ["none directly - supplies all strategies"],
+      "markets": [
+        "none directly - supplies all strategies"
+      ],
       "hypothesis": "The useful quantity is not 'who is out' but 'how far down the depth chart does this injury push the unit', which requires a per-unit starter/next-up/after-that chain and the quality gap between the links.",
       "signal": "for each unit (OL, DL, LB, CB, WR, backfield), build chain = [starter, next-up, after-that] with availability status per link; report chain_shift_depth (how many links the unit moved down) and gap_quality (unmeasured until a replacement-value estimate exists).",
-      "inputs": [{"name": "depth chart source", "status": "not-available"}, {"name": "injury report", "status": "verified-available"}, {"name": "snap counts to derive chains retrospectively", "status": "not-available"}],
+      "inputs": [
+        {
+          "name": "depth chart source",
+          "status": "not-available"
+        },
+        {
+          "name": "injury report",
+          "status": "verified-available"
+        },
+        {
+          "name": "snap counts to derive chains retrospectively",
+          "status": "not-available"
+        }
+      ],
       "entry": "n/a - data product.",
       "no_bet": "n/a.",
       "stake_rule": "n/a.",
@@ -332,9 +731,18 @@
       "why_real": "Verified by inspection: the official report page in this snapshot has columns for Player, Position, Injuries, Practice Status, Game Status - and nothing about the replacement. The gap is structural, so it must be sourced, never derived from that page.",
       "how_it_loses": "If depth charts are unofficial, they are wrong on exactly the weeks that matter (after trades and IR moves - both occurred in this snapshot).",
       "edge_claim": null,
-      "gates": ["G-7", "G-9", "G-13"],
+      "gates": [
+        "G-7",
+        "G-9",
+        "G-13"
+      ],
       "status": "design-complete-blocked-on-data",
-      "blocked_on": "Q-ROSTER-01, Q-ROSTER-04"
+      "blocked_on": "Q-ROSTER-01, Q-ROSTER-04",
+      "what_would_change_our_mind": {
+        "if_observed_supports_it": "Depth-chain gaps are measured from an authorised per-club depth source for all 32 clubs and predict unit-level outcomes on a holdout.",
+        "if_observed_refutes_it": "No verified depth source exists for all 32 clubs, or the gap predicts no outcome beyond the snap-count proxy.",
+        "note": "Written before any result exists. Thresholds are the gate thresholds in data/signals/gates.json; null thresholds are reviewer-set (F-05)."
+      }
     }
   ]
 }

@@ -433,6 +433,27 @@ fl_body = f"""
 """
 OUTPUTS["pages/flagged.html"] = ("Flagged for Review", fl_body, "../", "pages/flagged.html")
 
+# ---------- Decision readiness and removal-of-luck panel (landing page) ----------
+N_OD = N_OUT + N_DOUBT
+_LBS = json.loads((DATA / "signals" / "leaderboard.json").read_text(encoding="utf-8"))
+_GATES = json.loads((DATA / "signals" / "gates.json").read_text(encoding="utf-8"))
+_STRATS = json.loads((DATA / "signals" / "strategies.json").read_text(encoding="utf-8"))["strategies"]
+_G1 = next(g for g in _GATES["gates"] if g["id"] == "G-1")["threshold"]
+
+
+LUCK_HTML = f"""
+<h2 id="luck">Removal-of-luck panel</h2>
+<p class="lead">Nothing on this panel is a result. It shows how far the evidence is from the minimum needed before any skill claim is possible.</p>
+<div class="kpis">
+{kpi("Settled prospective bets", "%d of %d" % (_LBS["removal_of_luck_panel"]["current_n"], _G1["min_bets"]), "minimum for any claim (G-1)")}
+{kpi("Distinct games", "0 of %d" % _G1["min_distinct_games"], "G-1 minimum")}
+{kpi("Strategies qualifying at stage 1", "0 of %d" % len(_STRATS), "proper-score lower bound not computed")}
+{kpi("Control-baseline runs", 0, "random, favourites-only, shopping")}
+{kpi("Backtest figures on the leaderboard", 0, "excluded by rule and by the build")}
+</div>
+<p class="note">Registered: <code>prereg/REGISTRATION.md</code> (commit recorded in COORDINATION.md). Leaderboard rules and demotion gate: <a href="signals/leaderboard.html">signals/leaderboard.html</a>.</p>
+"""
+
 # ---------- Index / dashboard ----------
 READINESS = load("readiness.json")["rows"]
 READY_COUNTS = Counter(r["status"] for r in READINESS)
@@ -463,6 +484,7 @@ idx_body = f"""
 <a class="tile" href="signals/index.html"><b>Signals &amp; origination</b><span>Line-origination strategy catalogue, validation gates, correlation protocol and a second verified Week 10 availability capture (session 94107c0d)</span></a>
 <a class="tile warn" href="pages/flagged.html"><b>Flagged for Review</b><span>__FLAGCOUNT__ items to check</span></a>
 </div>
+{LUCK_HTML}
 """
 OUTPUTS["index.html"] = ("Dashboard", idx_body, "", "index.html")
 

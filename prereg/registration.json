@@ -1,0 +1,13 @@
+{
+  "registration": "REGISTRATION-2026-11-16",
+  "registered_utc_date": "2026-11-16",
+  "registration_text": "prereg/REGISTRATION.md",
+  "hash_algorithm": "sha256 of file bytes",
+  "note": "The registration is the git commit that adds this file. Hashes are checked on every build by tools/build_signals.py.",
+  "frozen_files": {
+    "data/signals/strategies.json": "41bff2c403ffeebadf9743a36cd638aefdcfafad40970e1635bc38cc7e21f12c",
+    "data/signals/gates.json": "9ace8bca100e83deec5f84f3e9b80e3a77ec340c2d5f72c75848090a86cdb862",
+    "data/signals/leaderboard.json": "19c4231a761234c4462b0e55cc70ed794bb212577eccecdc7470c8dfb50da2d0",
+    "data/signals/correlations.json": "a4f300a614044f0364098937da824c932465c9b9ed76ea7e5a9e90a43a9fa442"
+  }
+}
