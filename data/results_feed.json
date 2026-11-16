@@ -1,0 +1,173 @@
+{
+  "as_of": "2026-11-16",
+  "season": 2026,
+  "week": 10,
+  "note": "Official results for Week 10 read from the NFL schedule page. Final scores are shown only where the page says FINAL; live or scheduled games carry null scores. This feed covers Week 10 only. It is NOT the 136-game backtest corpus (see Flagged F-29).",
+  "schema": {
+    "game_id": "page-style fixture id",
+    "kickoff_et": "as published",
+    "away": "club code",
+    "home": "club code",
+    "away_score": "int or null (null unless FINAL)",
+    "home_score": "int or null",
+    "state": "Final | Live | Scheduled",
+    "source": "official game page URL",
+    "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+  },
+  "rows": [
+    {
+      "game_id": "THU WAS @ NYG",
+      "kickoff_et": "Thu Nov 12, 8:15 PM ET",
+      "away": "WAS",
+      "home": "NYG",
+      "away_score": 24,
+      "home_score": 21,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/commanders-at-giants-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "NE @ DET",
+      "kickoff_et": "Sun Nov 15, 9:30 AM ET (Munich)",
+      "away": "NE",
+      "home": "DET",
+      "away_score": 10,
+      "home_score": 35,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/patriots-at-lions-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "KC @ ATL",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "KC",
+      "home": "ATL",
+      "away_score": 35,
+      "home_score": 13,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/chiefs-at-falcons-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "MIN @ GB",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "MIN",
+      "home": "GB",
+      "away_score": 30,
+      "home_score": 10,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/vikings-at-packers-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "JAX @ TEN",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "JAX",
+      "home": "TEN",
+      "away_score": 40,
+      "home_score": 23,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/jaguars-at-titans-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "BUF @ NYJ",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "BUF",
+      "home": "NYJ",
+      "away_score": 31,
+      "home_score": 12,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/bills-at-jets-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "MIA @ IND",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "MIA",
+      "home": "IND",
+      "away_score": 22,
+      "home_score": 24,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/dolphins-at-colts-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "CAR @ NO",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "CAR",
+      "home": "NO",
+      "away_score": 20,
+      "home_score": 17,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/panthers-at-saints-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "HOU @ CLE",
+      "kickoff_et": "Sun Nov 15, 1:00 PM ET",
+      "away": "HOU",
+      "home": "CLE",
+      "away_score": 24,
+      "home_score": 27,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/texans-at-browns-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "LAR @ AZ",
+      "kickoff_et": "Sun Nov 15, 4:05 PM ET",
+      "away": "LAR",
+      "home": "AZ",
+      "away_score": 34,
+      "home_score": 6,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/rams-at-cardinals-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "SEA @ LV",
+      "kickoff_et": "Sun Nov 15, 4:05 PM ET",
+      "away": "SEA",
+      "home": "LV",
+      "away_score": 21,
+      "home_score": 13,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/seahawks-at-raiders-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "SF @ DAL",
+      "kickoff_et": "Sun Nov 15, 4:25 PM ET",
+      "away": "SF",
+      "home": "DAL",
+      "away_score": 46,
+      "home_score": 40,
+      "state": "Final",
+      "source": "https://www.nfl.com/games/49ers-at-cowboys-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "PIT @ CIN",
+      "kickoff_et": "Sun Nov 15, 8:20 PM ET",
+      "away": "PIT",
+      "home": "CIN",
+      "away_score": null,
+      "home_score": null,
+      "state": "Live",
+      "source": "https://www.nfl.com/games/steelers-at-bengals-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    },
+    {
+      "game_id": "MON LAC @ BAL",
+      "kickoff_et": "Mon Nov 16, 8:15 PM ET",
+      "away": "LAC",
+      "home": "BAL",
+      "away_score": null,
+      "home_score": null,
+      "state": "Scheduled",
+      "source": "https://www.nfl.com/games/chargers-at-ravens-2026-reg-10",
+      "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
+    }
+  ]
+}

@@ -1,0 +1,365 @@
+{
+  "as_of_utc": "2026-11-16T01:32:00Z",
+  "season": 2026,
+  "week": 10,
+  "source_url": "https://www.nfl.com/injuries/league/2026/reg10",
+  "source_title": "Official NFL Injury Report for Players - Week 10 of the 2026 Season | NFL.com",
+  "capture_method": "fetch_page tool, chunks 0-7 of 8 read 2026-11-16; transcribed row by row into a private, git-ignored file. Raw fetch bytes were not retained (the tool returns processed markdown), so the hash below is of the transcription, not of the page.",
+  "private_file_sha256": "ed390d9aca17442d4f5027625cf6e7a6d78993cbc921231ad88bfa1909c51ec8",
+  "games": 14,
+  "clubs_with_sections": 28,
+  "clubs_without_section": 4,
+  "player_rows_total": 347,
+  "game_status_out": 70,
+  "game_status_doubtful": 11,
+  "game_status_questionable": 90,
+  "rows_with_injury_text": 171,
+  "rows_with_no_injury_and_no_status": 176,
+  "sections_with_no_injury_text_or_status": [],
+  "rows_flagged_injury_text_or_status": 171,
+  "per_game": {
+    "MON LAC @ BAL": {
+      "rows_listed": 29,
+      "flagged": 12,
+      "out": 4,
+      "doubtful": 1,
+      "questionable": 7
+    },
+    "SUN BUF @ NYJ": {
+      "rows_listed": 23,
+      "flagged": 14,
+      "out": 1,
+      "doubtful": 1,
+      "questionable": 12
+    },
+    "SUN CAR @ NO": {
+      "rows_listed": 24,
+      "flagged": 13,
+      "out": 5,
+      "doubtful": 2,
+      "questionable": 6
+    },
+    "SUN HOU @ CLE": {
+      "rows_listed": 28,
+      "flagged": 14,
+      "out": 7,
+      "doubtful": 0,
+      "questionable": 7
+    },
+    "SUN JAX @ TEN": {
+      "rows_listed": 23,
+      "flagged": 10,
+      "out": 8,
+      "doubtful": 0,
+      "questionable": 2
+    },
+    "SUN KC @ ATL": {
+      "rows_listed": 24,
+      "flagged": 11,
+      "out": 4,
+      "doubtful": 1,
+      "questionable": 6
+    },
+    "SUN LAR @ AZ": {
+      "rows_listed": 29,
+      "flagged": 16,
+      "out": 5,
+      "doubtful": 0,
+      "questionable": 11
+    },
+    "SUN MIA @ IND": {
+      "rows_listed": 25,
+      "flagged": 11,
+      "out": 8,
+      "doubtful": 1,
+      "questionable": 2
+    },
+    "SUN MIN @ GB": {
+      "rows_listed": 30,
+      "flagged": 20,
+      "out": 9,
+      "doubtful": 1,
+      "questionable": 10
+    },
+    "SUN NE @ DET": {
+      "rows_listed": 24,
+      "flagged": 17,
+      "out": 6,
+      "doubtful": 0,
+      "questionable": 11
+    },
+    "SUN PIT @ CIN": {
+      "rows_listed": 17,
+      "flagged": 5,
+      "out": 1,
+      "doubtful": 3,
+      "questionable": 1
+    },
+    "SUN SEA @ LV": {
+      "rows_listed": 20,
+      "flagged": 6,
+      "out": 4,
+      "doubtful": 0,
+      "questionable": 2
+    },
+    "SUN SF @ DAL": {
+      "rows_listed": 31,
+      "flagged": 19,
+      "out": 6,
+      "doubtful": 1,
+      "questionable": 12
+    },
+    "THU WAS @ NYG": {
+      "rows_listed": 20,
+      "flagged": 3,
+      "out": 2,
+      "doubtful": 0,
+      "questionable": 1
+    }
+  },
+  "per_club": {
+    "ATL": {
+      "rows_listed": 11,
+      "game_status_out": 1,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 3,
+      "injury_text_rows": 5,
+      "no_injury_no_status_rows": 6
+    },
+    "AZ": {
+      "rows_listed": 15,
+      "game_status_out": 3,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 6,
+      "injury_text_rows": 9,
+      "no_injury_no_status_rows": 6
+    },
+    "BAL": {
+      "rows_listed": 10,
+      "game_status_out": 1,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 2,
+      "no_injury_no_status_rows": 8
+    },
+    "BUF": {
+      "rows_listed": 14,
+      "game_status_out": 0,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 4,
+      "injury_text_rows": 5,
+      "no_injury_no_status_rows": 9
+    },
+    "CAR": {
+      "rows_listed": 12,
+      "game_status_out": 1,
+      "game_status_doubtful": 2,
+      "game_status_questionable": 4,
+      "injury_text_rows": 7,
+      "no_injury_no_status_rows": 5
+    },
+    "CIN": {
+      "rows_listed": 9,
+      "game_status_out": 1,
+      "game_status_doubtful": 3,
+      "game_status_questionable": 0,
+      "injury_text_rows": 4,
+      "no_injury_no_status_rows": 5
+    },
+    "CLE": {
+      "rows_listed": 12,
+      "game_status_out": 2,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 3,
+      "no_injury_no_status_rows": 9
+    },
+    "DAL": {
+      "rows_listed": 19,
+      "game_status_out": 5,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 5,
+      "injury_text_rows": 11,
+      "no_injury_no_status_rows": 8
+    },
+    "DET": {
+      "rows_listed": 9,
+      "game_status_out": 3,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 2,
+      "injury_text_rows": 5,
+      "no_injury_no_status_rows": 4
+    },
+    "GB": {
+      "rows_listed": 17,
+      "game_status_out": 4,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 7,
+      "injury_text_rows": 12,
+      "no_injury_no_status_rows": 5
+    },
+    "HOU": {
+      "rows_listed": 16,
+      "game_status_out": 5,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 6,
+      "injury_text_rows": 11,
+      "no_injury_no_status_rows": 5
+    },
+    "IND": {
+      "rows_listed": 14,
+      "game_status_out": 6,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 7,
+      "no_injury_no_status_rows": 7
+    },
+    "JAX": {
+      "rows_listed": 11,
+      "game_status_out": 3,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 4,
+      "no_injury_no_status_rows": 7
+    },
+    "KC": {
+      "rows_listed": 13,
+      "game_status_out": 3,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 3,
+      "injury_text_rows": 6,
+      "no_injury_no_status_rows": 7
+    },
+    "LAC": {
+      "rows_listed": 19,
+      "game_status_out": 3,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 6,
+      "injury_text_rows": 10,
+      "no_injury_no_status_rows": 9
+    },
+    "LAR": {
+      "rows_listed": 14,
+      "game_status_out": 2,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 5,
+      "injury_text_rows": 7,
+      "no_injury_no_status_rows": 7
+    },
+    "LV": {
+      "rows_listed": 5,
+      "game_status_out": 0,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 2,
+      "injury_text_rows": 2,
+      "no_injury_no_status_rows": 3
+    },
+    "MIA": {
+      "rows_listed": 11,
+      "game_status_out": 2,
+      "game_status_doubtful": 1,
+      "game_status_questionable": 1,
+      "injury_text_rows": 4,
+      "no_injury_no_status_rows": 7
+    },
+    "MIN": {
+      "rows_listed": 13,
+      "game_status_out": 5,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 3,
+      "injury_text_rows": 8,
+      "no_injury_no_status_rows": 5
+    },
+    "NE": {
+      "rows_listed": 15,
+      "game_status_out": 3,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 9,
+      "injury_text_rows": 12,
+      "no_injury_no_status_rows": 3
+    },
+    "NO": {
+      "rows_listed": 12,
+      "game_status_out": 4,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 2,
+      "injury_text_rows": 6,
+      "no_injury_no_status_rows": 6
+    },
+    "NYG": {
+      "rows_listed": 11,
+      "game_status_out": 0,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 1,
+      "no_injury_no_status_rows": 10
+    },
+    "NYJ": {
+      "rows_listed": 9,
+      "game_status_out": 1,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 8,
+      "injury_text_rows": 9,
+      "no_injury_no_status_rows": 0
+    },
+    "PIT": {
+      "rows_listed": 8,
+      "game_status_out": 0,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 1,
+      "no_injury_no_status_rows": 7
+    },
+    "SEA": {
+      "rows_listed": 15,
+      "game_status_out": 4,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 0,
+      "injury_text_rows": 4,
+      "no_injury_no_status_rows": 11
+    },
+    "SF": {
+      "rows_listed": 12,
+      "game_status_out": 1,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 7,
+      "injury_text_rows": 8,
+      "no_injury_no_status_rows": 4
+    },
+    "TEN": {
+      "rows_listed": 12,
+      "game_status_out": 5,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 1,
+      "injury_text_rows": 6,
+      "no_injury_no_status_rows": 6
+    },
+    "WAS": {
+      "rows_listed": 9,
+      "game_status_out": 2,
+      "game_status_doubtful": 0,
+      "game_status_questionable": 0,
+      "injury_text_rows": 2,
+      "no_injury_no_status_rows": 7
+    }
+  },
+  "delta_vs_earlier_table_2026_11_14": {
+    "earlier_table_rows": 160,
+    "earlier_out": 66,
+    "earlier_doubtful": 10,
+    "earlier_questionable": 84,
+    "rows_designated_now_not_in_earlier_table": 12,
+    "clubs_with_no_section_in_earlier_table": [
+      "BAL",
+      "LAC"
+    ],
+    "rows_added_clubs": [
+      "BAL",
+      "LAC"
+    ],
+    "earlier_rows_no_longer_designated": 1,
+    "earlier_rows_status_changed": 0,
+    "reading": "Most of the difference is coverage, not change: the earlier table has no section for the clubs listed above (both play on Monday 16 Nov). One earlier designation no longer appears as designated on the 16 Nov page. Changes are counted, not named, on the public layer."
+  },
+  "publication_rule": "Public layer = aggregate counts and links only. Player names and row-level values stay in private/ (git-ignored) per the private/public split. Designation counts are reproducible from the official page at the source_url."
+}

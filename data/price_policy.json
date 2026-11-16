@@ -1,0 +1,27 @@
+{
+  "as_of": "2026-11-16",
+  "decision_id": "PP-01",
+  "title": "Price-data policy (decided before any backtest is published)",
+  "status": "Adopted as the project default on 2026-11-16. No price source is connected. The owner may amend this policy at any time; amendments are logged in COORDINATION.md.",
+  "rules": [
+    "R1. No backtest, ROI, CLV or originated-line result is published unless it is computed from price records that carry an open timestamp, a close timestamp, a named source, and a terms/licence check recorded in data/sources.json.",
+    "R2. Price records are append-only. A correction is a new row that cites the reason; the old row is kept.",
+    "R3. A missing closing line is recorded as missing. It is never filled from another book, a model, or an estimate.",
+    "R4. No automated collection from NFL pages or sportsbook pages is configured. NFL.com Terms s.1.3 prohibit systematic retrieval, or compiling a database from the Services, without express prior written consent (S29).",
+    "R5. The public site shows only aggregates derived from price records. Row-level prices are not published unless a licence permits redistribution.",
+    "R6. A pre-registration commit (data/prereg.json) must exist before any evaluation window opens. Results computed before registration are labelled exploratory and are barred from the leaderboard."
+  ],
+  "blocks": [
+    "G-3 closing-line value (blocked on Q-MKT-02)",
+    "G-13 compliance and source licensing (partially satisfied)",
+    "R-06 originated lines",
+    "Backtest corpus (136-game log has no prices)"
+  ],
+  "clears_when": "A named price source with a recorded licence or written permission, and at least one open/close pair stored under R1.",
+  "sources": [
+    "S29",
+    "S31",
+    "S27",
+    "S28"
+  ]
+}
