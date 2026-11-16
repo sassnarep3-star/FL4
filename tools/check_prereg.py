@@ -26,6 +26,7 @@ D = ROOT / "data"
 PREREG = D / "prereg.json"
 STRAT = ROOT / "data" / "signals" / "strategies.json"
 GATES = ROOT / "data" / "signals" / "gates.json"
+LEADERBOARD = ROOT / "data" / "signals" / "leaderboard.json"
 
 
 def canon_hash(obj):
@@ -82,11 +83,15 @@ def check():
             errors.append(f"registered strategy {rid} no longer exists in strategies.json (retirement must be logged, not deleted)")
 
     # Leaderboard guard: backtest numbers may never appear on the leaderboard.
-    strat_doc = json.loads(STRAT.read_text(encoding="utf-8"))
-    lb = strat_doc.get("leaderboard", [])
+    lb_doc = json.loads(LEADERBOARD.read_text(encoding="utf-8"))
+    lb = lb_doc.get("entries", [])
     if not isinstance(lb, list):
-        errors.append("strategies.json leaderboard must be a list")
+        errors.append("data/signals/leaderboard.json 'entries' must be a list")
         lb = []
+    # The file's worked_example is labelled synthetic arithmetic. Report its presence; never quote it as a result.
+    worked = lb_doc.get("worked_example", {})
+    if isinstance(worked, dict) and worked.get("synthetic") is not True:
+        errors.append("leaderboard worked_example must be labelled synthetic=true")
     for i, row in enumerate(lb):
         if row.get("evidence_type") != "prospective":
             errors.append(f"leaderboard row {i}: evidence_type must be 'prospective' (backtests are barred from the leaderboard)")
@@ -102,8 +107,8 @@ def check():
             errors.append(f"results_feed {r.get('game_id')}: Final without both scores")
         if not is_final and (r.get("away_score") is not None or r.get("home_score") is not None):
             errors.append(f"results_feed {r.get('game_id')}: non-final row carries a score")
-        if not str(r.get("source", "")).startswith("https://www.nfl.com/"):
-            errors.append(f"results_feed {r.get('game_id')}: source must be an nfl.com URL")
+        if r.get("source") != "S32":
+            errors.append(f"results_feed {r.get('game_id')}: source must be S32 (the schedule page actually read)")
 
     # Price snapshots.
     ps = json.loads((D / "price_snapshots.json").read_text(encoding="utf-8"))

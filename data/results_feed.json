@@ -2,7 +2,7 @@
   "as_of": "2026-11-16",
   "season": 2026,
   "week": 10,
-  "note": "Official results for Week 10 read from the NFL schedule page. Final scores are shown only where the page says FINAL; live or scheduled games carry null scores. This feed covers Week 10 only. It is NOT the 136-game backtest corpus (see Flagged F-29).",
+  "note": "Official results for Week 10 read from the NFL schedule page. Final scores are shown only where the page says FINAL; live or scheduled games carry null scores. This feed covers Week 10 only. It is NOT the 136-game backtest corpus (see Flagged F-29). Per-game links were NOT fetched and have been removed; each row cites the schedule page S32 that was read.",
   "schema": {
     "game_id": "page-style fixture id",
     "kickoff_et": "as published",
@@ -11,7 +11,7 @@
     "away_score": "int or null (null unless FINAL)",
     "home_score": "int or null",
     "state": "Final | Live | Scheduled",
-    "source": "official game page URL",
+    "source": "source ID from data/sources.json (S32 = official schedule page, read 2026-11-16)",
     "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
   },
   "rows": [
@@ -23,7 +23,7 @@
       "away_score": 24,
       "home_score": 21,
       "state": "Final",
-      "source": "https://www.nfl.com/games/commanders-at-giants-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -34,7 +34,7 @@
       "away_score": 10,
       "home_score": 35,
       "state": "Final",
-      "source": "https://www.nfl.com/games/patriots-at-lions-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -45,7 +45,7 @@
       "away_score": 35,
       "home_score": 13,
       "state": "Final",
-      "source": "https://www.nfl.com/games/chiefs-at-falcons-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -56,7 +56,7 @@
       "away_score": 30,
       "home_score": 10,
       "state": "Final",
-      "source": "https://www.nfl.com/games/vikings-at-packers-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -67,7 +67,7 @@
       "away_score": 40,
       "home_score": 23,
       "state": "Final",
-      "source": "https://www.nfl.com/games/jaguars-at-titans-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -78,7 +78,7 @@
       "away_score": 31,
       "home_score": 12,
       "state": "Final",
-      "source": "https://www.nfl.com/games/bills-at-jets-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -89,7 +89,7 @@
       "away_score": 22,
       "home_score": 24,
       "state": "Final",
-      "source": "https://www.nfl.com/games/dolphins-at-colts-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -100,7 +100,7 @@
       "away_score": 20,
       "home_score": 17,
       "state": "Final",
-      "source": "https://www.nfl.com/games/panthers-at-saints-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -111,7 +111,7 @@
       "away_score": 24,
       "home_score": 27,
       "state": "Final",
-      "source": "https://www.nfl.com/games/texans-at-browns-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -122,7 +122,7 @@
       "away_score": 34,
       "home_score": 6,
       "state": "Final",
-      "source": "https://www.nfl.com/games/rams-at-cardinals-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -133,7 +133,7 @@
       "away_score": 21,
       "home_score": 13,
       "state": "Final",
-      "source": "https://www.nfl.com/games/seahawks-at-raiders-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -144,7 +144,7 @@
       "away_score": 46,
       "home_score": 40,
       "state": "Final",
-      "source": "https://www.nfl.com/games/49ers-at-cowboys-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -155,7 +155,7 @@
       "away_score": null,
       "home_score": null,
       "state": "Live",
-      "source": "https://www.nfl.com/games/steelers-at-bengals-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     },
     {
@@ -166,7 +166,7 @@
       "away_score": null,
       "home_score": null,
       "state": "Scheduled",
-      "source": "https://www.nfl.com/games/chargers-at-ravens-2026-reg-10",
+      "source": "S32",
       "schedule_source": "https://www.nfl.com/schedules/2026/reg10"
     }
   ]

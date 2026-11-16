@@ -126,6 +126,7 @@ def main():
             "game_status_doubtful": sum(1 for r in rs if r["status"] == "Doubtful"),
             "game_status_questionable": sum(1 for r in rs if r["status"] == "Questionable"),
             "injury_text_rows": sum(1 for r in rs if r["injury"]),
+            "flagged": sum(1 for r in rs if r["injury"] or r["status"]),
             "no_injury_no_status_rows": sum(1 for r in rs if not r["injury"] and not r["status"]),
         }
 

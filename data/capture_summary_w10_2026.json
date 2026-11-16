@@ -124,6 +124,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 3,
       "injury_text_rows": 5,
+      "flagged": 5,
       "no_injury_no_status_rows": 6
     },
     "AZ": {
@@ -132,6 +133,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 6,
       "injury_text_rows": 9,
+      "flagged": 9,
       "no_injury_no_status_rows": 6
     },
     "BAL": {
@@ -140,6 +142,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 2,
+      "flagged": 2,
       "no_injury_no_status_rows": 8
     },
     "BUF": {
@@ -148,6 +151,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 4,
       "injury_text_rows": 5,
+      "flagged": 5,
       "no_injury_no_status_rows": 9
     },
     "CAR": {
@@ -156,6 +160,7 @@
       "game_status_doubtful": 2,
       "game_status_questionable": 4,
       "injury_text_rows": 7,
+      "flagged": 7,
       "no_injury_no_status_rows": 5
     },
     "CIN": {
@@ -164,6 +169,7 @@
       "game_status_doubtful": 3,
       "game_status_questionable": 0,
       "injury_text_rows": 4,
+      "flagged": 4,
       "no_injury_no_status_rows": 5
     },
     "CLE": {
@@ -172,6 +178,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 3,
+      "flagged": 3,
       "no_injury_no_status_rows": 9
     },
     "DAL": {
@@ -180,6 +187,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 5,
       "injury_text_rows": 11,
+      "flagged": 11,
       "no_injury_no_status_rows": 8
     },
     "DET": {
@@ -188,6 +196,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 2,
       "injury_text_rows": 5,
+      "flagged": 5,
       "no_injury_no_status_rows": 4
     },
     "GB": {
@@ -196,6 +205,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 7,
       "injury_text_rows": 12,
+      "flagged": 12,
       "no_injury_no_status_rows": 5
     },
     "HOU": {
@@ -204,6 +214,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 6,
       "injury_text_rows": 11,
+      "flagged": 11,
       "no_injury_no_status_rows": 5
     },
     "IND": {
@@ -212,6 +223,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 7,
+      "flagged": 7,
       "no_injury_no_status_rows": 7
     },
     "JAX": {
@@ -220,6 +232,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 4,
+      "flagged": 4,
       "no_injury_no_status_rows": 7
     },
     "KC": {
@@ -228,6 +241,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 3,
       "injury_text_rows": 6,
+      "flagged": 6,
       "no_injury_no_status_rows": 7
     },
     "LAC": {
@@ -236,6 +250,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 6,
       "injury_text_rows": 10,
+      "flagged": 10,
       "no_injury_no_status_rows": 9
     },
     "LAR": {
@@ -244,6 +259,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 5,
       "injury_text_rows": 7,
+      "flagged": 7,
       "no_injury_no_status_rows": 7
     },
     "LV": {
@@ -252,6 +268,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 2,
       "injury_text_rows": 2,
+      "flagged": 2,
       "no_injury_no_status_rows": 3
     },
     "MIA": {
@@ -260,6 +277,7 @@
       "game_status_doubtful": 1,
       "game_status_questionable": 1,
       "injury_text_rows": 4,
+      "flagged": 4,
       "no_injury_no_status_rows": 7
     },
     "MIN": {
@@ -268,6 +286,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 3,
       "injury_text_rows": 8,
+      "flagged": 8,
       "no_injury_no_status_rows": 5
     },
     "NE": {
@@ -276,6 +295,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 9,
       "injury_text_rows": 12,
+      "flagged": 12,
       "no_injury_no_status_rows": 3
     },
     "NO": {
@@ -284,6 +304,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 2,
       "injury_text_rows": 6,
+      "flagged": 6,
       "no_injury_no_status_rows": 6
     },
     "NYG": {
@@ -292,6 +313,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 1,
+      "flagged": 1,
       "no_injury_no_status_rows": 10
     },
     "NYJ": {
@@ -300,6 +322,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 8,
       "injury_text_rows": 9,
+      "flagged": 9,
       "no_injury_no_status_rows": 0
     },
     "PIT": {
@@ -308,6 +331,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 1,
+      "flagged": 1,
       "no_injury_no_status_rows": 7
     },
     "SEA": {
@@ -316,6 +340,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 0,
       "injury_text_rows": 4,
+      "flagged": 4,
       "no_injury_no_status_rows": 11
     },
     "SF": {
@@ -324,6 +349,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 7,
       "injury_text_rows": 8,
+      "flagged": 8,
       "no_injury_no_status_rows": 4
     },
     "TEN": {
@@ -332,6 +358,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 1,
       "injury_text_rows": 6,
+      "flagged": 6,
       "no_injury_no_status_rows": 6
     },
     "WAS": {
@@ -340,6 +367,7 @@
       "game_status_doubtful": 0,
       "game_status_questionable": 0,
       "injury_text_rows": 2,
+      "flagged": 2,
       "no_injury_no_status_rows": 7
     }
   },
