@@ -1023,7 +1023,7 @@ def build_suggestions():
 <button type="button" id="export-all">Copy my choices</button>
 <span id="save-note" role="status"></span>
 </div>
-{table([("#", "id"), ("Suggestion", "title"), ("Problem", "problem"), ("Options &mdash; choose one", "_opts"),
+{table([("#", "id"), ("Suggestion", "title"), ("Problem", "problem"), ("Options - choose one", "_opts"),
         ("Recommended path", "rec"), ("Depends on", "depends"), ("Effort", "effort"), ("Risk", "risk"),
         ("Status", "_status"), ("What it discovers", "discovers")],
        rows, "sg", filterable=True,

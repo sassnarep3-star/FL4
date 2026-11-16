@@ -2,10 +2,10 @@
  "as_of": "2026-11-16",
  "note": "Decision board, not a work log. Each suggestion states the problem, the candidate paths with their cost and risk, the recommended path and what it depends on. The 'status' field is the control: nothing below is approved until the owner sets it. Silence never approves. Selection controls on the rendered page are stored in the browser only - they change no code and trigger no capture.",
  "review_workflow": [
-  "1. Read the problem and the options for a suggestion.",
-  "2. Choose one option, or write your own in the free-text field.",
-  "3. Record the choice locally with the 'Save my choice' control so it survives a reload.",
-  "4. To make it binding, set 'status' for that row in data/lab/suggestions.json to 'approved' and name the approver. Only that edit changes what the project will do."
+  "Read the problem and the options for a suggestion.",
+  "Choose one option, or write your own in the free-text field.",
+  "Record the choice locally with the Save button so it survives a reload.",
+  "To make it binding, set status for that row in data/lab/suggestions.json to approved and name the approver. Only that edit changes what the project will do."
  ],
  "columns": [
   "id",
