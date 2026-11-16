@@ -26,6 +26,7 @@ OFFICIAL_HOSTS = ("nfl.com", "nflgsis.com", "operations.nfl.com", "diputados.gob
 NAV = [
     ("Dashboard", "index.html"),
     ("Executive summary", "pages/executive-summary.html"),
+    ("Decision readiness", "pages/readiness.html"),
     ("Injuries & depth", "pages/injuries.html"),
     ("Strategies", "pages/strategies.html"),
     ("Questions", "pages/questions.html"),
@@ -197,6 +198,7 @@ SUGG = load("suggestions.json")["rows"]
 STRAT = load("strategies.json")
 REPO = load("repo_review.json")["rows"]
 FLAGS = load("flags.json")["rows"]
+READY = load("readiness.json")["rows"]
 NEWS = load("depth_news.json")["rows"]
 REPLACEMENTS = load("replacement_tiers.json")["rows"]
 SOURCE_ROWS = load("sources.json")["sources"]
@@ -392,6 +394,15 @@ sg_body = f"""
 """
 OUTPUTS["pages/suggestions.html"] = ("Suggestions - review and select", sg_body, "../", "pages/suggestions.html")
 
+# ---------- Decision readiness ----------
+ready_rows = [dict(r, _src=source_cell(r["source"], "readiness", r["id"])) for r in READY]
+ready_body = f"""
+<p class="lead">What the brief asks for, how far the repository has got, the gate that blocks each item, and the number that would clear it. One row per requirement ({len(READY)} rows). Counts come from the data files named in each row. Where the project has not set a threshold, the row says NOT SET.</p>
+<p class="lead"><b>Status key:</b> Met = built and verified in the repo; Partial = some of it exists, a named input is missing; Blocked = cannot finish until the blocker clears; Not started = no work yet; Not met = required field absent; Rejected (policy) = proposal rejected and recorded.</p>
+{table([("ID", "id"), ("Requirement", "requirement"), ("Status", "status"), ("Blocking gate", "blocking_gate"), ("Number that clears it", "clearing_number"), ("Now", "now"), ("Source", "_src")], ready_rows, "tbl-ready", filterable=True, status_key="status")}
+"""
+OUTPUTS["pages/readiness.html"] = ("Decision readiness", ready_body, "../", "pages/readiness.html")
+
 # ---------- Repo review ----------
 repo_rows = [dict(r, _src=source_cell(r["source"], "repo-review", r["id"])) for r in REPO]
 repo_body = f"""
@@ -450,6 +461,7 @@ idx_body = f"""
 <a class="tile" href="pages/questions.html"><b>Questions</b><span>What we know, what is missing, how to find out</span></a>
 <a class="tile" href="pages/requirements.html"><b>Requirements</b><span>Every requirement from the brief and its status</span></a>
 <a class="tile" href="pages/suggestions.html"><b>Suggestions</b><span>Review recommendations and record choices locally</span></a>
+<a class="tile" href="pages/readiness.html"><b>Decision readiness</b><span>Every brief requirement: status, blocking gate, number that clears it</span></a>
 <a class="tile" href="pages/repo-review.html"><b>Repo review</b><span>Line-by-line checks with links</span></a>
 <a class="tile" href="pages/sources.html"><b>Sources</b><span>Official and secondary sources used</span></a>
 <a class="tile" href="decision-lab.html"><b>Decision Lab (blueprint)</b><span>Earlier session's evidence-first framework, kept as built</span></a>
