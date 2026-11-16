@@ -209,6 +209,46 @@
       "why": "https://www.nfl.com/teams/seattle-seahawks/depth-chart returned \"404 - Flag on the Play.\" on 2026-11-16. No verified per-club depth page exists; snap-count route has no verified source.",
       "source": "https://www.nfl.com/teams/seattle-seahawks/depth-chart",
       "status": "Unverified: no depth source for any club"
+    },
+    {
+      "id": "F-27",
+      "area": "Privacy / terms (row-level public data)",
+      "item": "Player-level Week 10 injury rows are still published: data/injuries_w10_2026.json (171 rows), data/signals/injuries_week10_2026.json (81 Out or Doubtful rows, Signals section) and signals/data/injuries_week10_2026.json. pages/injuries.html renders the player table.",
+      "why": "NFL.com Terms s.1.3 prohibit systematic retrieval, and compiling a database from the Services, without express prior written consent. The brief asks for row-level data in a private layer until terms are read. A git-ignored raw layer now exists (private/, not published). Public row-level files were NOT removed in this session; git history keeps earlier copies.",
+      "source": "https://www.nfl.com/legal/terms/ (S29) ; https://www.nfl.com/injuries/league/2026/reg10 (S31)",
+      "status": "Needs reviewer decision: remove row-level public tables and files, or confirm permission in writing"
+    },
+    {
+      "id": "F-28",
+      "area": "Injuries - snapshot timing",
+      "item": "The 16 Nov capture of the official Week 10 report was read after most Week 10 games had finished: the schedule page shows 12 Finals, PIT at CIN live in Q1, and LAC at BAL still to play.",
+      "why": "Game-status and practice fields may reflect post-game or later state, not the pre-kickoff status a forecast needs. The 16 Nov capture cannot serve as a pre-kickoff snapshot.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31) ; https://www.nfl.com/schedules/2026/reg10 (S32)",
+      "status": "Open - a pre-kickoff capture is needed for any forecast"
+    },
+    {
+      "id": "F-29",
+      "area": "Injuries - club code",
+      "item": "The public Week 10 dataset uses ARI for Arizona on 9 rows. The official page, the Signals file and the private transcription use AZ.",
+      "why": "Reconciliation of the private 347-row transcription against the public 171 designated rows: player, status and injury text match on every row after the ARI/AZ code is normalised. 0 status mismatches, 0 injury-text mismatches, 0 rows missing on either side apart from the code.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31) ; https://www.nfl.com/schedules/2026/reg10 (S32)",
+      "status": "Open - normalise the code in the public dataset (not changed in this session)"
+    },
+    {
+      "id": "F-30",
+      "area": "Private raw layer - integrity",
+      "item": "private/captures/nfl_injuries_w10_2026_reg10.psv (347 rows) was transcribed by hand from the fetch tool output. The raw fetch bytes were not kept, so the stored SHA-256 is a hash of the transcription, not of the NFL page.",
+      "why": "A transcription hash shows the file has not changed since capture. It does not prove each row matches the page byte for byte. Two transcription faults were found and fixed during validation (an extra delimiter on 176 rows; the Arizona code on 15 rows). The file is git-ignored and is not published.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
+      "status": "Open - a reviewer may re-read the page to confirm any row"
+    },
+    {
+      "id": "F-31",
+      "area": "Injuries - Out/Doubtful list (data/injuries_week10_2026.json)",
+      "item": "The 75-row Out/Doubtful list in data/injuries_week10_2026.json omits 6 designated rows that the official page and the 81-row Signals file both carry: GB Micah Parsons (Out), LAC Branson Taylor (Out), LAC Brenen Thompson (Doubtful), LAC Isas Waxter (Out), LAC Kendall Williamson (Out), BAL Jaylinn Hawkins (Out).",
+      "why": "Five of the six are the Monday LAC @ BAL rows. Main's correction on 16 Nov added LAC/BAL rows to data/injuries_w10_2026.json but not to this 75-row list. The Parsons row matches the 16 Nov transcription and the Signals file; a fresh page read of that single row is not yet recorded. Counts: 81 Out or Doubtful expected (70 Out + 11 Doubtful), 75 present.",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10 (S31)",
+      "status": "Open - a dated correction to this file is needed; not changed in this session (outside claim)"
     }
   ]
 }

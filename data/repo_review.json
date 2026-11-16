@@ -1,13 +1,114 @@
 {
-  "as_of": "2026-11-14",
+  "as_of": "2026-11-16",
   "method": "Each item was checked by running git or gh in the sandbox on 2026-11-14 (commands listed in 'Evidence'). Links point to the GitHub object checked.",
   "rows": [
-    {"id": "R-01","item": "Repository history","finding": "One commit on main: 'Initial commit' (ade1d5d, 2026-11-14 11:48 +0900, author sassnarep3-star). No other commits before this session.","evidence": "git log; gh api repos/sassnarep3-star/FL4","source": "https://github.com/sassnarep3-star/FL4/commit/ade1d5d7586cd7734f02aaafdc183231df568b8b","severity": "Info","status": "Verified"},
-    {"id": "R-02","item": "README.md","finding": "README contains only the heading '# FL4' (5 bytes). No description, purpose, licence, setup or run instructions.","evidence": "git show HEAD:README.md; wc -c","source": "https://github.com/sassnarep3-star/FL4/blob/main/README.md","severity": "Medium","status": "Verified - flagged"},
-    {"id": "R-03","item": "Repository contents","finding": "The only tracked file at ade1d5d is README.md. No source code, data, tests, CI workflow, .gitignore or licence file.","evidence": "git ls-tree -r --name-only HEAD","source": "https://github.com/sassnarep3-star/FL4/tree/ade1d5d7586cd7734f02aaafdc183231df568b8b","severity": "Medium","status": "Verified - flagged"},
-    {"id": "R-04","item": "Coordination rules vs branch rules","finding": "Historical scope note: the earlier review session followed its Arena-supplied fixed branch and created COORDINATION.md. The current task likewise stays on its Arena-supplied branch; this is not a repository branch-naming requirement.","evidence": "Earlier-session COORDINATION.md; current task board in COORDINATION.md.","source": "https://github.com/sassnarep3-star/FL4/blob/main/COORDINATION.md","severity": "Low","status": "Historical scope note; current branch documented on the coordination board"},
-    {"id": "R-05","item": "GitHub Pages configuration","finding": "GitHub Pages is enabled for main at the repository root with HTTPS. The initial base commit had no landing page; after PR #2, the integrated site was published and fetched successfully on 2026-11-14. A separate verify workflow and Pages publishing workflow now run on main changes; confirm both outcomes for each merge.","evidence": "GitHub Pages API, latest build status, Actions runs 43549635924 and 43551740148, and static fetch of the published URL.","source": "S15, S30","severity": "Medium","status": "Base and latest main deployment verified; later deploys tracked per commit"},
-    {"id": "R-06","item": "Git remote and credentials","finding": "origin is https://github.com/sassnarep3-star/FL4.git. No credentials are stored in the remote URL.","evidence": "git remote -v","source": "https://github.com/sassnarep3-star/FL4","severity": "Info","status": "Verified"},
-    {"id": "R-07","item": "Data to verify","finding": "The repo contains no data, tables or claims, so there was nothing in the repo to check line by line. All data in this session comes from the sources in data/sources.json.","evidence": "git ls-tree (see R-03)","source": "https://github.com/sassnarep3-star/FL4/tree/ade1d5d7586cd7734f02aaafdc183231df568b8b","severity": "Info","status": "Verified"}
+    {
+      "id": "R-01",
+      "item": "Repository history",
+      "finding": "One commit on main: 'Initial commit' (ade1d5d, 2026-11-14 11:48 +0900, author sassnarep3-star). No other commits before this session.",
+      "evidence": "git log; gh api repos/sassnarep3-star/FL4",
+      "source": "https://github.com/sassnarep3-star/FL4/commit/ade1d5d7586cd7734f02aaafdc183231df568b8b",
+      "severity": "Info",
+      "status": "Verified"
+    },
+    {
+      "id": "R-02",
+      "item": "README.md",
+      "finding": "README contains only the heading '# FL4' (5 bytes). No description, purpose, licence, setup or run instructions.",
+      "evidence": "git show HEAD:README.md; wc -c",
+      "source": "https://github.com/sassnarep3-star/FL4/blob/main/README.md",
+      "severity": "Medium",
+      "status": "Verified - flagged"
+    },
+    {
+      "id": "R-03",
+      "item": "Repository contents",
+      "finding": "The only tracked file at ade1d5d is README.md. No source code, data, tests, CI workflow, .gitignore or licence file.",
+      "evidence": "git ls-tree -r --name-only HEAD",
+      "source": "https://github.com/sassnarep3-star/FL4/tree/ade1d5d7586cd7734f02aaafdc183231df568b8b",
+      "severity": "Medium",
+      "status": "Verified - flagged"
+    },
+    {
+      "id": "R-04",
+      "item": "Coordination rules vs branch rules",
+      "finding": "Historical scope note: the earlier review session followed its Arena-supplied fixed branch and created COORDINATION.md. The current task likewise stays on its Arena-supplied branch; this is not a repository branch-naming requirement.",
+      "evidence": "Earlier-session COORDINATION.md; current task board in COORDINATION.md.",
+      "source": "https://github.com/sassnarep3-star/FL4/blob/main/COORDINATION.md",
+      "severity": "Low",
+      "status": "Historical scope note; current branch documented on the coordination board"
+    },
+    {
+      "id": "R-05",
+      "item": "GitHub Pages configuration",
+      "finding": "GitHub Pages is enabled for main at the repository root with HTTPS. The initial base commit had no landing page; after PR #2, the integrated site was published and fetched successfully on 2026-11-14. A separate verify workflow and Pages publishing workflow now run on main changes; confirm both outcomes for each merge.",
+      "evidence": "GitHub Pages API, latest build status, Actions runs 43549635924 and 43551740148, and static fetch of the published URL.",
+      "source": "S15, S30",
+      "severity": "Medium",
+      "status": "Base and latest main deployment verified; later deploys tracked per commit"
+    },
+    {
+      "id": "R-06",
+      "item": "Git remote and credentials",
+      "finding": "origin is https://github.com/sassnarep3-star/FL4.git. No credentials are stored in the remote URL.",
+      "evidence": "git remote -v",
+      "source": "https://github.com/sassnarep3-star/FL4",
+      "severity": "Info",
+      "status": "Verified"
+    },
+    {
+      "id": "R-07",
+      "item": "Data to verify",
+      "finding": "The repo contains no data, tables or claims, so there was nothing in the repo to check line by line. All data in this session comes from the sources in data/sources.json.",
+      "evidence": "git ls-tree (see R-03)",
+      "source": "https://github.com/sassnarep3-star/FL4/tree/ade1d5d7586cd7734f02aaafdc183231df568b8b",
+      "severity": "Info",
+      "status": "Verified"
+    },
+    {
+      "id": "R-08",
+      "item": "Duplicate row-level Week 10 injury datasets",
+      "finding": "Three public Week 10 injury files differ. data/injuries_w10_2026.json has 171 designated rows and now matches the private transcription after the ARI/AZ code is normalised (0 status and 0 injury-text mismatches). data/signals/injuries_week10_2026.json has 81 Out/Doubtful rows and matches. data/injuries_week10_2026.json has 75 Out/Doubtful rows and omits 6 designated rows (GB Micah Parsons; LAC x4; BAL x1).",
+      "evidence": "JSON comparison of each file with the private 16 Nov transcription (python snippet in the T18 log entry; tools/capture_w10.py --check)",
+      "source": "https://www.nfl.com/injuries/league/2026/reg10",
+      "severity": "High",
+      "status": "Flagged (F-27, F-29, F-31)"
+    },
+    {
+      "id": "R-09",
+      "item": "Parallel 'root' and 'signals' datasets with different schemas",
+      "finding": "data/flags.json and data/flagged.json; data/strategies.json and data/signals/strategies.json; data/gates.json and data/signals/gates.json; data/leaderboard.json and data/signals/leaderboard.json; data/sources.json and data/signals/sources.json. Each pair is the output of a different session and disagrees on schema or numbering (F-01 means different things in each).",
+      "evidence": "ls -l data data/signals; python JSON key comparison",
+      "source": "https://github.com/sassnarep3-star/FL4/tree/main/data",
+      "severity": "Medium",
+      "status": "Flagged - owner to decide whether to merge (not merged in this session)"
+    },
+    {
+      "id": "R-10",
+      "item": "Private raw store is git-ignored",
+      "finding": "private/ was added to .gitignore so that row-level capture files are not committed or published by Pages. Git reports the raw file as ignored.",
+      "evidence": "git check-ignore -v private/captures/nfl_injuries_w10_2026_reg10.psv",
+      "source": "https://github.com/sassnarep3-star/FL4/blob/main/.gitignore",
+      "severity": "Info",
+      "status": "Verified"
+    },
+    {
+      "id": "R-11",
+      "item": "No scheduled capture job exists",
+      "finding": "The Pages workflow publishes the repo root on push to main. verify.yml runs on pushes and pull requests. No cron or scheduled scraper is configured; adding one would need an express consent decision under NFL.com Terms s.1.3.",
+      "evidence": ".github/workflows/pages.yml and verify.yml read in full",
+      "source": "https://www.nfl.com/legal/terms/ (S29)",
+      "severity": "Info",
+      "status": "Verified"
+    },
+    {
+      "id": "R-12",
+      "item": "Git history retains earlier public row-level files",
+      "finding": "Deleting or emptying a row-level JSON file in the working tree does not remove it from earlier commits (62afd1b and before). Removing history would need a history rewrite, which this session does not do.",
+      "evidence": "git log --oneline -- data/injuries_w10_2026.json",
+      "source": "https://github.com/sassnarep3-star/FL4/commits/main/data/injuries_w10_2026.json",
+      "severity": "Medium",
+      "status": "Flagged - reviewer decision (F-27)"
+    }
   ]
 }

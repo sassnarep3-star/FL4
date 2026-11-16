@@ -57,6 +57,9 @@ jobs:
           git diff --exit-code -- index.html pages/ assets/ || {
             echo "::error::root dashboard output is out of date with tools/build_site.py"; exit 1; }
 
+      - name: Week 10 capture - validator (skips cleanly when the git-ignored private file is absent)
+        run: python tools/capture_w10.py --check
+
       - name: Fixture test for the capture parser
         run: |
           python tools/fetch_injuries.py --raw tools/testdata/report_sample.md -o /tmp/parsed.json | tee /tmp/parse.log
