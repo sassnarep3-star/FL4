@@ -434,48 +434,12 @@ fl_body = f"""
 OUTPUTS["pages/flagged.html"] = ("Flagged for Review", fl_body, "../", "pages/flagged.html")
 
 # ---------- Decision readiness and removal-of-luck panel (landing page) ----------
-READY_ROWS = json.loads((DATA / "readiness.json").read_text(encoding="utf-8"))["rows"]
 N_OD = N_OUT + N_DOUBT
 _LBS = json.loads((DATA / "signals" / "leaderboard.json").read_text(encoding="utf-8"))
 _GATES = json.loads((DATA / "signals" / "gates.json").read_text(encoding="utf-8"))
 _STRATS = json.loads((DATA / "signals" / "strategies.json").read_text(encoding="utf-8"))["strategies"]
 _G1 = next(g for g in _GATES["gates"] if g["id"] == "G-1")["threshold"]
 
-
-def _fill(text):
-    return (str(text).replace("{N_REQ}", str(len(READY_ROWS))).replace("{N_ROWS}", str(N_ROWS))
-            .replace("{N_OD}", str(N_OD)))
-
-
-def _ev(evs):
-    parts = []
-    for e in evs:
-        url = e["url"]
-        parts.append('<a href="%s">%s</a>' % (esc(url), esc(e["label"])))
-    return " · ".join(parts)
-
-
-def _status_cell(s):
-    tone = {"met": "done", "partial": "secondary", "blocked": "unverified"}.get(s, "pending")
-    return '<span class="badge %s">%s</span>' % (tone, esc(s))
-
-
-ready_rows = [{
-    "id": r["id"], "req": r["requirement"], "_st": _status_cell(r["status"]), "gate": r["blocking_gate"],
-    "clear": _fill(r["clearing_number"]), "now": _fill(r["current_value"]),
-    "_src": "User brief" + (" · " + _ev(r["evidence"]) if r.get("evidence") else ""),
-} for r in READY_ROWS]
-n_met = sum(1 for r in READY_ROWS if r["status"] == "met")
-n_part = sum(1 for r in READY_ROWS if r["status"] == "partial")
-n_block = sum(1 for r in READY_ROWS if r["status"] == "blocked")
-READY_HTML = f"""
-<h2 id="readiness">Decision readiness: one row per requirement</h2>
-<p class="lead">For each requirement from the brief: the gate that blocks it, the number that would clear it, and where things stand today. <b>{n_met} met</b> (as a rule or a definition), <b>{n_part} partial</b>, <b>{n_block} blocked</b>. A row marked blocked means no decision can be made from this repository yet.</p>
-<p class="note">Clearing numbers come from <code>data/signals/gates.json</code> where a gate exists (e.g. G-1: 500 bets, 250 games, 12 weeks). Otherwise they are proposals for reviewer approval, not facts. Every row is a requirement record (labelled "User brief") and links to the page or official source that shows its current value.</p>
-{table([("ID", "id"), ("Requirement", "req"), ("Status", "_st"), ("Blocking gate", "gate"),
-        ("Number that would clear it", "clear"), ("Current value", "now"), ("Source / evidence", "_src")],
-       ready_rows, "tbl-readiness", filterable=True)}
-"""
 
 LUCK_HTML = f"""
 <h2 id="luck">Removal-of-luck panel</h2>
@@ -491,6 +455,10 @@ LUCK_HTML = f"""
 """
 
 # ---------- Index / dashboard ----------
+READINESS = load("readiness.json")["rows"]
+READY_COUNTS = Counter(r["status"] for r in READINESS)
+ready_rows = [dict(r, _where=f'{esc(r["where"])} (User brief status; not an external fact)') for r in READINESS]
+ready_html = table([("Area", "area"), ("Status", "status"), ("Blocking gate", "gate"), ("Number that clears it", "clears"), ("Current number", "current"), ("Evidence (where)", "_where")], ready_rows, "tbl-readiness", filterable=True)
 idx_body = f"""
 <p class="lead">A simple dashboard for the NFL research project: official injury data, questions to answer, suggestions to choose from, and a strategy leaderboard that stays empty until a strategy passes every gate.</p>
 <div class="kpis">
@@ -500,6 +468,9 @@ idx_body = f"""
 {kpi("Suggestions awaiting you", PENDING_SG)}
 {kpi("Validated strategies", 0)}
 </div>
+<h2>Decision readiness</h2>
+<p class="note">One row per requirement area from the 2026-11-16 brief. Status counts: {", ".join(f"{k} {v}" for k, v in READY_COUNTS.most_common())}. A row is Met only when its deliverable exists on this site. Project status, not an official NFL value, so no source link applies; the gate and the official evidence are on the linked page.</p>
+{ready_html}
 <div class="tiles">
 <a class="tile" href="pages/executive-summary.html"><b>Executive summary</b><span>Key findings and decisions needed</span></a>
 <a class="tile" href="pages/injuries.html"><b>Injuries &amp; depth</b><span>Official Week 10 report, absences, headline checks, and blank offense/defense replacement slots through fourth string</span></a>
@@ -514,7 +485,6 @@ idx_body = f"""
 <a class="tile warn" href="pages/flagged.html"><b>Flagged for Review</b><span>__FLAGCOUNT__ items to check</span></a>
 </div>
 {LUCK_HTML}
-{READY_HTML}
 """
 OUTPUTS["index.html"] = ("Dashboard", idx_body, "", "index.html")
 

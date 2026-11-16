@@ -141,10 +141,10 @@
     {
       "id": "F-18",
       "area": "Injuries - method",
-      "item": "The injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser): 160 rows at that time. On 2026-11-16 they were re-read against the official page: 12 rows added (LAC, BAL) and one unsupported row removed (IND), now 171 rows. Totals (70 Out, 11 Doubtful, 90 Questionable) are computed from the file, not typed.",
+      "item": "The 160 injury rows were transcribed by hand from the NFL.com report text fetched on 2026-11-14 (no automated parser). Totals (66 Out, 10 Doubtful, 84 Questionable) are computed from the file, not typed.",
       "why": "Manual transcription can contain typos. Each row links to its player page so it can be checked one by one.",
       "source": "https://www.nfl.com/injuries/",
-      "status": "Unverified - second check recommended"
+      "status": "Unverified - second check recommended. Update 2026-11-16: the root capture now holds 171 rows (70 Out, 11 Doubtful, 90 Questionable) after the LAC/BAL correction in F-24; the 66/10/84 totals are superseded."
     },
     {
       "id": "F-19",
@@ -156,14 +156,46 @@
     },
     {
       "id": "F-20",
+      "area": "Injury data scope rule (tool vs data vs requirements)",
+      "item": "tools/fetch_injuries.py documents a keep-only-Out/Doubtful rule, but data/injuries_w10_2026.json holds 160 rows that include 84 Questionable rows (66 Out, 10 Doubtful). REQUIREMENTS.md R-15 still says 75 Out/Doubtful rows.",
+      "why": "The three documents describe three different populations. Questionable players are published on the official page (e.g. Malik Harrison, NYG, Questionable; Brenden Schooler, NE, Questionable) and are present in the data, so the parser's documented rule and the CI fixture expectation no longer describe the dataset. Any count on the site must name which population it counts.",
+      "source": "S31",
+      "status": "Unverified as a rule decision; data matches the live page on 23 sampled rows (checked 2026-11-16). Reviewer to choose the population and align tools/fetch_injuries.py, the CI fixture and R-15.. Update 2026-11-16: the population question stands; the 160 rows cited here are now 171 (see F-24)."
+    },
+    {
+      "id": "F-21",
+      "area": "Week 10 injury counts and no-injury sections (user brief)",
+      "item": "The brief states the live report has 279 rows and 2 no-injury sections, versus 254 rows and 4 sections on the site, and that Seattle and Cincinnati list 15 and 4 players while shown as injury-free. This session could not reproduce these counts: the local file holds 160 rows, with SEA 4 and CIN 4 rows. Live chunks 0–1 of 8 were read; the Seattle and Cincinnati sections are not in those chunks.",
+      "why": "A full eight-chunk capture, reconciled row by row, is needed before any count is republished. Not completed in this session. The 23 sampled rows that were checked match the live page exactly, so the local rows are accurate where checked, but completeness is unproven.",
+      "source": "S31",
+      "status": "Unverified: count and section claims not reproduced; full recapture pending (owner decision on population, see F-20)."
+    },
+    {
+      "id": "F-22",
+      "area": "Roster events and starter announcements cited by the brief (VR-/VQ- references)",
+      "item": "The brief cites VR-04 to VR-08, VR-12, VR-17, VR-21, VR-23 to VR-26 and VQ-05 to VQ-08 for the Colts receiver trades, the Ravens depth rows (Lamar Jackson, Tyler Huntley), the Lock/McCord/Brissett starter changes, Malik Willis on injured reserve, and the Seattle and Washington depth slots. None of these identifiers appears anywhere in this repository (grep of all files, 2026-11-16).",
+      "why": "The referenced evidence is not in the repo and was not located in the official sources available here, so none of these items are verified, and no depth, starter or reserve value is published from them. Each needs its official transaction, depth-chart or report URL supplied and recorded in the sources register before it can be used.",
+      "source": "S31 (checked for the cited events; identifiers not found in that page)",
+      "status": "Unverified: cited identifiers not found; no values published."
+    },
+    {
+      "id": "F-23",
+      "area": "Lions Week 10 game-status cells (user brief)",
+      "item": "The brief says Kerby Joseph, Cade Mays and D.J. Reed have blank game-status cells. In the current data and on the live official page they show Game Status 'Out' (DET; practice 'Did Not Participate In Practice').",
+      "why": "Recorded so the reviewer can see that the claimed defect was checked and is not present in the current file. The live page chunk read on 2026-11-16 is the evidence.",
+      "source": "S31",
+      "status": "Verified 2026-11-16: no blank-cell defect in current data (live page and local file agree)."
+    },
+    {
+      "id": "F-24",
       "area": "Week 10 injury capture",
-      "item": "Monday LAC @ BAL rows added; unsupported Colts row removed (2026-11-16)",
+      "item": "Monday LAC @ BAL rows added; unsupported Colts row removed (2026-11-16) (Renumbered from root F-20 on merge; the 160-row figure in F-18 is superseded by this entry.)",
       "why": "The previous root capture omitted 12 official rows for LAC and BAL, and kept one row (Arden Key) that the official page does not support. Corrected from the page. The count claims of 254 and 279 rows could not be reproduced.",
       "source": "S31 ; https://www.nfl.com/injuries/league/2026/reg10",
       "status": "Corrected 2026-11-16; reviewer spot-check requested"
     },
     {
-      "id": "F-21",
+      "id": "F-25",
       "area": "Automated snapshots",
       "item": "Daily or multi-day official captures are not built",
       "why": "NFL.com Terms Section 1.3 prohibits systematic retrieval without express prior written consent. Hand transcription of the full report repeats an error class already found. A decision is needed before any capture job.",
@@ -171,7 +203,7 @@
       "status": "Unverified: decision pending"
     },
     {
-      "id": "F-22",
+      "id": "F-26",
       "area": "Depth source",
       "item": "Depth-chart route (a) URL returns a 404 page",
       "why": "https://www.nfl.com/teams/seattle-seahawks/depth-chart returned \"404 - Flag on the Play.\" on 2026-11-16. No verified per-club depth page exists; snap-count route has no verified source.",

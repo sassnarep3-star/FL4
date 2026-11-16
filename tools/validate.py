@@ -289,6 +289,31 @@ for page in html_files:
                 add_error(f"broken fragment in {page.relative_to(ROOT)}: {href}")
     validate_tables(page, text)
 
+# Decision-readiness register: every row must carry the fields the landing table renders,
+# a status from the declared set, and a page or file that exists in the repo.
+READY_FIELDS = ("area", "requirements", "status", "gate", "clears", "current", "where")
+READY_STATUSES = {"Met", "Partial", "Blocked", "Design only", "Design set", "Policy in place",
+                  "Rule set", "Not started", "Not built", "Blank by design", "Resolved"}
+ready_path = ROOT / "data" / "readiness.json"
+if not ready_path.exists():
+    add_error("data/readiness.json missing")
+else:
+    ready = json.loads(ready_path.read_text(encoding="utf-8"))
+    ready_rows = ready.get("rows", [])
+    if not ready_rows:
+        add_error("data/readiness.json has no rows")
+    for i, row in enumerate(ready_rows, 1):
+        for field in READY_FIELDS:
+            if not str(row.get(field, "")).strip():
+                add_error(f"data/readiness.json row {i} ({row.get('area', '?')}): empty field '{field}'")
+        if row.get("status") not in READY_STATUSES:
+            add_error(f"data/readiness.json row {i}: status '{row.get('status')}' not in declared set")
+        where = str(row.get("where", "")).split("#")[0]
+        if where and not (ROOT / where).exists() and not (ROOT / "pages" / where).exists():
+            add_error(f"data/readiness.json row {i}: 'where' target not found: {where}")
+    if ready_rows:
+        print(f"PASS: {len(ready_rows)} decision-readiness rows have all fields, declared statuses and existing targets.")
+
 if errors:
     print("FAILED:")
     for error in errors:
