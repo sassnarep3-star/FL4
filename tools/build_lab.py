@@ -287,7 +287,7 @@ def build_index():
         readiness.append({
             "id": r["id"], "group": r["group"], "req": r["requirement"],
             "_status": f'<span class="badge {cls}">{esc(r["status"])}</span>',
-            "_where": (f'<a href="{esc(r["where_published"])}">{esc(r["where_published"])}</a>'
+            "_where": (f'<a href="{esc(r["where_published"][4:])}">{esc(r["where_published"])}</a>'
                        if r["where_published"].startswith("lab/") else esc(r["where_published"])),
             "_gate": (esc(r["blocking_gate"]) if r["blocking_gate"].lower().startswith("none")
                       else f'<a class="badge gate" href="questions.html">{esc(r["blocking_gate"])}</a>'),
