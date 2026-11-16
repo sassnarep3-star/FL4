@@ -1,0 +1,80 @@
+{
+ "season": 2026,
+ "week": 10,
+ "captured_at": "2026-11-16",
+ "source": "https://www.nfl.com/games/<game_id> - official NFL game centre: the 'Game Info' panel (Location / Stadium) and the 'Download Game Book (PDF)' link",
+ "note": "Venue transcribed verbatim from the official game centre. A null game_book_url means the official page had not published a Game Book for that game at capture time.",
+ "irregularity": "The game centre's pre-game injury cards use coarser practice wording than the injury report (for example Jaylinn Hawkins shows 'Did participate' on the game centre and 'Limited Participation in Practice' on the official report). Where the two disagree, this site publishes the injury report's wording.",
+ "venues": {
+  "commanders-at-giants-2026-reg-10": {
+   "location": "EAST RUTHERFORD, NJ",
+   "stadium": "METLIFE STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794570519/gamecenter/ab5828d9-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "patriots-at-lions-2026-reg-10": {
+   "location": "MUNICH",
+   "stadium": "FC BAYERN MUNICH STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794764592/gamecenter/ab582c2f-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "chiefs-at-falcons-2026-reg-10": {
+   "location": "ATLANTA, GA",
+   "stadium": "MERCEDES-BENZ STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777676/gamecenter/ab582f5b-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "texans-at-browns-2026-reg-10": {
+   "location": "CLEVELAND, OH",
+   "stadium": "HUNTINGTON BANK FIELD",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777616/gamecenter/ab583279-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "vikings-at-packers-2026-reg-10": {
+   "location": "GREEN BAY, WI",
+   "stadium": "LAMBEAU FIELD",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794776656/gamecenter/ab788967-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "dolphins-at-colts-2026-reg-10": {
+   "location": "INDIANAPOLIS, IN",
+   "stadium": "LUCAS OIL STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777736/gamecenter/ab789365-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "panthers-at-saints-2026-reg-10": {
+   "location": "NEW ORLEANS, LA",
+   "stadium": "CAESARS SUPERDOME",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777436/gamecenter/ab789769-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "bills-at-jets-2026-reg-10": {
+   "location": "EAST RUTHERFORD, NJ",
+   "stadium": "METLIFE STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777196/gamecenter/ab789ac9-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "jaguars-at-titans-2026-reg-10": {
+   "location": "NASHVILLE, TN",
+   "stadium": "NISSAN STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794777496/gamecenter/ab789e15-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "rams-at-cardinals-2026-reg-10": {
+   "location": "GLENDALE, AZ",
+   "stadium": "STATE FARM STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794786979/gamecenter/ab78a133-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "seahawks-at-raiders-2026-reg-10": {
+   "location": "PARADISE, NV",
+   "stadium": "ALLEGIANT STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794787399/gamecenter/ab78a43c-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "49ers-at-cowboys-2026-reg-10": {
+   "location": "ARLINGTON, TX",
+   "stadium": "AT&T STADIUM",
+   "game_book_url": "https://static.www.nfl.com/image/upload/v1794790580/gamecenter/ab78a748-4feb-11f1-abca-2c54536568a9.pdf"
+  },
+  "steelers-at-bengals-2026-reg-10": {
+   "location": "CINCINNATI, OH",
+   "stadium": "PAYCOR STADIUM",
+   "game_book_url": null
+  },
+  "chargers-at-ravens-2026-reg-10": {
+   "location": "BALTIMORE, MD",
+   "stadium": "M&T BANK STADIUM",
+   "game_book_url": null
+  }
+ }
+}
